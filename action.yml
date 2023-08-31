@@ -8,7 +8,7 @@ inputs:
   Path:
     description: 'Path to the module to publish.'
     required: true
-  verbose:
+  Verbose:
     description: 'Enable verbose output.'
     required: false
     default: 'false'
@@ -24,8 +24,8 @@ runs:
         Write-Output '-------------------------------------------'
         Write-Output 'Action inputs:'
         $params = @{
-            Message = '${{ inputs.message }}'
-            Verbose = [System.Convert]::ToBoolean('${{ inputs.verbose }}')
+            Path = '${{ inputs.Path }}'
+            Verbose = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
         }
         $params.GetEnumerator() | Sort-Object -Property Name
 
