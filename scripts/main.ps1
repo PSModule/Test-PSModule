@@ -9,6 +9,7 @@ Write-Verbose "$Task`: Starting..."
 
 Write-Verbose "$Task`: Message: $Message"
 Write-Verbose "$Task`: Run Pester tests"
+Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
 Write-Verbose "$Task`: Run PSScriptAnalyzer"
 Write-Verbose "$Task`: Run linter on docs files"
 
