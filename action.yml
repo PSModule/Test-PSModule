@@ -1,14 +1,13 @@
 name: 'Test-Module'
-description: 'Test a PowerShell module to the PowerShell Gallery'
+description: 'Test a PowerShell module before publishing the module to the PowerShell Gallery.'
 branding:
   icon: activity
   color: blue
 
 inputs:
-  message:
-    description: 'A message to test with.'
-    required: false
-    default: 'Hello World!'
+  Path:
+    description: 'Path to the module to publish.'
+    required: true
   verbose:
     description: 'Enable verbose output.'
     required: false
