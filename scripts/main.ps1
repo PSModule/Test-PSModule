@@ -1,6 +1,6 @@
 ﻿[CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory)]
     [string] $Message
 )
 $Task = ($MyInvocation.MyCommand.Name).split('.')[0]
