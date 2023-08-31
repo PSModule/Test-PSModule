@@ -6,8 +6,9 @@ param(
 $Task = ($MyInvocation.MyCommand.Name).split('.')[0]
 
 Write-Verbose "$Task`: Starting..."
-Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -Verbose:$false
-Install-Module -Name Pester -Scope CurrentUser -Force -Verbose:$false
+#Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -Verbose:$false
+#Invoke-ScriptAnalyzer -Path .\src\Fonts -Recurse -Verbose
+#Install-Module -Name Pester -Scope CurrentUser -Force -Verbose:$false
 
 Write-Verbose "$Task`: Message: $Path"
 Write-Verbose "$Task`: Run Pester tests"
