@@ -5,9 +5,6 @@ branding:
   color: blue
 
 inputs:
-  Path:
-    description: 'Path to the module to publish.'
-    required: true
   Verbose:
     description: 'Enable verbose output.'
     required: false
@@ -23,7 +20,6 @@ runs:
         Write-Output '-------------------------------------------'
         Write-Output 'Action inputs:'
         $params = @{
-            Path = '${{ inputs.Path }}'
             Verbose = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
         }
         $params.GetEnumerator() | Sort-Object -Property Name
