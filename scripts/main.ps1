@@ -1,8 +1,5 @@
 ﻿[CmdletBinding()]
-param(
-    [Parameter(Mandatory)]
-    [string] $Path
-)
+param()
 $Task = ($MyInvocation.MyCommand.Name).split('.')[0]
 
 Write-Verbose "$Task`: Starting..."
