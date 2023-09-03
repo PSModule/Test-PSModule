@@ -1,6 +1,6 @@
 ﻿[CmdletBinding()]
 param()
-$Task = ($MyInvocation.MyCommand.Name).split('.')[0]
+$Task = 'Test-Module'
 
 Write-Verbose "$Task`: Starting..."
 #Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -Verbose:$false
