@@ -17,7 +17,7 @@ runs:
       shell: pwsh
       run: |
         # Test-Module
-        Write-Output '::group::[Test-Module] - Initialize'
+        Write-Output '::group::[Test-Module] - Initializing...'
         Write-Output '-------------------------------------------'
         Write-Output 'Action inputs:'
         $params = @{

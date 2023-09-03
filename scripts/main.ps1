@@ -1,6 +1,13 @@
 ﻿[CmdletBinding()]
 param()
-$Task = 'Test-Module'
+
+$task = New-Object System.Collections.Generic.List[string]
+$task.Add('Test-Module')
+Write-Output "::group::[$($task -join '] - [')] - Starting..."
+$task.Add('Install-Prerequisites')
+Write-Output "::group::[$($task -join '] - [')]"
+Write-Verbose "[$($task -join '] - [')] - [$_]"
+
 
 Write-Verbose "$Task`: Starting..."
 #Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -Verbose:$false
