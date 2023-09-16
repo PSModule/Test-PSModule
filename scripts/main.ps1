@@ -1,4 +1,4 @@
-﻿[CmdletBinding()]
+﻿[CmdletBinding(SupportsShouldProcess)]
 param()
 $task = New-Object System.Collections.Generic.List[string]
 #region Test-Module

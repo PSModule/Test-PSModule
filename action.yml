@@ -9,6 +9,10 @@ inputs:
     description: 'Enable verbose output.'
     required: false
     default: 'false'
+  WhatIf:
+    description: 'Run in WhatIf mode.'
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -22,6 +26,7 @@ runs:
         Write-Output 'Action inputs:'
         $params = @{
             Verbose = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
+            WhatIf  = [System.Convert]::ToBoolean('${{ inputs.WhatIf }}')
         }
         $params.GetEnumerator() | Sort-Object -Property Name
         Write-Output '-------------------------------------------'
