@@ -23,7 +23,7 @@ runs:
         # Test-Module
 
         Write-Output '::group::[Build-Module] - Initializing...'
-        Install-Module -Name PSModule.FX -Verbose
+        Install-Module -Name PSModule.FX -Force -Verbose
         Write-Output '::endgroup::'
 
         Write-Output '::group::[Test-Module] - Initializing...'
