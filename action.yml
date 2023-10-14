@@ -1,4 +1,4 @@
-name: 'Test-Module'
+name: 'Test-PSModule'
 description: 'Test a PowerShell module before publishing the module to the PowerShell Gallery.'
 branding:
   icon: activity
@@ -17,16 +17,12 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Run Test-Module
+    - name: Run Test-PSModule
       shell: pwsh
       run: |
-        # Test-Module
+        # Test-PSModule
 
-        Write-Output '::group::[Build-Module] - Initializing...'
-        Install-Module -Name PSModule.FX -Force -Verbose
-        Write-Output '::endgroup::'
-
-        Write-Output '::group::[Test-Module] - Initializing...'
+        Write-Output '::group::[Test-PSModule] - Initializing...'
         Write-Output '-------------------------------------------'
         Write-Output 'Action inputs:'
         $params = @{
