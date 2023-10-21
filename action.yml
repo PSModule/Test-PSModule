@@ -46,5 +46,5 @@ runs:
 
         if ($ErrorActionPreference -like 'Continue*') {
             Write-Output '::warning::Errors were ignored.'
-            return 0
+            return
         }
