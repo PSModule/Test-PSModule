@@ -9,6 +9,10 @@ inputs:
     description: 'The name of the module to build.'
     required: false
     default: '*'
+  ErrorAction:
+    description: 'The action to take if an error occurs.'
+    required: false
+    default: 'Stop'
   Verbose:
     description: 'Enable verbose output.'
     required: false
@@ -24,6 +28,7 @@ runs:
     - name: Run Test-PSModule
       shell: pwsh
       run: |
+        $ErrorActionPreference = '${{ inputs.ErrorAction }}'
         # Test-PSModule
 
         Write-Output '::group::Initializing...'
