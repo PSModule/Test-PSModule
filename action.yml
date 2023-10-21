@@ -9,6 +9,10 @@ inputs:
     description: 'The name of the module to build.'
     required: false
     default: '*'
+  Path:
+    description: 'The path to the module to build.'
+    required: false
+    default: 'outputs'
   ErrorAction:
     description: 'The action to take if an error occurs.'
     required: false
@@ -36,6 +40,7 @@ runs:
         Write-Output 'Action inputs:'
         $params = @{
             Name    = '${{ inputs.Name }}'
+            Path    = (Join-Path $env:GITHUB_WORKSPACE '${{ inputs.Path }}')
             Verbose = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
             WhatIf  = [System.Convert]::ToBoolean('${{ inputs.WhatIf }}')
         }
