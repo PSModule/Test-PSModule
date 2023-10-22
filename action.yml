@@ -54,5 +54,5 @@ runs:
             return
         } catch {
             Write-Output "::error::$_"
-            throw $_
+            exit 1
         }
