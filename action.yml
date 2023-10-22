@@ -50,17 +50,9 @@ runs:
 
         try {
             $failedTests = Test-PSModule @params
-        } catch {
-            Write-Output "::error::$_"
-        }
-
-
-        if ($ErrorActionPreference -like '*Continue*') {
             Write-Output '::warning::Errors were ignored.'
             return
-        }
-
-        if ($failedTests) {
-            Write-Output "::error::$failedTests tests failed."
-            throw "$failedTests tests failed"
+        } catch {
+            Write-Output "::error::$_"
+            throw $_
         }
