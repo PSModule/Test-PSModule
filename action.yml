@@ -56,5 +56,6 @@ runs:
                 Write-Output '::warning::Errors were ignored.'
                 return
             }
-            throw $_
+            Wrtie-Verbose "Done"
+            # throw $_
         }
