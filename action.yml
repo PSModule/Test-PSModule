@@ -48,14 +48,14 @@ runs:
         $params.GetEnumerator() | Sort-Object -Property Name
         Write-Output '::endgroup::'
 
-        try {
-            Test-PSModule @params
-        } catch {
-            if ($ErrorActionPreference -like '*Continue*') {
-                Write-Error $_
-                Write-Output '::warning::Errors were ignored.'
-                return
-            }
-            Wrtie-Verbose "Done"
-            # throw $_
+        $failedTests = Test-PSModule @params
+
+        if ($ErrorActionPreference -like '*Continue*') {
+            Write-Output '::warning::Errors were ignored.'
+            return
+        }
+        
+        if ($failedTests) {
+            Write-Output "::error::$failedTests tests failed."
+            throw "$failedTests tests failed"
         }
