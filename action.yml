@@ -50,7 +50,7 @@ runs:
         try {
             Test-PSModule @params
         } catch {
-            if ($ErrorActionPreference -like 'Continue*') {
+            if ($ErrorActionPreference -like '*Continue*') {
                 Write-Error $_
                 Write-Output '::warning::Errors were ignored.'
                 return
