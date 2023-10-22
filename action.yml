@@ -32,17 +32,18 @@ runs:
     - name: Run Test-PSModule
       shell: pwsh
       run: |
-        $ErrorActionPreference = '${{ inputs.ErrorAction }}'
         # Test-PSModule
+        $ErrorActionPreference = '${{ inputs.ErrorAction }}'
 
         Write-Output '::group::Initializing...'
         Write-Output '-------------------------------------------'
         Write-Output 'Action inputs:'
         $params = @{
-            Name    = '${{ inputs.Name }}'
-            Path    = (Join-Path $env:GITHUB_WORKSPACE '${{ inputs.Path }}')
-            Verbose = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
-            WhatIf  = [System.Convert]::ToBoolean('${{ inputs.WhatIf }}')
+            Name        = '${{ inputs.Name }}'
+            Path        = (Join-Path $env:GITHUB_WORKSPACE '${{ inputs.Path }}')
+            Verbose     = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
+            WhatIf      = [System.Convert]::ToBoolean('${{ inputs.WhatIf }}')
+            ErrorAction = $ErrorActionPreference
         }
         $params.GetEnumerator() | Sort-Object -Property Name
         Write-Output '::endgroup::'
