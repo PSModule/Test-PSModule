@@ -59,9 +59,12 @@ runs:
 
         try {
             $failedTests = Test-PSModule @params
-            Write-Output '::warning::Errors were ignored.'
-            return
         } catch {
             Write-Output "::error::$_"
             exit 1
+        }
+
+        if ($ErrorActionPreference -like '*Continue') {
+            Write-Output '::warning::Errors were ignored.'
+            return
         }
