@@ -39,13 +39,12 @@ runs:
         # Test-PSModule
         $ErrorActionPreference = '${{ inputs.ErrorAction }}'
 
-        Write-Output '::group::Initializing...'
+        Write-Host '::group::Initializing...'
         Write-Output '-------------------------------------------'
         Write-Output 'Action inputs:'
         $params = @{
             Name            = "${{ inputs.Name }}"
             Path            = (Join-Path $env:GITHUB_WORKSPACE '${{ inputs.Path }}')
-            CustomTestsPath = (Join-Path $env:GITHUB_WORKSPACE '${{ inputs.CustomTestsPath }}')
             Verbose         = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
             WhatIf          = [System.Convert]::ToBoolean('${{ inputs.WhatIf }}')
             ErrorAction     = $ErrorActionPreference
@@ -56,16 +55,16 @@ runs:
         }
 
         $params.GetEnumerator() | Sort-Object -Property Name
-        Write-Output '::endgroup::'
+        Write-Host '::endgroup::'
 
         try {
             $failedTests = Test-PSModule @params
         } catch {
-            Write-Output "::error::$_"
+            Write-Host "::error::$_"
             exit 1
         }
 
         if ($ErrorActionPreference -like '*Continue') {
-            Write-Output '::warning::Errors were ignored.'
+            Write-Host '::warning::Errors were ignored.'
             return
         }
