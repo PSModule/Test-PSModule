@@ -44,14 +44,14 @@ runs:
         Write-Output 'Action inputs:'
         $params = @{
             Name            = "${{ inputs.Name }}"
-            Path            = (Join-Path $env:GITHUB_WORKSPACE '${{ inputs.Path }}')
+            Path            = Join-Path $env:GITHUB_WORKSPACE '${{ inputs.Path }}'
             Verbose         = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
             WhatIf          = [System.Convert]::ToBoolean('${{ inputs.WhatIf }}')
             ErrorAction     = $ErrorActionPreference
         }
 
-        if ([string]::IsNullOrEmpty('${{ inputs.CustomTestsPath }}')) {
-            $params['CustomTestsPath'] = (Join-Path $env:GITHUB_WORKSPACE '${{ inputs.CustomTestsPath }}')
+        if (-not [string]::IsNullOrEmpty('${{ inputs.CustomTestsPath }}')) {
+            $params['CustomTestsPath'] = Join-Path $env:GITHUB_WORKSPACE '${{ inputs.CustomTestsPath }}'
         }
 
         $params.GetEnumerator() | Sort-Object -Property Name
