@@ -51,7 +51,7 @@ runs:
         }
 
         if (-not [string]::IsNullOrEmpty("${{ inputs.CustomTestsPath }}")) {
-            $params['CustomTestsPath'] = Join-Path $env:GITHUB_WORKSPACE '${{ inputs.CustomTestsPath }}'
+            $params['CustomTestsPath'] = Join-Path $env:GITHUB_WORKSPACE "${{ inputs.CustomTestsPath }}"
         }
 
         $params.GetEnumerator() | Sort-Object -Property Name
