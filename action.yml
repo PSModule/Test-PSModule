@@ -45,6 +45,7 @@ runs:
         $params = @{
             Name            = "${{ inputs.Name }}"
             Path            = (Join-Path $env:GITHUB_WORKSPACE '${{ inputs.Path }}')
+            CustomTestsPath = (Join-Path $env:GITHUB_WORKSPACE '${{ inputs.CustomTestsPath }}')
             Verbose         = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
             WhatIf          = [System.Convert]::ToBoolean('${{ inputs.WhatIf }}')
             ErrorAction     = $ErrorActionPreference
