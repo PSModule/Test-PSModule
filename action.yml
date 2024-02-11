@@ -1,0 +1,70 @@
+name: 'Test-PSModule'
+description: 'Test a PowerShell module before publishing the module to the PowerShell Gallery.'
+branding:
+  icon: activity
+  color: blue
+
+inputs:
+  Name:
+    description: 'The name of the module to build.'
+    required: false
+    default: '*'
+  Path:
+    description: 'The path to the module to build.'
+    required: false
+    default: 'outputs'
+  CustomTestsPath:
+    description: 'The path to the custom tests to run.'
+    required: false
+    default: $null
+  ErrorAction:
+    description: 'The action to take if an error occurs.'
+    required: false
+    default: 'Stop'
+  Verbose:
+    description: 'Enable verbose output.'
+    required: false
+    default: 'true'
+  WhatIf:
+    description: 'Run in WhatIf mode.'
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run Test-PSModule
+      shell: pwsh
+      run: |
+        # Test-PSModule
+        $ErrorActionPreference = '${{ inputs.ErrorAction }}'
+
+        Write-Host '::group::Initializing...'
+        Write-Output '-------------------------------------------'
+        Write-Output 'Action inputs:'
+        $params = @{
+            Name            = "${{ inputs.Name }}"
+            Path            = Join-Path $env:GITHUB_WORKSPACE '${{ inputs.Path }}'
+            Verbose         = [System.Convert]::ToBoolean('${{ inputs.Verbose }}')
+            WhatIf          = [System.Convert]::ToBoolean('${{ inputs.WhatIf }}')
+            ErrorAction     = $ErrorActionPreference
+        }
+
+        if (-not [string]::IsNullOrEmpty("${{ inputs.CustomTestsPath }}")) {
+            $params['CustomTestsPath'] = Join-Path $env:GITHUB_WORKSPACE "${{ inputs.CustomTestsPath }}"
+        }
+
+        $params.GetEnumerator() | Sort-Object -Property Name
+        Write-Host '::endgroup::'
+
+        try {
+            $failedTests = Test-PSModule @params
+        } catch {
+            Write-Host "::error::$_"
+            exit 1
+        }
+
+        if ($ErrorActionPreference -like '*Continue') {
+            Write-Host '::warning::Errors were ignored.'
+            return
+        }
