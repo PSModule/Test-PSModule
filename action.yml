@@ -5,10 +5,6 @@ branding:
   color: blue
 
 inputs:
-  Name:
-    description: The name of the module to build.
-    required: false
-    default: '*'
   Path:
     description: The path to the module to build.
     required: false
@@ -35,7 +31,6 @@ runs:
     - name: Run Test-PSModule
       shell: pwsh
       env:
-        Name: ${{ inputs.Name }}
         Path: ${{ inputs.Path }}
         CustomTestsPath: ${{ inputs.CustomTestsPath }}
         ErrorAction: ${{ inputs.ErrorAction }}

@@ -1,10 +1,15 @@
 ﻿$ErrorActionPreference = $env:ErrorAction
 
+Get-ChildItem -Path (Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'helpers') -Filter '*.ps1' -Recurse | ForEach-Object {
+    . $_.FullName
+}
+
+$env:GITHUB_REPOSITORY_NAME = $env:GITHUB_REPOSITORY -replace '.+/', ''
+
 Write-Output '::group::Initializing...'
 Write-Output '-------------------------------------------'
-Write-Output 'Action inputs:'
 $params = @{
-    Name        = $env:Name
+    Name        = $env:GITHUB_REPOSITORY_NAME
     Path        = Join-Path $env:GITHUB_WORKSPACE $env:Path
     Verbose     = $env:Verbose -eq 'true'
     WhatIf      = $env:WhatIf -eq 'true'
