@@ -1,38 +1,33 @@
 ﻿$ErrorActionPreference = $env:ErrorAction
 
-Write-Verbose "Importing helper scripts..." -Verbose
+Start-LogGroup 'Importing helper scripts...'
 Get-ChildItem -Path (Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'helpers') -Filter '*.ps1' -Recurse | ForEach-Object {
     Write-Verbose "[$($_.FullName)]" -Verbose
     . $_.FullName
 }
+Stop-LogGroup
 
-$env:GITHUB_REPOSITORY_NAME = $env:GITHUB_REPOSITORY -replace '.+/', ''
+$moduleName = [string]::IsNullOrEmpty($env:Name) ? $env:GITHUB_REPOSITORY -replace '.+/', '' : $env:Name
 
-Write-Output '::group::Initializing...'
-Write-Output '-------------------------------------------'
 $params = @{
-    Name        = $env:GITHUB_REPOSITORY_NAME
-    Path        = Join-Path $env:GITHUB_WORKSPACE $env:Path
     Verbose     = $env:Verbose -eq 'true'
     WhatIf      = $env:WhatIf -eq 'true'
     ErrorAction = $ErrorActionPreference
 }
 
-if (-not [string]::IsNullOrEmpty($env:CustomTestsPath)) {
-    $params['CustomTestsPath'] = Join-Path $env:GITHUB_WORKSPACE $env:CustomTestsPath
-}
-
-Write-Verbose ($params.GetEnumerator() | Sort-Object -Property Name | Out-String) -Verbose
-Write-Output '::endgroup::'
+$codeToTest = Join-Path $env:GITHUB_WORKSPACE $env:Path $moduleName
 
 try {
-    $failedTests = Test-PSModule @params
+    $params = @{
+        Path      = $codeToTest
+        TestsPath = (Test-Path -Path $ModuleTestsPath) ? $ModuleTestsPath : $null
+    }
+    $failedTests = Invoke-PSModuleTest @params
 } catch {
-    Write-Output "::error::$_"
-    exit 1
+    if ($ErrorActionPreference -like '*Continue') {
+        Write-Output '::warning::Errors were ignored.'
+        return
+    } else {
+        throw "$($_.Exception.Message)"
+    }
 }
-
-# if ($ErrorActionPreference -like '*Continue') {
-#     Write-Output '::warning::Errors were ignored.'
-#     return
-# }

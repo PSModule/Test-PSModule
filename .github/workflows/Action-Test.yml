@@ -9,8 +9,8 @@ on:
       - main
 
 jobs:
-  ActionTestDefault:
-    name: Action-Test - [Default]
+  ActionTestSrc:
+    name: Action-Test - [src]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -20,3 +20,19 @@ jobs:
         uses: ./
         env:
           GITHUB_TOKEN: ${{ github.token }}
+        with:
+          Path: src
+
+  ActionTestOutputs:
+    name: Action-Test - [outputs]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Action-Test
+        uses: ./
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          Path: outputs

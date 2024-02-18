@@ -9,9 +9,6 @@ inputs:
     description: The path to the module to build.
     required: false
     default: outputs
-  CustomTestsPath:
-    description: The path to the custom tests to run.
-    required: false
   ErrorAction:
     description: The action to take if an error occurs.
     required: false
@@ -32,7 +29,6 @@ runs:
       shell: pwsh
       env:
         Path: ${{ inputs.Path }}
-        CustomTestsPath: ${{ inputs.CustomTestsPath }}
         ErrorAction: ${{ inputs.ErrorAction }}
         Verbose: ${{ inputs.Verbose }}
         WhatIf: ${{ inputs.WhatIf }}

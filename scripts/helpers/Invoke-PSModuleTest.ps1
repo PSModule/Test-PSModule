@@ -2,83 +2,90 @@
     <#
         .SYNOPSIS
         Performs tests on a module.
-
-        .DESCRIPTION
-        Performs tests on a module.
-
-        .EXAMPLE
-        Invoke-PSModuleTest -ModuleFolderPath $ModuleFolderPath
-
-        Performs tests on a module located at $ModuleFolderPath.
     #>
     [OutputType([int])]
     [CmdletBinding()]
     param(
-        # Path to the folder where the built modules are outputted.
+        # Path to the folder where the code to test is located.
         [Parameter(Mandatory)]
-        [string] $ModuleFolderPath,
-
-        # Path to the folder where the custom tests are located.
-        [Parameter()]
-        [string] $CustomTestsPath
+        [string] $Path
     )
     $containers = @()
-    Write-Verbose "ModuleFolderPath - [$ModuleFolderPath]"
-    $moduleName = Split-Path -Path $ModuleFolderPath -Leaf
 
-    Start-LogGroup "[$moduleName] - Add - PSScriptAnalyzer tests"
+    $modules = Get-PSResource
+    $PSSAModule = $modules | Where-Object Name -EQ PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
+    $pesterModule = $modules | Where-Object Name -EQ Pester | Sort-Object Version -Descending | Select-Object -First 1
+
+    Write-Verbose 'Testing with:'
+    Write-Verbose "   PowerShell       $($PSVersionTable.PSVersion.ToString())"
+    Write-Verbose "   Pester           $($pesterModule.version)"
+    Write-Verbose "   PSScriptAnalyzer $($PSSAModule.version)"
+
+    #region Add - PSScriptAnalyzer tests
+    Start-LogGroup 'Add - PSScriptAnalyzer tests'
+    $PSSATestsPath = Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'tests' 'PSScriptAnalyzer'
     $containerParams = @{
-        Path = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.ps1')
+        Path = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.ps1'
         Data = @{
-            Path             = $ModuleFolderPath
-            SettingsFilePath = (Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSScriptAnalyzer' 'PSScriptAnalyzer.Tests.psd1')
+            Path             = $Path
+            SettingsFilePath = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.psd1'
         }
     }
     Write-Verbose 'ContainerParams:'
     Write-Verbose "$($containerParams | ConvertTo-Json)"
     $containers += New-PesterContainer @containerParams
     Stop-LogGroup
+    #endregion
 
-    Start-LogGroup "[$moduleName] - Add - PSModule tests"
-    $testFolderPath = Join-Path -Path $PSScriptRoot -ChildPath 'tests' 'PSModule'
+    #region Add - PSModule tests
+    Start-LogGroup 'Add - PSModule tests'
+    $PSModuleTestsPath = Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'tests' 'PSModule'
     $containerParams = @{
-        Path = $testFolderPath
+        Path = $PSModuleTestsPath
         Data = @{
-            Path = $ModuleFolderPath
+            Path = $Path
         }
     }
     Write-Verbose 'ContainerParams:'
-    Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
+    Write-Verbose "$($containerParams | ConvertTo-Json)"
     $containers += New-PesterContainer @containerParams
     Stop-LogGroup
+    #endregion
+<#
+    #region Add - Module specific tests
+    $ModuleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
+    if (Test-Path -Path $ModuleTestsPath) {
+        Start-LogGroup 'Add - Module specific tests'
+        $containerParams = @{
+            Path = $ModuleTestsPath
+            Data = @{
+                Path = $Path
+            }
+        }
+        Write-Verbose 'ContainerParams:'
+        Write-Verbose "$($containerParams | ConvertTo-Json)"
+        $containers += New-PesterContainer @containerParams
+        Stop-LogGroup
+    } else {
+        Write-Warning "[$ModuleTestsPath] - No tests found"
+    }
+    #endregion
 
-    if ($CustomTestsPath) {
-        Start-LogGroup "[$moduleName] - Importing module"
-        Add-PSModulePath -Path (Split-Path -Path $ModuleFolderPath -Parent)
+    #region Import module
+
+
+    if ($ModuleTestsPath) {
+        Start-LogGroup 'Importing module'
+        Get-ChildItem -Path $Path -Filter '*.psm1' | ForEach-Object {
+            $moduleName = $_.BaseName
+            Write-Verbose "Importing module: $moduleName"
         Import-Module -Name $moduleName -Force
         Stop-LogGroup
-
-        Start-LogGroup "[$moduleName] - Add - Module specific tests"
-        Write-Verbose "[$moduleName] - [$CustomTestsPath] - Checking for tests"
-        if (Test-Path -Path $CustomTestsPath) {
-            $containerParams = @{
-                Path = $CustomTestsPath
-                Data = @{
-                    Path = $ModuleFolderPath
-                }
-            }
-            Write-Verbose 'ContainerParams:'
-            Write-Verbose "$($containerParams | ConvertTo-Json -Depth 5)"
-            $containers += New-PesterContainer @containerParams
-        } else {
-            Write-Warning "[$moduleName] - [$CustomTestsPath] - No tests found"
-        }
-    } else {
-        Write-Warning "[$moduleName] - No custom tests path specified"
     }
-    Stop-LogGroup
-
-    Start-LogGroup "[$moduleName] - Run tests"
+    #endregion
+#>
+    #region Pester config
+    Start-LogGroup 'Pester config'
     $pesterParams = @{
         Configuration = @{
             Run          = @{
@@ -106,35 +113,23 @@
         }
         Verbose       = $false
     }
-
     Write-Verbose 'PesterParams:'
     Write-Verbose "$($pesterParams | ConvertTo-Json)"
     Stop-LogGroup
+    #endregion
 
+    #region Run tests
+    Start-LogGroup 'Run tests'
     Invoke-Pester @pesterParams
     $failedTests = $LASTEXITCODE
-
     if ($failedTests -gt 0) {
-        Write-Error "[$moduleName] - [$failedTests] tests failed"
+        Write-Error "[$failedTests] tests failed"
     } else {
-        Write-Verbose "[$moduleName] - All tests passed"
+        Write-Verbose 'All tests passed'
     }
+    Write-Verbose 'Done'
+    Stop-LogGroup
+    #endregion
 
-    Write-Verbose "[$moduleName] - Done"
     return $failedTests
 }
-
-# <#
-# Run tests from ".\tests\$moduleName.Tests.ps1"
-# # Import the module using Import-Module $moduleManifestFilePath,
-# # Do not not just add the outputted module file to the PATH of the runner (current context is enough)
-# #   $env:PATH += ";.\outputs\$moduleName" as the import-module will actually test that the module is importable.
-# #>
-
-# <#
-# Run tests from ".\tests\$moduleName.Tests.ps1"
-# #>
-
-# <#
-# Test-ModuleManifest -Path $Path
-# #>

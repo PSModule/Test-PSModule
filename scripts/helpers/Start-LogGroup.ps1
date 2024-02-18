@@ -23,6 +23,5 @@
         [Parameter(Mandatory)]
         [string] $Name
     )
-
-    Start-LogGroup "$Name"
+    Write-Host "::group::$Name"
 }
