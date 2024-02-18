@@ -1,6 +1,8 @@
 ﻿$ErrorActionPreference = $env:ErrorAction
 
+Write-Verbose "Importing helper scripts..." -Verbose
 Get-ChildItem -Path (Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'helpers') -Filter '*.ps1' -Recurse | ForEach-Object {
+    Write-Verbose "[$($_.FullName)]" -Verbose
     . $_.FullName
 }
 
