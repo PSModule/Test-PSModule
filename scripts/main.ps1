@@ -6,18 +6,10 @@ Get-ChildItem -Path (Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'helpers') -Fil
 }
 
 $moduleName = [string]::IsNullOrEmpty($env:Name) ? $env:GITHUB_REPOSITORY -replace '.+/', '' : $env:Name
-
-$params = @{
-    Verbose     = $env:Verbose -eq 'true'
-    WhatIf      = $env:WhatIf -eq 'true'
-    ErrorAction = $ErrorActionPreference
-}
-
 $codeToTest = Join-Path $env:GITHUB_WORKSPACE $env:Path $moduleName
 if (-not (Test-Path -Path $codeToTest)) {
     throw "Module path [$codeToTest] does not exist."
 }
-
 
 try {
     $params = @{
@@ -28,8 +20,9 @@ try {
 } catch {
     if ($ErrorActionPreference -like '*Continue') {
         Write-Output '::warning::Errors were ignored.'
-        return
+        exit
     } else {
-        throw "$($_.Exception.Message)"
+        Write-Host "::error::$_"
+        exit 1
     }
 }
