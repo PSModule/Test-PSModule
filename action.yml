@@ -31,7 +31,7 @@ runs:
     - name: Run Test-PSModule
       shell: pwsh
       env:
-        name: ${{ inputs.Name }}
+        Name: ${{ inputs.Name }}
         Path: ${{ inputs.Path }}
         ErrorAction: ${{ inputs.ErrorAction }}
         Verbose: ${{ inputs.Verbose }}
