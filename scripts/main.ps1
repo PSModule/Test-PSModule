@@ -1,11 +1,9 @@
 ﻿$ErrorActionPreference = $env:ErrorAction
 
-Start-LogGroup 'Importing helper scripts...'
 Get-ChildItem -Path (Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'helpers') -Filter '*.ps1' -Recurse | ForEach-Object {
     Write-Verbose "[$($_.FullName)]" -Verbose
     . $_.FullName
 }
-Stop-LogGroup
 
 $moduleName = [string]::IsNullOrEmpty($env:Name) ? $env:GITHUB_REPOSITORY -replace '.+/', '' : $env:Name
 
