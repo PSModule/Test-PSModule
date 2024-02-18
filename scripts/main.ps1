@@ -22,10 +22,8 @@ if (-not [string]::IsNullOrEmpty($env:CustomTestsPath)) {
     $params['CustomTestsPath'] = Join-Path $env:GITHUB_WORKSPACE $env:CustomTestsPath
 }
 
-$params.GetEnumerator() | Sort-Object -Property Name
+Write-Verbose ($params.GetEnumerator() | Sort-Object -Property Name | Out-String) -Verbose
 Write-Output '::endgroup::'
-
-Write-Verbose "Running tests..." -Verbose
 
 try {
     $failedTests = Test-PSModule @params
