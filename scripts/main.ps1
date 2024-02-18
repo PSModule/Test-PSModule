@@ -1,4 +1,5 @@
 ﻿$ErrorActionPreference = $env:ErrorAction
+$VerbosePreference = $env:Verbose
 
 Get-ChildItem -Path (Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'helpers') -Filter '*.ps1' -Recurse | ForEach-Object {
     Write-Verbose "[$($_.FullName)]" -Verbose
