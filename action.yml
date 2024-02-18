@@ -16,7 +16,6 @@ inputs:
   CustomTestsPath:
     description: The path to the custom tests to run.
     required: false
-    default: $null
   ErrorAction:
     description: The action to take if an error occurs.
     required: false
