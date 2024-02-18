@@ -25,14 +25,12 @@ if (-not [string]::IsNullOrEmpty($env:CustomTestsPath)) {
 Write-Verbose ($params.GetEnumerator() | Sort-Object -Property Name | Out-String) -Verbose
 Write-Output '::endgroup::'
 
-Get-Command
-
-# try {
-#     $failedTests = Test-PSModule @params
-# } catch {
-#     Write-Output "::error::$_"
-#     exit 1
-# }
+try {
+    $failedTests = Test-PSModule @params
+} catch {
+    Write-Output "::error::$_"
+    exit 1
+}
 
 # if ($ErrorActionPreference -like '*Continue') {
 #     Write-Output '::warning::Errors were ignored.'
