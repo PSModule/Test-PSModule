@@ -3,7 +3,7 @@
 Write-Verbose "Importing helper scripts..." -Verbose
 Get-ChildItem -Path (Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'helpers') -Filter '*.ps1' -Recurse | ForEach-Object {
     Write-Verbose "[$($_.FullName)]" -Verbose
-    Import-Module $_.FullName -Verbose
+    . $_.FullName
 }
 
 $env:GITHUB_REPOSITORY_NAME = $env:GITHUB_REPOSITORY -replace '.+/', ''
@@ -24,6 +24,8 @@ if (-not [string]::IsNullOrEmpty($env:CustomTestsPath)) {
 
 $params.GetEnumerator() | Sort-Object -Property Name
 Write-Output '::endgroup::'
+
+Write-Verbose "Running tests..." -Verbose
 
 try {
     $failedTests = Test-PSModule @params
