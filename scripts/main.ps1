@@ -14,6 +14,10 @@ $params = @{
 }
 
 $codeToTest = Join-Path $env:GITHUB_WORKSPACE $env:Path $moduleName
+if (-not (Test-Path -Path $codeToTest)) {
+    throw "Module path [$codeToTest] does not exist."
+}
+
 
 try {
     $params = @{
