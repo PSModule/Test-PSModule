@@ -4,17 +4,9 @@ on:
   push:
     branches:
       - main
-    paths:
-      - action.yml
-      - .github/workflows/Action-Test.yml
-      - scripts/**
   pull_request_target:
     branches:
       - main
-    paths:
-      - action.yml
-      - .github/workflows/Action-Test.yml
-      - scripts/**
 
 jobs:
   ActionTestDefault:
@@ -31,6 +23,3 @@ jobs:
         uses: ./
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        with:
-          Name: PSModuleTest
-          APIKey: ${{ secrets.APIKEY }}

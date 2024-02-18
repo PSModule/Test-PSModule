@@ -42,36 +42,4 @@ runs:
         ErrorAction: ${{ inputs.ErrorAction }}
         Verbose: ${{ inputs.Verbose }}
         WhatIf: ${{ inputs.WhatIf }}
-      run: |
-        # Test-PSModule
-        $ErrorActionPreference = $env:ErrorAction
-
-        Write-Host '::group::Initializing...'
-        Write-Output '-------------------------------------------'
-        Write-Output 'Action inputs:'
-        $params = @{
-            Name            = $env:Name
-            Path            = Join-Path $env:GITHUB_WORKSPACE $env:Path
-            Verbose         = $env:Verbose -eq 'true'
-            WhatIf          = $env:WhatIf -eq 'true'
-            ErrorAction     = $ErrorActionPreference
-        }
-
-        if (-not [string]::IsNullOrEmpty($env:CustomTestsPath)) {
-            $params['CustomTestsPath'] = Join-Path $env:GITHUB_WORKSPACE $env:CustomTestsPath
-        }
-
-        $params.GetEnumerator() | Sort-Object -Property Name
-        Write-Host '::endgroup::'
-
-        try {
-            $failedTests = Test-PSModule @params
-        } catch {
-            Write-Host "::error::$_"
-            exit 1
-        }
-
-        if ($ErrorActionPreference -like '*Continue') {
-            Write-Host '::warning::Errors were ignored.'
-            return
-        }
+      run: . "$env:GITHUB_ACTION_PATH\scripts\main.ps1"
