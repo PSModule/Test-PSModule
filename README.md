@@ -1,6 +1,6 @@
-# Test-Module
+# Test-PSModule
 
-Action that is used to test PowerShell modules.
+Test PowerShell modules with Pester and PSScriptAnalyzer.
 
 ## Tools
 

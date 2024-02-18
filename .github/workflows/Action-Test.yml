@@ -1,16 +1,24 @@
-name: Verify Action
+name: Action-Test
 
 on:
-  workflow_call:
   push:
+    branches:
+      - main
+    paths:
+      - action.yml
+      - .github/workflows/Action-Test.yml
+      - scripts/**
+  pull_request_target:
+    branches:
+      - main
     paths:
       - action.yml
       - .github/workflows/Action-Test.yml
       - scripts/**
 
 jobs:
-  DefaultTest:
-    name: Test Action - [Default]
+  ActionTestDefault:
+    name: Action-Test - [Default]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -19,5 +27,10 @@ jobs:
       - name: Initialize environment
         uses: PSModule/Initialize-PSModule@main
 
-      - name: Test local action
+      - name: Action-Test
         uses: ./
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          Name: PSModuleTest
+          APIKey: ${{ secrets.APIKEY }}
