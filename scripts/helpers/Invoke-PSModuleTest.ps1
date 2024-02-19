@@ -78,8 +78,9 @@
         Get-ChildItem -Path $Path -Filter '*.psm1' | ForEach-Object {
             $moduleName = $_.BaseName
             Write-Verbose "Importing module: $moduleName"
-        Import-Module -Name $moduleName -Force
-        Stop-LogGroup
+            Import-Module -Name $moduleName -Force
+            Stop-LogGroup
+        }
     }
     #endregion
 
