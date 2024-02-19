@@ -15,7 +15,7 @@ try {
     $params = @{
         Path = $codeToTest
     }
-    $failedTests = Invoke-PSModuleTest @params
+    Invoke-PSModuleTest @params
 } catch {
     if ($ErrorActionPreference -like '*Continue') {
         Write-Output '::warning::Errors were ignored.'
