@@ -1,4 +1,4 @@
-﻿function Invoke-PSModuleTest {
+﻿function Test-PSModule {
     <#
         .SYNOPSIS
         Performs tests on a module.

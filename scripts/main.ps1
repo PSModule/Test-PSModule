@@ -15,4 +15,4 @@ $params = @{
     Name = $moduleName
     Path = $codeToTest
 }
-Invoke-PSModuleTest @params
+Test-PSModule @params
