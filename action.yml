@@ -12,18 +12,6 @@ inputs:
     description: The path to the module to test.
     required: false
     default: outputs
-  ErrorAction:
-    description: The action to take if an error occurs.
-    required: false
-    default: Stop
-  Verbose:
-    description: Enable verbose output.
-    required: false
-    default: 'true'
-  WhatIf:
-    description: Run in WhatIf mode.
-    required: false
-    default: 'false'
 
 runs:
   using: composite
@@ -33,7 +21,4 @@ runs:
       env:
         Name: ${{ inputs.Name }}
         Path: ${{ inputs.Path }}
-        ErrorAction: ${{ inputs.ErrorAction }}
-        Verbose: ${{ inputs.Verbose }}
-        WhatIf: ${{ inputs.WhatIf }}
       run: . "$env:GITHUB_ACTION_PATH\scripts\main.ps1"

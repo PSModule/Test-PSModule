@@ -26,8 +26,8 @@
     }
     $env:PSModulePath += "$PSModulePathSeparator$Path"
 
-    Write-Verbose 'PSModulePath:'
+    Write-Host 'PSModulePath:'
     $env:PSModulePath.Split($PSModulePathSeparator) | ForEach-Object {
-        Write-Verbose " - [$_]"
+        Write-Host " - [$_]"
     }
 }

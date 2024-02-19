@@ -18,13 +18,13 @@
 
     Install-Dependency -Name PSScriptAnalyzer, Pester
 
-    $PSSAModule = Get-PSResource -Name PSScriptAnalyzer -Verbose:$false | Sort-Object Version -Descending | Select-Object -First 1
-    $pesterModule = Get-PSResource -Name Pester -Verbose:$false | Sort-Object Version -Descending | Select-Object -First 1
+    $PSSAModule = Get-PSResource -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
+    $pesterModule = Get-PSResource -Name Pester | Sort-Object Version -Descending | Select-Object -First 1
 
-    Write-Verbose 'Testing with:'
-    Write-Verbose "   PowerShell       $($PSVersionTable.PSVersion.ToString())"
-    Write-Verbose "   Pester           $($pesterModule.version)"
-    Write-Verbose "   PSScriptAnalyzer $($PSSAModule.version)"
+    Write-Host 'Testing with:'
+    Write-Host "   PowerShell       $($PSVersionTable.PSVersion.ToString())"
+    Write-Host "   Pester           $($pesterModule.version)"
+    Write-Host "   PSScriptAnalyzer $($PSSAModule.version)"
 
     #region Add - PSScriptAnalyzer tests
     Start-LogGroup 'Add - PSScriptAnalyzer tests'
@@ -36,8 +36,8 @@
             SettingsFilePath = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.psd1'
         }
     }
-    Write-Verbose 'ContainerParams:'
-    Write-Verbose "$($containerParams | ConvertTo-Json)"
+    Write-Host 'ContainerParams:'
+    Write-Host "$($containerParams | ConvertTo-Json)"
     $containers += New-PesterContainer @containerParams
     Stop-LogGroup
     #endregion
@@ -51,8 +51,8 @@
             Path = $Path
         }
     }
-    Write-Verbose 'ContainerParams:'
-    Write-Verbose "$($containerParams | ConvertTo-Json)"
+    Write-Host 'ContainerParams:'
+    Write-Host "$($containerParams | ConvertTo-Json)"
     $containers += New-PesterContainer @containerParams
     Stop-LogGroup
     #endregion
@@ -67,8 +67,8 @@
                 Path = $Path
             }
         }
-        Write-Verbose 'ContainerParams:'
-        Write-Verbose "$($containerParams | ConvertTo-Json)"
+        Write-Host 'ContainerParams:'
+        Write-Host "$($containerParams | ConvertTo-Json)"
         $containers += New-PesterContainer @containerParams
         Stop-LogGroup
     } else {
@@ -116,8 +116,8 @@
         }
         Verbose       = $false
     }
-    Write-Verbose 'PesterParams:'
-    Write-Verbose "$($pesterParams | ConvertTo-Json -Depth 4 -WarningAction SilentlyContinue)"
+    Write-Host 'PesterParams:'
+    Write-Host "$($pesterParams | ConvertTo-Json -Depth 4 -WarningAction SilentlyContinue)"
     Stop-LogGroup
     #endregion
 
@@ -128,9 +128,9 @@
     if ($failedTests -gt 0) {
         Write-Error "[$failedTests] tests failed"
     } else {
-        Write-Verbose 'All tests passed'
+        Write-Host 'All tests passed'
     }
-    Write-Verbose 'Done'
+    Write-Host 'Done'
     Stop-LogGroup
     #endregion
 
