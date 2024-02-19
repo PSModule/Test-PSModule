@@ -52,7 +52,7 @@
     $containers += New-PesterContainer @containerParams
     Stop-LogGroup
     #endregion
-<#
+    <#
     #region Add - Module specific tests
     $ModuleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
     if (Test-Path -Path $ModuleTestsPath) {
@@ -90,6 +90,7 @@
     $pesterParams = @{
         Configuration = @{
             Run          = @{
+                Path      = $Path
                 Container = $containers
                 PassThru  = $false
             }
