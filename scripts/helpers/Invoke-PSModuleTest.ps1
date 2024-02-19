@@ -81,7 +81,7 @@
         Start-LogGroup 'Importing module'
         Add-PSModulePath -Path (Split-Path $Path -Parent)
         Write-Verbose "Importing module: $Name"
-        Import-Module -Name $Name -Force
+        Import-Module -Name $Name -Force -Verbose:$false
         Get-Command -Module $Name | Select-Object -Property CommandType, Name, Version, Source | Format-Table -AutoSize
         Stop-LogGroup
     }
