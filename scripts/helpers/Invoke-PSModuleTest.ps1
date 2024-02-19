@@ -52,7 +52,7 @@
     $containers += New-PesterContainer @containerParams
     Stop-LogGroup
     #endregion
-    <#
+
     #region Add - Module specific tests
     $ModuleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
     if (Test-Path -Path $ModuleTestsPath) {
@@ -73,9 +73,7 @@
     #endregion
 
     #region Import module
-
-
-    if ($ModuleTestsPath) {
+    if (Test-Path -Path $ModuleTestsPath) {
         Start-LogGroup 'Importing module'
         Get-ChildItem -Path $Path -Filter '*.psm1' | ForEach-Object {
             $moduleName = $_.BaseName
@@ -84,7 +82,7 @@
         Stop-LogGroup
     }
     #endregion
-#>
+
     #region Pester config
     Start-LogGroup 'Pester config'
     $pesterParams = @{
@@ -133,5 +131,5 @@
     Stop-LogGroup
     #endregion
 
-    return $failedTests
+    $failedTests
 }
