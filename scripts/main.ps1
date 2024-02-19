@@ -1,6 +1,6 @@
 ﻿Write-Output '##[group]Loading helper scripts'
 Get-ChildItem -Path (Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'helpers') -Filter '*.ps1' -Recurse | ForEach-Object {
-    Write-Verbose "[$($_.FullName)]" -Verbose
+    Write-Host "[$($_.FullName)]"
     . $_.FullName
 }
 Write-Output '##[endgroup]'
