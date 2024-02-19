@@ -12,7 +12,7 @@
     param (
         # Name of the person to greet.
         [Parameter(Mandatory)]
-        [string] $Name = 'World'
+        [string] $Name
     )
     Write-Output "Hello, $Name!"
 }
