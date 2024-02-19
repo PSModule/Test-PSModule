@@ -12,8 +12,7 @@
     )
     $containers = @()
 
-    Install-PSResource -Name PSScriptAnalyzer -TrustRepository
-    Install-PSResource -Name Pester -TrustRepository
+    Install-Dependency -Name PSScriptAnalyzer, Pester
 
     $PSSAModule = Get-PSResource -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
     $pesterModule = Get-PSResource -Name Pester | Sort-Object Version -Descending | Select-Object -First 1
