@@ -115,7 +115,7 @@
         Verbose       = $false
     }
     Write-Verbose 'PesterParams:'
-    Write-Verbose "$($pesterParams | ConvertTo-Json -Depth 3 -WarningAction SilentlyContinue)"
+    Write-Verbose "$($pesterParams | ConvertTo-Json -Depth 4 -WarningAction SilentlyContinue)"
     Stop-LogGroup
     #endregion
 
