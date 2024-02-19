@@ -14,6 +14,7 @@ if (-not (Test-Path -Path $codeToTest)) {
 try {
     $params = @{
         Path = $codeToTest
+        Verbose = $env:Verbose -eq 'true'
     }
     Invoke-PSModuleTest @params
 } catch {
