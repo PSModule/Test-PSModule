@@ -12,9 +12,8 @@
     )
     $containers = @()
 
-    $modules = Get-PSResource
-    $PSSAModule = $modules | Where-Object Name -EQ PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
-    $pesterModule = $modules | Where-Object Name -EQ Pester | Sort-Object Version -Descending | Select-Object -First 1
+    $PSSAModule = Get-PSResource -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
+    $pesterModule = Get-PSResource -Name Pester | Sort-Object Version -Descending | Select-Object -First 1
 
     Write-Verbose 'Testing with:'
     Write-Verbose "   PowerShell       $($PSVersionTable.PSVersion.ToString())"
