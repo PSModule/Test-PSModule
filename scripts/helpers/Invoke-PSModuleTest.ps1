@@ -12,8 +12,6 @@
     )
     $containers = @()
 
-    Get-PSResource
-
     Install-PSResource -Name PSScriptAnalyzer -TrustRepository
     Install-PSResource -Name Pester -TrustRepository
 
