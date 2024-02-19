@@ -15,6 +15,7 @@ if (-not (Test-Path -Path $codeToTest)) {
 
 try {
     $params = @{
+        Name = $moduleName
         Path = $codeToTest
         Verbose = $env:Verbose -eq 'true'
     }

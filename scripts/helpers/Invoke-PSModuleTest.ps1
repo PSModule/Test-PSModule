@@ -6,6 +6,10 @@
     [OutputType([int])]
     [CmdletBinding()]
     param(
+        # Name of the module to test.
+        [Parameter(Mandatory)]
+        [string] $Name,
+
         # Path to the folder where the code to test is located.
         [Parameter(Mandatory)]
         [string] $Path
@@ -76,9 +80,8 @@
     if (Test-Path -Path $ModuleTestsPath) {
         Start-LogGroup 'Importing module'
         Add-PSModulePath -Path (Split-Path $Path -Parent)
-        Get-ChildItem -Path (Split-Path $Path -Parent)
-        Write-Verbose "Importing module: $moduleName"
-        Import-Module -Name $moduleName -Force
+        Write-Verbose "Importing module: $Name"
+        Import-Module -Name $Name -Force
         Stop-LogGroup
 
     }
