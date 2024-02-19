@@ -14,8 +14,8 @@
 
     Install-Dependency -Name PSScriptAnalyzer, Pester
 
-    $PSSAModule = Get-PSResource -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
-    $pesterModule = Get-PSResource -Name Pester | Sort-Object Version -Descending | Select-Object -First 1
+    $PSSAModule = Get-PSResource -Name PSScriptAnalyzer -Verbose:$false | Sort-Object Version -Descending | Select-Object -First 1
+    $pesterModule = Get-PSResource -Name Pester -Verbose:$false | Sort-Object Version -Descending | Select-Object -First 1
 
     Write-Verbose 'Testing with:'
     Write-Verbose "   PowerShell       $($PSVersionTable.PSVersion.ToString())"
