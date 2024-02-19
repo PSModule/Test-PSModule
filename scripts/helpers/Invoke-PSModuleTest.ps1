@@ -12,6 +12,8 @@
     )
     $containers = @()
 
+    Get-InstalledPSModule
+
     $PSSAModule = Get-PSResource -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
     $pesterModule = Get-PSResource -Name Pester | Sort-Object Version -Descending | Select-Object -First 1
 
