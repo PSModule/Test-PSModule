@@ -5,12 +5,14 @@
 
         .EXAMPLE
         Test-PSModuleTest -Name 'World'
+
+        "Hello, World!"
     #>
     [CmdletBinding()]
     param (
         # Name of the person to greet.
         [Parameter(Mandatory)]
-        [string]$Name
+        [string] $Name = 'World'
     )
-    Write-Output "Hello, $Name"
+    Write-Output "Hello, $Name!"
 }
