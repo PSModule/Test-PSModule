@@ -26,8 +26,8 @@
     Write-Host "   Pester           $($pesterModule.version)"
     Write-Host "   PSScriptAnalyzer $($PSSAModule.version)"
 
-    #region Add - PSScriptAnalyzer tests
-    Start-LogGroup 'Add - PSScriptAnalyzer tests'
+    #region Add test - PSScriptAnalyzer
+    Start-LogGroup 'Add test - PSScriptAnalyzer'
     $PSSATestsPath = Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'tests' 'PSScriptAnalyzer'
     $containerParams = @{
         Path = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.ps1'
@@ -42,8 +42,8 @@
     Stop-LogGroup
     #endregion
 
-    #region Add - PSModule tests
-    Start-LogGroup 'Add - PSModule tests'
+    #region Add test - PSModule
+    Start-LogGroup 'Add test - PSModule'
     $PSModuleTestsPath = Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'tests' 'PSModule'
     $containerParams = @{
         Path = $PSModuleTestsPath
@@ -57,10 +57,10 @@
     Stop-LogGroup
     #endregion
 
-    #region Add - Module specific tests
+    #region Add test - Module specific
     $ModuleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
     if (Test-Path -Path $ModuleTestsPath) {
-        Start-LogGroup 'Add - Module specific tests'
+        Start-LogGroup 'Add test - Module specific'
         $containerParams = @{
             Path = $ModuleTestsPath
             Data = @{

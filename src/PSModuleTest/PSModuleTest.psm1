@@ -29,4 +29,4 @@ $Param = @{
 
 Write-Verbose 'Exporting module members'
 
-Export-ModuleMember @Param -Verbose
+Export-ModuleMember @Param

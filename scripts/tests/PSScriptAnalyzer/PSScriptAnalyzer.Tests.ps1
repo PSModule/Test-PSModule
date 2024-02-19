@@ -20,14 +20,14 @@ Param(
 )
 
 BeforeDiscovery {
-    $rules = Get-ScriptAnalyzerRule | Sort-Object -Property Severity -Verbose:$false | ConvertTo-Json | ConvertFrom-Json -AsHashtable
+    $rules = Get-ScriptAnalyzerRule | Sort-Object -Property Severity | ConvertTo-Json | ConvertFrom-Json -AsHashtable
     Write-Warning "Discovered [$($rules.Count)] rules"
     $relativeSettingsFilePath = $SettingsFilePath.Replace($PSScriptRoot, '').Trim('\').Trim('/')
 }
 
 Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]" {
     BeforeAll {
-        $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse -Verbose:$false
+        $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse
         Write-Warning "Found [$($testResults.Count)] issues"
     }
 
