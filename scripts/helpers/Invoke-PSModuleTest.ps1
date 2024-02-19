@@ -76,12 +76,11 @@
     if (Test-Path -Path $ModuleTestsPath) {
         Start-LogGroup 'Importing module'
         Add-PSModulePath -Path (Split-Path $Path -Parent)
-        Get-ChildItem -Path $Path -Filter '*.psm1' | ForEach-Object {
-            $moduleName = $_.BaseName
-            Write-Verbose "Importing module: $moduleName"
-            Import-Module -Name $moduleName -Force
-            Stop-LogGroup
-        }
+        Get-ChildItem -Path (Split-Path $Path -Parent)
+        Write-Verbose "Importing module: $moduleName"
+        Import-Module -Name $moduleName -Force
+        Stop-LogGroup
+
     }
     #endregion
 
