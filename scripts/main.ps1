@@ -17,4 +17,5 @@ if (-not (Test-Path -Path $codeToTest)) {
 $params = @{
     Path = $codeToTest
 }
-Test-PSModule @params
+$failedTests = Test-PSModule @params
+exit $failedTests
