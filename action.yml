@@ -23,7 +23,9 @@ runs:
         Path: ${{ inputs.Path }}
       run: |
         Write-Host '::group::Loading libraries'
-        Install-PSResource -Name 'Utilities', 'powershell-yaml' -TrustRepository -Verbose
+        $modules = 'Utilities', 'powershell-yaml'
+        Install-PSResource -Name $modules -TrustRepository -Verbose
+        Import-Module -Name $modules
         Write-Host '::endgroup::'
 
         . "$env:GITHUB_ACTION_PATH\scripts\main.ps1"
