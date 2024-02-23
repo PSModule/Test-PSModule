@@ -84,7 +84,7 @@ function Test-PSModule {
     if (Test-Path -Path $ModuleTestsPath) {
         Start-LogGroup "Importing module: $Name"
         Add-PSModulePath -Path (Split-Path $Path -Parent)
-        Import-Module -Name $Name -Force -Verbose
+        Import-Module -Name $Name -Force
         Get-Command -Module $Name | Select-Object -Property CommandType, Name, Version, Source | Format-Table -AutoSize
         Stop-LogGroup
     }
