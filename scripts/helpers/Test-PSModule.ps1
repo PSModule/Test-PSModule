@@ -1,4 +1,4 @@
-﻿#REQUIRES -Modules PSScriptAnalyzer, Pester, Utilities
+﻿#REQUIRES -Modules Utilities, PSScriptAnalyzer, Pester
 
 function Test-PSModule {
     <#
@@ -8,14 +8,12 @@ function Test-PSModule {
     [OutputType([int])]
     [CmdletBinding()]
     param(
-        # Name of the module to test.
-        [Parameter(Mandatory)]
-        [string] $Name,
-
         # Path to the folder where the code to test is located.
         [Parameter(Mandatory)]
         [string] $Path
     )
+
+    $moduleName = Split-Path -Path $Path -Leaf
 
     #region Get test kit versions
     Start-LogGroup 'Get test kit versions'
@@ -32,7 +30,7 @@ function Test-PSModule {
     #region Add test - PSScriptAnalyzer
     Start-LogGroup 'Add test - PSScriptAnalyzer'
     $containers = @()
-    $PSSATestsPath = Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'tests' 'PSScriptAnalyzer'
+    $PSSATestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'tests' 'PSScriptAnalyzer'
     $containerParams = @{
         Path = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.ps1'
         Data = @{
@@ -48,7 +46,7 @@ function Test-PSModule {
 
     #region Add test - PSModule
     Start-LogGroup 'Add test - PSModule'
-    $PSModuleTestsPath = Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'tests' 'PSModule'
+    $PSModuleTestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'tests' 'PSModule'
     $containerParams = @{
         Path = $PSModuleTestsPath
         Data = @{
@@ -82,10 +80,10 @@ function Test-PSModule {
 
     #region Import module
     if (Test-Path -Path $ModuleTestsPath) {
-        Start-LogGroup "Importing module: $Name"
+        Start-LogGroup "Importing module: $moduleName"
         Add-PSModulePath -Path (Split-Path $Path -Parent)
-        Import-Module -Name $Name -Force
-        Get-Command -Module $Name | Select-Object -Property CommandType, Name, Version, Source | Format-Table -AutoSize
+        Import-Module -Name $moduleName -Force
+        Get-Command -Module $moduleName | Select-Object -Property CommandType, Name, Version, Source | Format-Table -AutoSize
         Stop-LogGroup
     }
     #endregion
@@ -137,6 +135,12 @@ function Test-PSModule {
     Write-Verbose 'Done'
     Stop-LogGroup
     #endregion
+
+    if ($failedTests -eq 0) {
+        Write-Verbose '✅ All tests passed.'
+    } else {
+        Write-Warning "❌ Failed tests: [$failedTests]"
+    }
 
     $failedTests
 }
