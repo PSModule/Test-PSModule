@@ -27,8 +27,8 @@ function Test-PSModule {
     Stop-LogGroup
     #endregion
 
-    #region Add test - PSScriptAnalyzer
-    Start-LogGroup 'Add test - PSScriptAnalyzer'
+    #region Add test - Common - PSScriptAnalyzer
+    Start-LogGroup 'Add test - Common - PSScriptAnalyzer'
     $containers = @()
     $PSSATestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'tests' 'PSScriptAnalyzer'
     $containerParams = @{
@@ -44,8 +44,8 @@ function Test-PSModule {
     Stop-LogGroup
     #endregion
 
-    #region Add test - PSModule
-    Start-LogGroup 'Add test - PSModule'
+    #region Add test - Common - PSModule
+    Start-LogGroup 'Add test - Common - PSModule'
     $PSModuleTestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'tests' 'PSModule'
     $containerParams = @{
         Path = $PSModuleTestsPath
@@ -59,12 +59,12 @@ function Test-PSModule {
     Stop-LogGroup
     #endregion
 
-    #region Add test - Module specific
-    $ModuleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
-    if (Test-Path -Path $ModuleTestsPath) {
-        Start-LogGroup 'Add test - Module specific'
+    #region Add test - Specific - $moduleName
+    $moduleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
+    if (Test-Path -Path $moduleTestsPath) {
+        Start-LogGroup "Add test - Specific - $moduleName"
         $containerParams = @{
-            Path = $ModuleTestsPath
+            Path = $moduleTestsPath
             Data = @{
                 Path = $Path
             }
@@ -74,12 +74,12 @@ function Test-PSModule {
         $containers += New-PesterContainer @containerParams
         Stop-LogGroup
     } else {
-        Write-Warning "[$ModuleTestsPath] - No tests found"
+        Write-Warning "⚠️ No tests found - [$moduleTestsPath]"
     }
     #endregion
 
     #region Import module
-    if (Test-Path -Path $ModuleTestsPath) {
+    if (Test-Path -Path $moduleTestsPath) {
         Start-LogGroup "Importing module: $moduleName"
         Add-PSModulePath -Path (Split-Path $Path -Parent)
         Import-Module -Name $moduleName -Force
