@@ -21,4 +21,9 @@ runs:
       env:
         Name: ${{ inputs.Name }}
         Path: ${{ inputs.Path }}
-      run: . "$env:GITHUB_ACTION_PATH\scripts\main.ps1"
+      run: |
+        Write-Host '::group::Loading libraries'
+        Install-PSResource -Name 'Utilities', 'powershell-yaml' -TrustRepository -Verbose
+        Write-Host '::endgroup::'
+
+        . "$env:GITHUB_ACTION_PATH\scripts\main.ps1"
