@@ -1,4 +1,7 @@
-﻿Write-Output '##[group]Loading helper scripts'
+﻿$VerbosePreference = 'Continue'
+Install-PSResource -Name 'Utilities', 'powershell-yaml' -TrustRepository
+
+Write-Output '##[group]Loading helper scripts'
 Get-ChildItem -Path (Join-Path $env:GITHUB_ACTION_PATH 'scripts' 'helpers') -Filter '*.ps1' -Recurse | ForEach-Object {
     Write-Host "[$($_.FullName)]"
     . $_.FullName
