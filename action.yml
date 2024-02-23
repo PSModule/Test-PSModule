@@ -22,9 +22,9 @@ runs:
         Name: ${{ inputs.Name }}
         Path: ${{ inputs.Path }}
       run: |
+        # Test-PSModule
         Write-Host '::group::Loading libraries'
-        $modules = 'Utilities', 'Pester', 'PSScriptAnalyzer'
-        Install-PSResource -Name $modules -TrustRepository -Verbose
+        Install-PSResource -Name 'Utilities', 'Pester', 'PSScriptAnalyzer' -TrustRepository -Verbose
         Write-Host '::endgroup::'
 
         . "$env:GITHUB_ACTION_PATH\scripts\main.ps1"
