@@ -23,9 +23,8 @@ runs:
         Path: ${{ inputs.Path }}
       run: |
         Write-Host '::group::Loading libraries'
-        $modules = 'Utilities', 'powershell-yaml'
+        $modules = 'Utilities', 'Pester', 'PSScriptAnalyzer'
         Install-PSResource -Name $modules -TrustRepository -Verbose
-        Import-Module -Name $modules
         Write-Host '::endgroup::'
 
         . "$env:GITHUB_ACTION_PATH\scripts\main.ps1"

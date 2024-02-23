@@ -1,5 +1,6 @@
-﻿$VerbosePreference = 'Continue'
-Install-PSResource -Name 'Utilities', 'powershell-yaml' -TrustRepository
+﻿#REQUIRES -Modules Utilities
+[CmdletBinding()]
+param()
 
 Start-LogGroup 'Loading helper scripts'
 Get-ChildItem -Path (Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'helpers') -Filter '*.ps1' -Recurse |
