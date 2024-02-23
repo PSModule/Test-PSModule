@@ -27,4 +27,4 @@ runs:
         Install-PSResource -Name 'Utilities', 'Pester', 'PSScriptAnalyzer' -TrustRepository -Verbose
         Write-Host '::endgroup::'
 
-        . "$env:GITHUB_ACTION_PATH\scripts\main.ps1"
+        . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
