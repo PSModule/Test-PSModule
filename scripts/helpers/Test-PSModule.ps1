@@ -126,7 +126,10 @@ function Test-PSModule {
 
     #region Run tests
     Start-LogGroup 'Run tests'
-    Invoke-Pester @pesterParams -Verbose:$false
+    $verbosepref = $VerbosePreference
+    $VerbosePreference = 'Continue'
+    Invoke-Pester @pesterParams
+    $VerbosePreference = $verbosepref
     $failedTests = $LASTEXITCODE
     if ($failedTests -gt 0) {
         Write-Error "[$failedTests] tests failed"
