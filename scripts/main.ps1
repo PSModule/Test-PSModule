@@ -10,7 +10,7 @@ Stop-LogGroup
 
 Start-LogGroup 'Loading inputs'
 $env:GITHUB_REPOSITORY_NAME = $env:GITHUB_REPOSITORY -replace '.+/'
-"GITHUB_REPOSITORY_NAME=$env:GITHUB_REPOSITORY_NAME" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+Set-GitHubEnv -Name 'GITHUB_REPOSITORY_NAME' -Value $env:GITHUB_REPOSITORY_NAME
 $moduleName = ($env:GITHUB_ACTION_INPUT_Name | IsNullOrEmpty) ? $env:GITHUB_REPOSITORY -replace '.+/' : $env:GITHUB_ACTION_INPUT_Name
 Write-Verbose "Module name:       [$moduleName]"
 
