@@ -19,8 +19,8 @@ runs:
     - name: Run Test-PSModule
       shell: pwsh
       env:
-        Name: ${{ inputs.Name }}
-        Path: ${{ inputs.Path }}
+        GITHUB_ACTION_INPUT_Name: ${{ inputs.Name }}
+        GITHUB_ACTION_INPUT_Path: ${{ inputs.Path }}
       run: |
         # Test-PSModule
         Write-Host '::group::Loading libraries'
