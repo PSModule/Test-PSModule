@@ -6,7 +6,10 @@ on: [pull_request]
 
 jobs:
   ActionTestSrc:
-    name: Action-Test - [src]
+    strategy:
+      matrix:
+        path: [src, outputs/module]
+    name: Action-Test - [${{ matrix.path }}]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -21,22 +24,4 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModule
-          Path: src
-
-  ActionTestOutputs:
-    name: Action-Test - [outputs]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Initialize environment
-        uses: PSModule/Initialize-PSModule@main
-
-      - name: Action-Test
-        uses: ./
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          Name: PSModule
-          Path: outputs/module
+          Path: ${{ matrix.path }}
