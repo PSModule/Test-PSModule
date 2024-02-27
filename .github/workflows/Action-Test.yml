@@ -1,10 +1,8 @@
 name: Action-Test
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
+run-name: "Action-Test - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}"
+
+on: [pull_request]
 
 jobs:
   ActionTestSrc:
@@ -22,7 +20,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          Name: PSModuleTest
+          Name: PSModule
           Path: src
 
   ActionTestOutputs:
@@ -40,5 +38,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          Name: PSModuleTest
+          Name: PSModule
           Path: outputs/module
