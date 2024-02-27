@@ -16,7 +16,7 @@
     NestedModules         = @()
     FunctionsToExport     = 'Test-PSModule'
     CmdletsToExport       = @()
-    AliasesToExport       = '*'
+    AliasesToExport       = @()
     ModuleList            = @()
     FileList              = 'PSModule.psd1', 'PSModule.psm1'
     PrivateData           = @{
