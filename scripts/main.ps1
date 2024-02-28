@@ -24,14 +24,14 @@ $params = @{
 }
 $results = Test-PSModule @params
 
+Start-LogGroup 'Test results'
 Write-Verbose ($results | Out-String)
+Stop-LogGroup
 
 $failedTests = $results.FailedCount
 if ($failedTests -eq 0) {
     Write-Output '::notice::✅ All tests passed.'
-    Write-Verbose '✅ All tests passed.'
 } else {
     Write-Output "::error::❌ Failed tests: [$failedTests]"
-    Write-Warning "❌ Failed tests: [$failedTests]"
 }
 exit $failedTests
