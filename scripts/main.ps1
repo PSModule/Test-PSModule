@@ -22,9 +22,9 @@ Stop-LogGroup
 $params = @{
     Path = $codeToTest
 }
-$failedTests = Test-PSModule @params
+$results = Test-PSModule @params
 
-Write-Verbose "Failed tests: [$failedTests]"
+Write-Verbose ($results | Out-String)
 
 if ($failedTests -eq 0) {
     Write-Output '::notice::✅ All tests passed.'
