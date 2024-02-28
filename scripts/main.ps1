@@ -23,6 +23,9 @@ $params = @{
     Path = $codeToTest
 }
 $failedTests = Test-PSModule @params
+
+Write-Verbose "Failed tests: [$failedTests]"
+
 if ($failedTests -eq 0) {
     Write-Output '::notice::✅ All tests passed.'
     Write-Verbose '✅ All tests passed.'
