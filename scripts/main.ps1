@@ -26,6 +26,7 @@ $results = Test-PSModule @params
 
 Write-Verbose ($results | Out-String)
 
+$failedTests = $results.FailedCount
 if ($failedTests -eq 0) {
     Write-Output '::notice::✅ All tests passed.'
     Write-Verbose '✅ All tests passed.'
