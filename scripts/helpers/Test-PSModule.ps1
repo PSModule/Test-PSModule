@@ -96,7 +96,7 @@ function Test-PSModule {
             Run          = @{
                 Path      = $Path
                 Container = $containers
-                PassThru  = $false
+                PassThru  = $true
             }
             TestResult   = @{
                 Enabled       = $true
