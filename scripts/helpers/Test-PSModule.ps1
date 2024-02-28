@@ -128,9 +128,8 @@ function Test-PSModule {
     Start-LogGroup 'Run tests'
     $verbosepref = $VerbosePreference
     $VerbosePreference = 'SilentlyContinue'
-    Invoke-Pester @pesterParams
+    $failedTests = Invoke-Pester @pesterParams
     $VerbosePreference = $verbosepref
-    $failedTests = $LASTEXITCODE
     Write-Verbose 'Done'
     Stop-LogGroup
     #endregion
