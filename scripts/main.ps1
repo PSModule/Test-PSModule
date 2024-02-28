@@ -31,7 +31,5 @@ Stop-LogGroup
 $failedTests = $results.FailedCount
 if ($failedTests -eq 0) {
     Write-Output '::notice::✅ All tests passed.'
-} else {
-    Write-Output "::error::❌ Failed tests: [$failedTests]"
 }
 exit $failedTests
