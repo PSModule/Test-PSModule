@@ -131,18 +131,15 @@ function Test-PSModule {
     Invoke-Pester @pesterParams
     $VerbosePreference = $verbosepref
     $failedTests = $LASTEXITCODE
-    if ($failedTests -gt 0) {
-        Write-Error "[$failedTests] tests failed"
-    } else {
-        Write-Verbose 'All tests passed'
-    }
     Write-Verbose 'Done'
     Stop-LogGroup
     #endregion
 
     if ($failedTests -eq 0) {
+        Write-Output "::notice::✅ All tests passed."
         Write-Verbose '✅ All tests passed.'
     } else {
+        Write-Output "::error::❌ Failed tests: [$failedTests]"
         Write-Warning "❌ Failed tests: [$failedTests]"
     }
 
