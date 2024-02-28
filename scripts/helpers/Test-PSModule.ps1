@@ -135,13 +135,5 @@ function Test-PSModule {
     Stop-LogGroup
     #endregion
 
-    if ($failedTests -eq 0) {
-        Write-Output "::notice::✅ All tests passed."
-        Write-Verbose '✅ All tests passed.'
-    } else {
-        Write-Output "::error::❌ Failed tests: [$failedTests]"
-        Write-Warning "❌ Failed tests: [$failedTests]"
-    }
-
     $failedTests
 }
