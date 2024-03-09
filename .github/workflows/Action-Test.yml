@@ -8,20 +8,30 @@ jobs:
   ActionTestSrc:
     strategy:
       matrix:
-        path: [src, outputs/module]
+        path: [tests/src, tests/outputs/modules]
     name: Action-Test - [${{ matrix.path }}]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Initialize environment
-        uses: PSModule/Initialize-PSModule@main
-
-      - name: Action-Test
-        uses: ./
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Checkout test repo
+        uses: actions/checkout@v4
         with:
-          Name: PSModule
-          Path: ${{ matrix.path }}
+          repository: PSModule/PSModuleTest
+
+      - name: Copy test data
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path ${{ matrix.path }} | Select-Object -ExpandProperty FullName
+
+      # - name: Initialize environment
+      #   uses: PSModule/Initialize-PSModule@main
+
+      # - name: Action-Test
+      #   uses: ./
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
+      #   with:
+      #     Name: PSModule
+      #     Path: ${{ matrix.path }}
