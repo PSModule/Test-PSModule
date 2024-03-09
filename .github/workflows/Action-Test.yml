@@ -23,6 +23,7 @@ jobs:
       - name: Copy test data
         shell: pwsh
         run: |
+          Set-Location -Path $env:RUNNER_WORKSPACE
           Get-ChildItem | Select-Object -ExpandProperty FullName
 
       # - name: Initialize environment
