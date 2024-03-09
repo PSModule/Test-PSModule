@@ -19,6 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: PSModule/PSModuleTest
+          path: ../PSModuleTest
 
       - name: Copy test data
         shell: pwsh
