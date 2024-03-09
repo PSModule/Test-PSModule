@@ -23,7 +23,7 @@ jobs:
       - name: Copy test data
         shell: pwsh
         run: |
-          Get-ChildItem -Path ${{ matrix.path }} | Select-Object -ExpandProperty FullName
+          Get-ChildItem | Select-Object -ExpandProperty FullName
 
       # - name: Initialize environment
       #   uses: PSModule/Initialize-PSModule@main
