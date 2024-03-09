@@ -4,10 +4,103 @@ Test PowerShell modules with Pester and PSScriptAnalyzer.
 
 This GitHub Action is a part of the [PSModule framework](https://github.com/PSModule). It is recommended to use the [Process-PSModule workflow](https://github.com/PSModule/Process-PSModule) to automate the whole process of managing the PowerShell module.
 
+## Specifications and practices
+
+Test-PSModule follows:
+
+- [Test-Driven Development](https://testdriven.io/test-driven-development/) using [Pester](https://pester.dev) and [PSScriptAnalyzer](https://learn.microsoft.com/en-us/powershell/utility-modules/psscriptanalyzer/overview?view=ps-modules)
+
+## How it works
+
+The action runs the following the Pester test framework:
+- [PSScriptAnalyzer tests](https://learn.microsoft.com/en-us/powershell/utility-modules/psscriptanalyzer/rules/readme?view=ps-modules)
+- [PSModule framework tests](#psmodule-tests)
+- If `RunModuleTests` is set to `true`:
+  - Custom module tests from the `tests` directory in the module repository.
+  - Module manifest tests using [Test-ModuleManifest](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/test-modulemanifest)
+
+The action fails if any of the tests fail or it fails to run the tests.
+
+## How to use it
+
+To use the action, create a new file in the `.github/workflows` directory of the module repository and add the following content.
+<details>
+<summary>Workflow suggestion - before module is built</summary>
+
+```yaml
+name: Test-PSModule
+
+on: [push]
+
+jobs:
+  Test-PSModule:
+    name: Test-PSModule
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Initialize environment
+        uses: PSModule/Initialize-PSModule@main
+
+      - name: Test-PSModule
+        uses: PSModule/Test-PSModule@main
+        with:
+          Name: PSModule # Needed if the repo is not named the same as the module
+          Path: src
+          RunModuleTests: false
+
+```
+</details>
+
+<details>
+<summary>Workflow suggestion - after module is built</summary>
+
+```yaml
+name: Test-PSModule
+
+on: [push]
+
+jobs:
+  Test-PSModule:
+    name: Test-PSModule
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Initialize environment
+        uses: PSModule/Initialize-PSModule@main
+
+      - name: Test-PSModule
+        uses: PSModule/Test-PSModule@main
+        with:
+          Name: PSModule
+          Path: outputs/modules
+
+```
+</details>
+
+## Usage
+
+### Inputs
+
+| Name | Description | Required | Default |
+| ---- | ----------- | -------- | ------- |
+| `Name` | The name of the module to test. The name of the repository is used if not specified. | `false` | |
+| `Path` | The path to the module to test. | `true` | |
+| `RunModuleTests` | Run the module tests. | `false` | `true` |
+
+## PSModule tests
+
+The [PSModule framework tests](https://github.com/PSModule/Test-PSModule/blob/main/scripts/tests/PSModule/PSModule.Tests.ps1) verifies the following coding practices that the framework enforces:
+
+- Script file name and function/filter name should match.
+
 ## Tools
 
-- [PSScriptAnalyzer | PS Gallery](https://www.powershellgallery.com/packages/PSScriptAnalyzer/)
-- [Test-ModuleManifest - PowerShell Core | Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/test-modulemanifest)
+- Pester | [Docs](https://www.pester.dev) | [GitHub](https://github.com/Pester/Pester) | [PS Gallery](https://www.powershellgallery.com/packages/Pester/)
+- PSScriptAnalyzer [Docs](https://learn.microsoft.com/en-us/powershell/utility-modules/psscriptanalyzer/overview?view=ps-modules) | [GitHub](https://github.com/PowerShell/PSScriptAnalyzer) | [PS Gallery](https://www.powershellgallery.com/packages/PSScriptAnalyzer/)
+- PSResourceGet | [Docs](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.psresourceget/?view=powershellget-3.x) | [GitHub](https://github.com/PowerShell/PSResourceGet) | [PS Gallery](https://www.powershellgallery.com/packages/Microsoft.PowerShell.PSResourceGet/)
+- [Test-ModuleManifest | Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/test-modulemanifest)
 - [PowerShellGet | Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/PowerShellGet/test-scriptfileinfo)
-- [pester.dev](https://www.pester.dev)
-- [Pester | GitHub](https://github.com/Pester/Pester)
