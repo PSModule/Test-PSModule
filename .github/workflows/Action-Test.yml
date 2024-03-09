@@ -24,7 +24,7 @@ jobs:
       - name: Copy test data
         shell: pwsh
         run: |
-          Copy-Item -Path .\PSModuleTest\scr\* -Destination .\tests\src -Recurse -Force
+          Copy-Item -Path .\PSModuleTest\src\* -Destination .\tests\src -Recurse -Force
           Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
 
       # - name: Initialize environment
