@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        path: [tests\src, tests\outputs\modules]
+        path: [tests/src, tests/outputs/modules]
     name: Action-Test - [${{ matrix.path }}]
     runs-on: ubuntu-latest
     steps:
