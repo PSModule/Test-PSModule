@@ -15,25 +15,25 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Checkout test repo
+      - name: Checkout tests -> PSModuleTest
         uses: actions/checkout@v4
         with:
           repository: PSModule/PSModuleTest
           path: PSModuleTest
 
-      - name: Copy test data
+      - name: Copy tests - PSModuleTest\src -> ${{ matrix.path }}
         shell: pwsh
         run: |
-          Copy-Item -Path .\PSModuleTest\src\* -Destination .\tests\src -Recurse -Force
+          Copy-Item -Path .\PSModuleTest\src\* -Destination .${{ matrix.path }} -Recurse -Force
           Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
 
-      # - name: Initialize environment
-      #   uses: PSModule/Initialize-PSModule@main
+      - name: Initialize environment
+        uses: PSModule/Initialize-PSModule@main
 
-      # - name: Action-Test
-      #   uses: ./
-      #   env:
-      #     GITHUB_TOKEN: ${{ github.token }}
-      #   with:
-      #     Name: PSModule
-      #     Path: ${{ matrix.path }}
+      - name: Action-Test
+        uses: ./
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          Name: PSModule
+          Path: ${{ matrix.path }}
