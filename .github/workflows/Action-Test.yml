@@ -19,14 +19,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: PSModule/PSModuleTest
-          path: ../PSModuleTest
+          path: PSModuleTest
 
       - name: Copy test data
         shell: pwsh
         run: |
-          $env:RUNNER_WORKSPACE
-          Set-Location -Path $env:RUNNER_WORKSPACE
-          Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName
+          Copy-Item -Path .\PSModuleTest\scr\* -Destination .\tests\src -Recurse -Force
+          Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
 
       # - name: Initialize environment
       #   uses: PSModule/Initialize-PSModule@main
