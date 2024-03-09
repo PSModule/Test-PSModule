@@ -26,7 +26,7 @@ jobs:
         run: |
           $env:RUNNER_WORKSPACE
           Set-Location -Path $env:RUNNER_WORKSPACE
-          Get-ChildItem | Select-Object -ExpandProperty FullName
+          Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName
 
       # - name: Initialize environment
       #   uses: PSModule/Initialize-PSModule@main
