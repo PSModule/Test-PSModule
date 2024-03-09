@@ -95,7 +95,7 @@ jobs:
 
 The [PSModule framework tests](https://github.com/PSModule/Test-PSModule/blob/main/scripts/tests/PSModule/PSModule.Tests.ps1) verifies the following coding practices that the framework enforces:
 
-- Script file name and function/filter name should match.
+- Script filename and function/filter name should match.
 
 ## Tools
 

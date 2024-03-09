@@ -11,7 +11,7 @@ Param(
 # These tests are for the whole module and its parts. The scope of these tests are on the src folder and the specific module folder within it.
 Context 'Module design tests' {
     Describe 'Script files' {
-        It 'Script file name and function/filter name should match' {
+        It 'Script filename and function/filter name should match' {
 
             $scriptFiles = @()
 
@@ -37,9 +37,9 @@ Context 'Module design tests' {
                 Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
 
-        # It 'Script file should only contain max one function or filter' {}
+        # It 'Script file should only contain one function or filter' {}
 
-        # It 'has tests for the section of functions' {} # Look for the folder name in tests called the same as section/folder name of functions
+        # It 'All script files have tests' {} # Look for the folder name in tests called the same as section/folder name of functions
 
     }
 
@@ -75,4 +75,8 @@ Context 'Manifest file' {
     It 'has a valid project URL' {}
     It 'has a valid icon URL' {}
     It 'has a valid help URL' {}
+}
+
+Context 'Root module file' {
+    It 'has a root module file' {}
 }
