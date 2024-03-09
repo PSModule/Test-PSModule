@@ -7,6 +7,7 @@ on: [pull_request]
 jobs:
   ActionTestSrc:
     strategy:
+      fail-fast: false
       matrix:
         path: [tests\src, tests\outputs\modules]
     name: Action-Test - [${{ matrix.path }}]
