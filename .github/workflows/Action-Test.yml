@@ -19,12 +19,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: PSModule/PSModuleTest
-          path: PSModuleTest
+          path: tests
 
-      - name: Copy tests - PSModuleTest\src -> ${{ matrix.path }}
+      - name: Show files
         shell: pwsh
         run: |
-          Copy-Item -Path .\PSModuleTest\src\* -Destination .\${{ matrix.path }} -Recurse -Force
           Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
 
       - name: Initialize environment
