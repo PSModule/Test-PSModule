@@ -8,7 +8,7 @@ jobs:
   ActionTestSrc:
     strategy:
       matrix:
-        path: [tests/src, tests/outputs/modules]
+        path: [tests\src, tests\outputs\modules]
     name: Action-Test - [${{ matrix.path }}]
     runs-on: ubuntu-latest
     steps:
@@ -24,7 +24,7 @@ jobs:
       - name: Copy tests - PSModuleTest\src -> ${{ matrix.path }}
         shell: pwsh
         run: |
-          Copy-Item -Path .\PSModuleTest\src\* -Destination .${{ matrix.path }} -Recurse -Force
+          Copy-Item -Path .\PSModuleTest\src\* -Destination .\${{ matrix.path }} -Recurse -Force
           Get-ChildItem -Recurse | Select-Object -ExpandProperty FullName | Sort-Object
 
       - name: Initialize environment
