@@ -90,6 +90,7 @@ jobs:
 | `Name` | The name of the module to test. The name of the repository is used if not specified. | `false` | |
 | `Path` | The path to the module to test. | `true` | |
 | `RunModuleTests` | Run the module tests. | `false` | `true` |
+| `Shell` | The shell to use for running the tests. | `false` | `pwsh` |
 
 ## PSModule tests
 
