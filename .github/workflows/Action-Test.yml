@@ -9,8 +9,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        path: [tests/src, tests/outputs/modules]
         os: [ubuntu-latest, macos-latest, windows-latest]
+        path: [tests/src, tests/outputs/modules]
         shell: [pwsh]
         include:
           - path: tests/src
