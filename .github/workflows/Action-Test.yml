@@ -11,8 +11,8 @@ jobs:
       matrix:
         path: [tests/src, tests/outputs/modules]
         os: [ubuntu-latest, macos-latest]
+        shell: [pwsh, powershell]
         include:
-          - shell: pwsh
           - os: windows-latest
             shell: pwsh
           - os: windows-latest
