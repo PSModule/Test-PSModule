@@ -5,13 +5,18 @@ run-name: "Action-Test - [${{ github.event.pull_request.title }} #${{ github.eve
 on: [pull_request]
 
 jobs:
-  ActionTestSrc:
+  ActionTest:
     strategy:
       fail-fast: false
       matrix:
         path: [tests/src, tests/outputs/modules]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - shell: pwsh
+          - os: windows-latest
+            shell: powershell
     name: Action-Test - [${{ matrix.path }}]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -32,3 +37,4 @@ jobs:
         with:
           Name: PSModule
           Path: ${{ matrix.path }}
+          Shell: ${{ matrix.shell }}
