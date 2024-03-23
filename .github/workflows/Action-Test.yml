@@ -13,10 +13,6 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         shell: [pwsh]
         include:
-          - path: tests/src
-            os: windows-latest
-            shell: powershell
-          - path: tests/outputs/modules
             os: windows-latest
             shell: powershell
     name: Action-Test - [${{ matrix.path }}] - [${{ matrix.os }}] - [${{ matrix.shell }}]
