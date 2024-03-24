@@ -19,6 +19,37 @@ function Test-PSModule {
 
     $moduleName = Split-Path -Path $Path -Leaf
 
+    #region Test Module Manifest
+    Start-LogGroup 'Test Module Manifest'
+    $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
+    if (Test-Path -Path $moduleManifestPath) {
+        try {
+            Test-ModuleManifest -Path $moduleManifestPath
+        } catch {
+            Write-Warning "⚠️ Test-ModuleManifest failed: $moduleManifestPath"
+            throw $_.Exception.Message
+        }
+        $params = @{
+            Path          = $moduleManifestPath
+            RootModule    = "$moduleName.psm1"
+            ModuleVersion = '999.0.0'
+            Author        = 'PSModule'
+            Description   = 'Description'
+        }
+        Update-ModuleManifest @params
+    } else {
+        Write-Warning "⚠️ Module manifest not found: $moduleManifestPath"
+        $params = @{
+            Path          = $moduleManifestPath
+            RootModule    = "$moduleName.psm1"
+            ModuleVersion = '999.0.0'
+            Author        = 'PSModule'
+            Description   = 'Description'
+        }
+        New-ModuleManifest @params
+    }
+    Stop-LogGroup
+
     #region Get test kit versions
     Start-LogGroup 'Get test kit versions'
     $PSSAModule = Get-PSResource -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
@@ -138,20 +169,6 @@ function Test-PSModule {
     Write-Verbose 'Done'
     Stop-LogGroup
     #endregion
-
-    #region Test Module Manifest
-    Start-LogGroup 'Test Module Manifest'
-    $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
-    if (Test-Path -Path $moduleManifestPath) {
-        try {
-            Test-ModuleManifest -Path $moduleManifestPath
-        } catch {
-            Write-Warning "⚠️ Test-ModuleManifest failed: $moduleManifestPath"
-            throw $_.Exception.Message
-        }
-    } else {
-        Write-Warning "⚠️ Module manifest not found: $moduleManifestPath"
-    }
 
     $results
 }
