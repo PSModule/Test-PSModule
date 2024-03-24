@@ -34,7 +34,7 @@ function Test-PSModule {
     #region Add test - Common - PSScriptAnalyzer
     Start-LogGroup 'Add test - Common - PSScriptAnalyzer'
     $containers = @()
-    $PSSATestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'tests' 'PSScriptAnalyzer'
+    $PSSATestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSScriptAnalyzer'
     $containerParams = @{
         Path = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.ps1'
         Data = @{
@@ -50,7 +50,7 @@ function Test-PSModule {
 
     #region Add test - Common - PSModule
     Start-LogGroup 'Add test - Common - PSModule'
-    $PSModuleTestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'tests' 'PSModule'
+    $PSModuleTestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule'
     $containerParams = @{
         Path = $PSModuleTestsPath
         Data = @{
@@ -90,8 +90,8 @@ function Test-PSModule {
     if ((Test-Path -Path $moduleTestsPath) -and $RunModuleTests) {
         Start-LogGroup "Importing module: $moduleName"
         Add-PSModulePath -Path (Split-Path $Path -Parent)
-        Remove-Module -Name $moduleName -ErrorAction SilentlyContinue -Force
-        Import-Module $Path -Force
+        Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force -Verbose:$false
+        Import-Module -Name $moduleName -Force
         Stop-LogGroup
     }
     #endregion

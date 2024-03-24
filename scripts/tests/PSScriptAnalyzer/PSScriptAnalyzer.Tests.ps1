@@ -20,7 +20,15 @@ Param(
 )
 
 BeforeDiscovery {
-    $rules = Get-ScriptAnalyzerRule | Sort-Object -Property Severity | ConvertTo-Json | ConvertFrom-Json -AsHashtable
+    $rules = @()
+    $ruleObjects = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
+    foreach ($ruleObject in $ruleObjects) {
+        $hashTable = @{}
+        foreach ($property in $ruleObject.PSObject.Properties) {
+            $hashTable[$property.Name] = $property.Value
+        }
+        $rules += $hashTable
+    }
     Write-Warning "Discovered [$($rules.Count)] rules"
     $relativeSettingsFilePath = $SettingsFilePath.Replace($PSScriptRoot, '').Trim('\').Trim('/')
 }

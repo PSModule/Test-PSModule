@@ -16,12 +16,16 @@ inputs:
     description: Run the module tests.
     required: false
     default: 'true'
+  Shell:
+    description: The shell to use for running the tests.
+    required: false
+    default: pwsh
 
 runs:
   using: composite
   steps:
     - name: Run Test-PSModule
-      shell: pwsh
+      shell: ${{ inputs.Shell }}
       env:
         GITHUB_ACTION_INPUT_Name: ${{ inputs.Name }}
         GITHUB_ACTION_INPUT_Path: ${{ inputs.Path }}
