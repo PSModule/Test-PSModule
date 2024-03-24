@@ -91,7 +91,7 @@ function Test-PSModule {
         Start-LogGroup "Importing module: $moduleName"
         Add-PSModulePath -Path (Split-Path $Path -Parent)
         Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force -Verbose:$false
-        Import-Module $Path -Force
+        Import-Module -Name $moduleName -Force
         Stop-LogGroup
     }
     #endregion
