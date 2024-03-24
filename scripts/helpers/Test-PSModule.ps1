@@ -34,7 +34,7 @@ function Test-PSModule {
     #region Add test - Common - PSScriptAnalyzer
     Start-LogGroup 'Add test - Common - PSScriptAnalyzer'
     $containers = @()
-    $PSSATestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'tests' 'PSScriptAnalyzer'
+    $PSSATestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSScriptAnalyzer'
     $containerParams = @{
         Path = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.ps1'
         Data = @{
@@ -50,7 +50,7 @@ function Test-PSModule {
 
     #region Add test - Common - PSModule
     Start-LogGroup 'Add test - Common - PSModule'
-    $PSModuleTestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'tests' 'PSModule'
+    $PSModuleTestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule'
     $containerParams = @{
         Path = $PSModuleTestsPath
         Data = @{
