@@ -90,7 +90,7 @@ function Test-PSModule {
     if ((Test-Path -Path $moduleTestsPath) -and $RunModuleTests) {
         Start-LogGroup "Importing module: $moduleName"
         Add-PSModulePath -Path (Split-Path $Path -Parent)
-        Remove-Module -Name $moduleName -ErrorAction SilentlyContinue -Force
+        Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force -Verbose:$false
         Import-Module $Path -Force
         Stop-LogGroup
     }
