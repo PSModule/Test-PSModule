@@ -4,6 +4,8 @@ run-name: "Action-Test - [${{ github.event.pull_request.title }} #${{ github.eve
 
 on: [pull_request]
 
+permissions: {}
+
 jobs:
   ActionTest:
     strategy:
@@ -24,12 +26,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
-      - name: Checkout tests -> PSModuleTest
-        uses: actions/checkout@v4
-        with:
-          repository: PSModule/PSModuleTest
-          path: tests
 
       - name: Initialize environment
         uses: PSModule/Initialize-PSModule@main
