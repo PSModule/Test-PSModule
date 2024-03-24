@@ -29,27 +29,12 @@ function Test-PSModule {
             Write-Warning "⚠️ Test-ModuleManifest failed: $moduleManifestPath"
             throw $_.Exception.Message
         }
-        $params = @{
-            Path          = $moduleManifestPath
-            RootModule    = "$moduleName.psm1"
-            ModuleVersion = '999.0.0'
-            Author        = 'PSModule'
-            Description   = 'Description'
-        }
-        Update-ModuleManifest @params
     } else {
         Write-Warning "⚠️ Module manifest not found: $moduleManifestPath"
-        $params = @{
-            Path          = $moduleManifestPath
-            RootModule    = "$moduleName.psm1"
-            ModuleVersion = '999.0.0'
-            Author        = 'PSModule'
-            Description   = 'Description'
-        }
-        New-ModuleManifest @params
     }
     Stop-LogGroup
-
+    #endregion Test Module Manifest
+    
     #region Get test kit versions
     Start-LogGroup 'Get test kit versions'
     $PSSAModule = Get-PSResource -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
