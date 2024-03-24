@@ -9,16 +9,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
         shell: [pwsh]
         path: [tests/src, tests/outputs/modules]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         include:
-          - path: tests/src
+          - shell: powershell
+            path: tests/src
             os: windows-latest
-            shell: powershell
-          - path: tests/outputs/modules
+          - shell: powershell
+            path: tests/outputs/modules
             os: windows-latest
-            shell: powershell
     name: Action-Test - [${{ matrix.os }}@${{ matrix.shell }}] - [${{ matrix.path }}]
     runs-on: ${{ matrix.os }}
     steps:
@@ -33,6 +33,8 @@ jobs:
 
       - name: Initialize environment
         uses: PSModule/Initialize-PSModule@main
+        with:
+          Shell: ${{ matrix.shell }}
 
       - name: Action-Test
         uses: ./
