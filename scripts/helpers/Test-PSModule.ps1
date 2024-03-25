@@ -19,6 +19,23 @@ function Test-PSModule {
 
     $moduleName = Split-Path -Path $Path -Leaf
 
+    #region Test Module Manifest
+    Start-LogGroup 'Test Module Manifest'
+    $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
+    if (Test-Path -Path $moduleManifestPath) {
+        try {
+            $status = Test-ModuleManifest -Path $moduleManifestPath
+        } catch {
+            Write-Warning "⚠️ Test-ModuleManifest failed: $moduleManifestPath"
+            throw $_.Exception.Message
+        }
+        Write-Verbose ($status | Format-List | Out-String) -Verbose
+    } else {
+        Write-Warning "⚠️ Module manifest not found: $moduleManifestPath"
+    }
+    Stop-LogGroup
+    #endregion
+
     #region Get test kit versions
     Start-LogGroup 'Get test kit versions'
     $PSSAModule = Get-PSResource -Name PSScriptAnalyzer | Sort-Object Version -Descending | Select-Object -First 1
@@ -64,25 +81,25 @@ function Test-PSModule {
     #endregion
 
     #region Add test - Specific - $moduleName
-    $moduleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
-    if ((Test-Path -Path $moduleTestsPath) -and $RunModuleTests) {
-        Start-LogGroup "Add test - Specific - $moduleName"
-        $containerParams = @{
-            Path = $moduleTestsPath
-            Data = @{
-                Path = $Path
+    if ($RunModuleTests) {
+        $moduleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
+        if (Test-Path -Path $moduleTestsPath) {
+            Start-LogGroup "Add test - Specific - $moduleName"
+            $containerParams = @{
+                Path = $moduleTestsPath
+                Data = @{
+                    Path = $Path
+                }
             }
-        }
-        Write-Verbose 'ContainerParams:'
-        Write-Verbose "$($containerParams | ConvertTo-Json)"
-        $containers += New-PesterContainer @containerParams
-        Stop-LogGroup
-    } else {
-        if (-not $RunModuleTests) {
-            Write-Warning "⚠️ Module tests are disabled - [$moduleName]"
+            Write-Verbose 'ContainerParams:'
+            Write-Verbose "$($containerParams | ConvertTo-Json)"
+            $containers += New-PesterContainer @containerParams
+            Stop-LogGroup
         } else {
             Write-Warning "⚠️ No tests found - [$moduleTestsPath]"
         }
+    } else {
+        Write-Warning "⚠️ Module tests are disabled - [$moduleName]"
     }
     #endregion
 
@@ -90,8 +107,8 @@ function Test-PSModule {
     if ((Test-Path -Path $moduleTestsPath) -and $RunModuleTests) {
         Start-LogGroup "Importing module: $moduleName"
         Add-PSModulePath -Path (Split-Path $Path -Parent)
-        Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force -Verbose:$false
-        Import-Module -Name $moduleName -Force
+        Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force
+        Import-Module -Name $moduleName -Force -RequiredVersion 999.0.0 -Global
         Stop-LogGroup
     }
     #endregion
@@ -140,20 +157,6 @@ function Test-PSModule {
     Write-Verbose 'Done'
     Stop-LogGroup
     #endregion
-
-    #region Test Module Manifest
-    Start-LogGroup 'Test Module Manifest'
-    $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
-    if (Test-Path -Path $moduleManifestPath) {
-        try {
-            Test-ModuleManifest -Path $moduleManifestPath
-        } catch {
-            Write-Warning "⚠️ Test-ModuleManifest failed: $moduleManifestPath"
-            throw $_.Exception.Message
-        }
-    } else {
-        Write-Warning "⚠️ Module manifest not found: $moduleManifestPath"
-    }
 
     $results
 }
