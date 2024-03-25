@@ -33,7 +33,7 @@ function Test-PSModule {
         Write-Warning "⚠️ Module manifest not found: $moduleManifestPath"
     }
     Stop-LogGroup
-    #endregion Test Module Manifest
+    #endregion
 
     #region Get test kit versions
     Start-LogGroup 'Get test kit versions'
