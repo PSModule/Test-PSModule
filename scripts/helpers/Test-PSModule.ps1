@@ -33,9 +33,6 @@ function Test-PSModule {
     } else {
         Write-Warning "⚠️ Module manifest not found: $moduleManifestPath"
     }
-
-    Set-ModuleManifest -Path $moduleManifestPath -ModuleVersion '999.0.0'
-
     Stop-LogGroup
     #endregion
 
@@ -84,25 +81,25 @@ function Test-PSModule {
     #endregion
 
     #region Add test - Specific - $moduleName
-    $moduleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
-    if ((Test-Path -Path $moduleTestsPath) -and $RunModuleTests) {
-        Start-LogGroup "Add test - Specific - $moduleName"
-        $containerParams = @{
-            Path = $moduleTestsPath
-            Data = @{
-                Path = $Path
+    if ($RunModuleTests) {
+        $moduleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
+        if (Test-Path -Path $moduleTestsPath) {
+            Start-LogGroup "Add test - Specific - $moduleName"
+            $containerParams = @{
+                Path = $moduleTestsPath
+                Data = @{
+                    Path = $Path
+                }
             }
-        }
-        Write-Verbose 'ContainerParams:'
-        Write-Verbose "$($containerParams | ConvertTo-Json)"
-        $containers += New-PesterContainer @containerParams
-        Stop-LogGroup
-    } else {
-        if (-not $RunModuleTests) {
-            Write-Warning "⚠️ Module tests are disabled - [$moduleName]"
+            Write-Verbose 'ContainerParams:'
+            Write-Verbose "$($containerParams | ConvertTo-Json)"
+            $containers += New-PesterContainer @containerParams
+            Stop-LogGroup
         } else {
             Write-Warning "⚠️ No tests found - [$moduleTestsPath]"
         }
+    } else {
+        Write-Warning "⚠️ Module tests are disabled - [$moduleName]"
     }
     #endregion
 
