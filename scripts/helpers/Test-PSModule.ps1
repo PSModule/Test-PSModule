@@ -104,11 +104,11 @@ function Test-PSModule {
 
     #region Import module
     if ((Test-Path -Path $moduleTestsPath) -and $RunModuleTests) {
-    Start-LogGroup "Importing module: $moduleName"
-    Add-PSModulePath -Path (Split-Path $Path -Parent)
-    Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force
-    Import-Module -Name $moduleName -Force -RequiredVersion 999.0.0 -Global
-    Stop-LogGroup
+        Start-LogGroup "Importing module: $moduleName"
+        Add-PSModulePath -Path (Split-Path $Path -Parent)
+        Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force
+        Import-Module -Name $moduleName -Force -RequiredVersion 999.0.0 -Global
+        Stop-LogGroup
     }
     #endregion
 
