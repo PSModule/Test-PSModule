@@ -24,14 +24,18 @@ function Test-PSModule {
     $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
     if (Test-Path -Path $moduleManifestPath) {
         try {
-            Test-ModuleManifest -Path $moduleManifestPath
+            $status = Test-ModuleManifest -Path $moduleManifestPath
         } catch {
             Write-Warning "⚠️ Test-ModuleManifest failed: $moduleManifestPath"
             throw $_.Exception.Message
         }
+        Write-Verbose ($status | Format-List | Out-String) -Verbose
     } else {
         Write-Warning "⚠️ Module manifest not found: $moduleManifestPath"
     }
+
+    Set-ModuleManifest -Path $moduleManifestPath -ModuleVersion '999.0.0'
+
     Stop-LogGroup
     #endregion
 
