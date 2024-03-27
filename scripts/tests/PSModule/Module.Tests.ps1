@@ -29,8 +29,8 @@ Describe 'PSModule - Module tests' {
         }
         It 'Module Manifest is valid' {
             $result = Test-ModuleManifest -Path $moduleManifestPath
-            Write-Verbose $result -Verbose
             $result | Should -Not -Be $null
+            Write-Verbose $result -Verbose
         }
         # It 'has a valid license URL' {}
         # It 'has a valid project URL' {}
