@@ -147,12 +147,12 @@ function Test-PSModule {
             TestResult   = @{
                 Enabled       = $testModule
                 OutputFormat  = 'NUnitXml'
-                OutputPath    = '.\outputs\Test-Report.xml'
+                OutputPath    = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath 'outputs\Test-Report.xml'
                 TestSuiteName = 'Unit tests'
             }
             CodeCoverage = @{
                 Enabled               = $testModule
-                OutputPath            = '.\outputs\CodeCoverage-Report.xml'
+                OutputPath            = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath 'outputs\CodeCoverage-Report.xml'
                 OutputFormat          = 'JaCoCo'
                 OutputEncoding        = 'UTF8'
                 CoveragePercentTarget = 75
