@@ -126,8 +126,6 @@ function Test-PSModule {
     #region Import module
     if ((Test-Path -Path $moduleTestsPath) -and $testModule) {
         Start-LogGroup "Importing module: $moduleName"
-        $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
-        Set-ModuleManifest -Path $moduleManifestPath -ModuleVersion '999.0.0'
         Add-PSModulePath -Path (Split-Path $Path -Parent)
         Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force
         Import-Module -Name $moduleName -Force -RequiredVersion '999.0.0' -Global
