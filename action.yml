@@ -38,11 +38,11 @@ runs:
       if: ${{ inputs.TestType == 'Module' }}
       with:
         name: ${{ inputs.Shell }}-${{ runner.os }}-Test-Report
-        path: ${{ github.workspace }}\outputs\Test-Report.xml
+        path: ${{ github.workspace }}/outputs/Test-Report.xml
 
     - name: Upload code coverage report
       uses: actions/upload-artifact@v4
       if: ${{ inputs.TestType == 'Module' }}
       with:
         name: ${{ inputs.Shell }}-${{ runner.os }}-CodeCoverage-Report
-        path: ${{ github.workspace }}\outputs\CodeCoverage-Report.xml
+        path: ${{ github.workspace }}/outputs/CodeCoverage-Report.xml
