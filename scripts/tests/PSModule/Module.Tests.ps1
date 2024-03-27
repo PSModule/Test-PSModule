@@ -19,10 +19,14 @@ Describe 'PSModule - Module tests' {
             Write-Verbose "Module Manifest Path: [$moduleManifestPath]"
         }
         It 'Module Manifest exists' {
-            Test-Path -Path $moduleManifestPath | Should -Be $true
+            $result = Test-Path -Path $moduleManifestPath
+            $result | Should -Be $true
+            Write-Verbose $result
         }
         It 'Module Manifest is valid' {
-            Test-ModuleManifest -Path $moduleManifestPath | Should -Be $null
+            $result = Test-ModuleManifest -Path $moduleManifestPath
+            $result | Should -Not -Be $null
+            Write-Verbose $result
         }
         # It 'has a valid license URL' {}
         # It 'has a valid project URL' {}
