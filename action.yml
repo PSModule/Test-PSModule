@@ -12,10 +12,9 @@ inputs:
   Path:
     description: The path to the module to test.
     required: true
-  RunModuleTests:
-    description: Run the module tests.
-    required: false
-    default: 'true'
+  TestType:
+    description: The type of tests to run.
+    required: true
   Shell:
     description: The shell to use for running the tests.
     required: false
@@ -29,7 +28,21 @@ runs:
       env:
         GITHUB_ACTION_INPUT_Name: ${{ inputs.Name }}
         GITHUB_ACTION_INPUT_Path: ${{ inputs.Path }}
-        GITHUB_ACTION_INPUT_RunModuleTests: ${{ inputs.RunModuleTests }}
+        GITHUB_ACTION_INPUT_TestType: ${{ inputs.TestType }}
       run: |
         # Test-PSModule
         . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: ${{ inputs.TestType == 'Module' }}
+      with:
+        name: ${{ inputs.Shell }}-${{ runner.os }}-Test-Report
+        path: outputs\Test-Report.xml
+
+    - name: Upload code coverage report
+      uses: actions/upload-artifact@v2
+      if: ${{ inputs.TestType == 'Module' }}
+      with:
+        name: ${{ inputs.Shell }}-${{ runner.os }}-CodeCoverage-Report
+        path: outputs\CodeCoverage-Report.xml
