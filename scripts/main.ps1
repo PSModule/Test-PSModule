@@ -35,12 +35,13 @@ $failedTests = $results.FailedCount
 
 if ($failedTests -gt 0) {
     Write-Output '::error::❌ Some tests failed.'
-    exit $failedTests
+    return $false
 }
 if ($results.Result -ne 'Passed') {
     Write-Output '::error::❌ Some tests failed.'
-    exit 1
+    return $false
 }
 if ($failedTests -eq 0) {
     Write-Output '::notice::✅ All tests passed.'
+    return $true
 }
