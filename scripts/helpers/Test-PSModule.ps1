@@ -39,11 +39,13 @@ function Test-PSModule {
     Start-LogGroup 'Add test - Common - PSScriptAnalyzer'
     $containers = @()
     $PSSATestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSScriptAnalyzer'
+    $settingsFileName = if ($testModule) { 'Settings.Module.psd1' } else { 'Settings.SourceCode.psd1' }
+    $settingsFilePath = Join-Path -Path $PSSATestsPath -ChildPath $settingsFileName
     $containerParams = @{
         Path = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.ps1'
         Data = @{
             Path             = $Path
-            SettingsFilePath = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.psd1'
+            SettingsFilePath = $settingsFilePath
             Verbose          = $true
         }
     }
