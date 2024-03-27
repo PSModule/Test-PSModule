@@ -39,6 +39,7 @@ runs:
         # Test-PSModule
         $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
         Write-Host "passed=$passed" >> $GITHUB_OUTPUT
+        exit $passed
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
