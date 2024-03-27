@@ -34,14 +34,14 @@ Stop-LogGroup
 $failedTests = $results.FailedCount
 
 if ($failedTests -gt 0) {
-    Write-Output '::error::❌ Some tests failed.'
+    Write-Host '::error::❌ Some tests failed.'
     return $false
 }
 if ($results.Result -ne 'Passed') {
-    Write-Output '::error::❌ Some tests failed.'
+    Write-Host '::error::❌ Some tests failed.'
     return $false
 }
 if ($failedTests -eq 0) {
-    Write-Output '::notice::✅ All tests passed.'
+    Write-Host '::notice::✅ All tests passed.'
     return $true
 }
