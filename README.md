@@ -24,6 +24,34 @@ The action fails if any of the tests fail or it fails to run the tests.
 ## How to use it
 
 To use the action, create a new file in the `.github/workflows` directory of the module repository and add the following content.
+<details>
+<summary>Workflow suggestion - before module is built</summary>
+
+```yaml
+name: Test-PSModule
+
+on: [push]
+
+jobs:
+  Test-PSModule:
+    name: Test-PSModule
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Initialize environment
+        uses: PSModule/Initialize-PSModule@main
+
+      - name: Test-PSModule
+        uses: PSModule/Test-PSModule@main
+        with:
+          Name: PSModule # Needed if the repo is not named the same as the module
+          Path: src
+          RunModuleTests: false
+
+```
+</details>
 
 <details>
 <summary>Workflow suggestion - after module is built</summary>
