@@ -81,8 +81,8 @@ function Test-PSModule {
     #endregion
 
     #region Add test - Specific - $moduleName
+    $moduleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
     if ($RunModuleTests) {
-        $moduleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
         if (Test-Path -Path $moduleTestsPath) {
             Start-LogGroup "Add test - Specific - $moduleName"
             $containerParams = @{
