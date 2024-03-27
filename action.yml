@@ -38,7 +38,7 @@ runs:
       run: |
         # Test-PSModule
         $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
-        Write-Host "passed=$passed" >> $GITHUB_OUTPUT
+        "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         if (-not $passed) {
           exit 1
         }
