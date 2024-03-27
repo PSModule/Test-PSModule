@@ -44,6 +44,7 @@ function Test-PSModule {
         Data = @{
             Path             = $Path
             SettingsFilePath = Join-Path $PSSATestsPath 'PSScriptAnalyzer.Tests.psd1'
+            Verbose          = $true
         }
     }
     Write-Verbose 'ContainerParams:'
@@ -57,7 +58,8 @@ function Test-PSModule {
     $containerParams = @{
         Path = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule\Common.Tests.ps1'
         Data = @{
-            Path = $Path
+            Path    = $Path
+            Verbose = $true
         }
     }
     Write-Verbose 'ContainerParams:'
@@ -72,7 +74,8 @@ function Test-PSModule {
         $containerParams = @{
             Path = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule\Module.Tests.ps1'
             Data = @{
-                Path = $Path
+                Path    = $Path
+                Verbose = $true
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -88,7 +91,8 @@ function Test-PSModule {
         $containerParams = @{
             Path = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule\SourceCode.Tests.ps1'
             Data = @{
-                Path = $Path
+                Path    = $Path
+                Verbose = $true
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -105,7 +109,8 @@ function Test-PSModule {
             $containerParams = @{
                 Path = $moduleTestsPath
                 Data = @{
-                    Path = $Path
+                    Path    = $Path
+                    Verbose = $true
                 }
             }
             Write-Verbose 'ContainerParams:'

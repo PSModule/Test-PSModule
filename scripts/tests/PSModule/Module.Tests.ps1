@@ -9,6 +9,10 @@ Param(
 )
 
 BeforeAll {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSUseDeclaredVarsMoreThanAssignments', 'moduleName',
+        Justification = 'moduleName is used in the test.'
+    )]
     $moduleName = Split-Path -Path $Path -Leaf
 }
 
