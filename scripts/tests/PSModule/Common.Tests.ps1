@@ -25,8 +25,6 @@ Describe 'Script files' {
                         filePath     = $relativePath
                         functionName = $functionName
                     }
-                } else {
-                    qweqwe
                 }
             }
 
