@@ -22,14 +22,14 @@ Describe 'PSModule - Module tests' {
             $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
         }
         It 'Module Manifest exists' {
-            Write-Verbose "Module Manifest Path: [$moduleManifestPath]"
+            Write-Verbose "Module Manifest Path: [$moduleManifestPath]" -Verbose
             $result = Test-Path -Path $moduleManifestPath
-            Write-Verbose $result
+            Write-Verbose $result -Verbose
             $result | Should -Be $true
         }
         It 'Module Manifest is valid' {
             $result = Test-ModuleManifest -Path $moduleManifestPath
-            Write-Verbose $result
+            Write-Verbose $result -Verbose
             $result | Should -Not -Be $null
         }
         # It 'has a valid license URL' {}
