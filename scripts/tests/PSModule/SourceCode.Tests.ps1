@@ -8,9 +8,9 @@ Param(
     [string] $Path
 )
 
-# These tests are for the whole module and its parts. The scope of these tests are on the src folder and the specific module folder within it.
-Context 'Module design tests' {
-    Describe 'Script files' {
+Describe 'PSModule - SourceCode tests' {
+
+    Context 'function/filter' {
         It 'Script filename and function/filter name should match' {
 
             $scriptFiles = @()
@@ -34,7 +34,7 @@ Context 'Module design tests' {
                 " - $($_.filePath): Function/filter name [$($_.functionName)]. Change file name or function/filter name so they match."
             }
             $issues -join [Environment]::NewLine |
-                Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
+            Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
 
         # It 'Script file should only contain one function or filter' {}
@@ -43,7 +43,7 @@ Context 'Module design tests' {
 
     }
 
-    Describe 'Function/filter design' {
+    Context 'Function/filter design' {
         # It 'comment based doc block start is indented with 4 spaces' {}
         # It 'comment based doc is indented with 8 spaces' {}
         # It 'has synopsis for all functions' {}
@@ -57,7 +57,7 @@ Context 'Module design tests' {
         # It 'has verb 'New','Set','Disable','Enable' etc. and uses "ShoudProcess" in the [CmdletBinding()] attribute' {}
     }
 
-    Describe 'Parameter design' {
+    Context 'Parameter design' {
         # It 'has parameter description for all functions' {}
         # It 'has parameter validation for all functions' {}
         # It 'parameters have [Parameters()] attribute' {}
@@ -67,16 +67,4 @@ Context 'Module design tests' {
         # It 'datatype for parameters and parameter name are separated by a single space' {}
         # It 'parameters are separated by a blank line' {}
     }
-}
-
-Context 'Manifest file' {
-    It 'has a manifest file' {}
-    It 'has a valid license URL' {}
-    It 'has a valid project URL' {}
-    It 'has a valid icon URL' {}
-    It 'has a valid help URL' {}
-}
-
-Context 'Root module file' {
-    It 'has a root module file' {}
 }

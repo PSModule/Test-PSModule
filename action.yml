@@ -13,7 +13,7 @@ inputs:
     description: The path to the module to test.
     required: true
   TestType:
-    description: The type of tests to run.
+    description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
   Shell:
     description: The shell to use for running the tests.

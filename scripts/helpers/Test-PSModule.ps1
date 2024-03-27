@@ -52,12 +52,25 @@ function Test-PSModule {
     Stop-LogGroup
     #endregion
 
+    #region Add test - Common - PSModule
+    Start-LogGroup 'Add test - Common - PSModule'
+    $containerParams = @{
+        Path = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule\Common.Tests.ps1'
+        Data = @{
+            Path = $Path
+        }
+    }
+    Write-Verbose 'ContainerParams:'
+    Write-Verbose "$($containerParams | ConvertTo-Json)"
+    $containers += New-PesterContainer @containerParams
+    Stop-LogGroup
+    #endregion
+
     #region Add test - Module - PSModule
     if ($testModule) {
         Start-LogGroup 'Add test - Module - PSModule'
-        $PSModuleTestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule.Module'
         $containerParams = @{
-            Path = $PSModuleTestsPath
+            Path = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule\Module.Tests.ps1'
             Data = @{
                 Path = $Path
             }
@@ -72,9 +85,8 @@ function Test-PSModule {
     #region Add test - SourceCode - PSModule
     if ($testSourceCode) {
         Start-LogGroup 'Add test - SourceCode - PSModule'
-        $PSModuleTestsPath = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule.SourceCode'
         $containerParams = @{
-            Path = $PSModuleTestsPath
+            Path = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule\SourceCode.Tests.ps1'
             Data = @{
                 Path = $Path
             }
@@ -106,31 +118,14 @@ function Test-PSModule {
     }
     #endregion
 
-    #region Test Module Manifest #TODO: Move to a pester test for PSModule.Module
-    if ($testModule) {
-        Start-LogGroup 'Test Module Manifest'
-        $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
-        if (Test-Path -Path $moduleManifestPath) {
-            try {
-                $status = Test-ModuleManifest -Path $moduleManifestPath
-            } catch {
-                Write-Warning "⚠️ Test-ModuleManifest failed: $moduleManifestPath"
-                throw $_.Exception.Message
-            }
-            Write-Verbose ($status | Format-List | Out-String) -Verbose
-        } else {
-            Write-Warning "⚠️ Module manifest not found: $moduleManifestPath"
-        }
-        Stop-LogGroup
-    }
-    #endregion
-
     #region Import module
     if ((Test-Path -Path $moduleTestsPath) -and $testModule) {
         Start-LogGroup "Importing module: $moduleName"
+        $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
+        Set-ModuleManifest -Path $moduleManifestPath -ModuleVersion '999.0.0'
         Add-PSModulePath -Path (Split-Path $Path -Parent)
         Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force
-        Import-Module -Name $moduleName -Force -RequiredVersion 999.0.0 -Global
+        Import-Module -Name $moduleName -Force -RequiredVersion '999.0.0' -Global
         Stop-LogGroup
     }
     #endregion

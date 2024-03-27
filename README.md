@@ -6,7 +6,7 @@ This GitHub Action is a part of the [PSModule framework](https://github.com/PSMo
 
 ## Specifications and practices
 
-Test-PSModule follows:
+Test-PSModule enables:
 
 - [Test-Driven Development](https://testdriven.io/test-driven-development/) using [Pester](https://pester.dev) and [PSScriptAnalyzer](https://learn.microsoft.com/en-us/powershell/utility-modules/psscriptanalyzer/overview?view=ps-modules)
 
@@ -15,9 +15,20 @@ Test-PSModule follows:
 The action runs the following the Pester test framework:
 - [PSScriptAnalyzer tests](https://learn.microsoft.com/en-us/powershell/utility-modules/psscriptanalyzer/rules/readme?view=ps-modules)
 - [PSModule framework tests](#psmodule-tests)
-- If `RunModuleTests` is set to `true`:
-  - Custom module tests from the `tests` directory in the module repository.
-  - Module manifest tests using [Test-ModuleManifest](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/test-modulemanifest)
+- If `TestType` is set to `Module`:
+  - The module manifest is:
+    - tested using [Test-ModuleManifest](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/test-modulemanifest).
+    - temporarily altered to version `999.0.0` to avoid version conflicts when running for dependencies of the framework.
+  - The module is imported.
+  - Custom module tests from the `tests` directory in the module repository are run.
+  - CodeCoverage is calculated.
+  - The following reports are calculated and uploaded as artifacts:
+    - Test suite results.
+    - Code coverage results.
+- If `TestType` is set to `SourceCode`:
+  - The source code is tested with:
+    - `PSScriptAnalyzer` for best practices, using custom settings.
+    - `PSModule.SourceCode` for other PSModule standards.
 
 The action fails if any of the tests fail or it fails to run the tests.
 
@@ -46,9 +57,8 @@ jobs:
       - name: Test-PSModule
         uses: PSModule/Test-PSModule@main
         with:
-          Name: PSModule # Needed if the repo is not named the same as the module
           Path: src
-          RunModuleTests: false
+          TestType: SourceCode
 
 ```
 </details>
@@ -75,8 +85,8 @@ jobs:
       - name: Test-PSModule
         uses: PSModule/Test-PSModule@main
         with:
-          Name: PSModule
           Path: outputs/modules
+          TestType: Module
 
 ```
 </details>
@@ -87,9 +97,9 @@ jobs:
 
 | Name | Description | Required | Default |
 | ---- | ----------- | -------- | ------- |
-| `Name` | The name of the module to test. The name of the repository is used if not specified. | `false` | |
 | `Path` | The path to the module to test. | `true` | |
-| `RunModuleTests` | Run the module tests. | `false` | `true` |
+| `TestType` | The type of tests to run. Can be either `Module` or `SourceCode`.  | `true` | |
+| `Name` | The name of the module to test. The name of the repository is used if not specified. | `false` | |
 | `Shell` | The shell to use for running the tests. | `false` | `pwsh` |
 
 ## PSModule tests
