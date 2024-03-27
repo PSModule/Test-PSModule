@@ -17,14 +17,13 @@ Write-Verbose "Code to test:      [$codeToTest]"
 if (-not (Test-Path -Path $codeToTest)) {
     throw "Path [$codeToTest] does not exist."
 }
-$runModuleTests = $env:GITHUB_ACTION_INPUT_RunModuleTests -eq 'true'
-Write-Verbose "Run module tests:  [$runModuleTests]"
+Write-Verbose "Test type to run:  [$env:GITHUB_ACTION_INPUT_TestType]"
 
 Stop-LogGroup
 
 $params = @{
-    Path           = $codeToTest
-    RunModuleTests = $runModuleTests
+    Path     = $codeToTest
+    TestType = $env:GITHUB_ACTION_INPUT_TestType
 }
 $results = Test-PSModule @params
 

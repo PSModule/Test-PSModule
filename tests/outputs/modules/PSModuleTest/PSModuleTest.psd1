@@ -1,6 +1,6 @@
 ﻿@{
     RootModule            = 'PSModuleTest.psm1'
-    ModuleVersion         = '999.0.0'
+    ModuleVersion         = '0.0.1'
     CompatiblePSEditions  = @(
         'Core'
         'Desktop'

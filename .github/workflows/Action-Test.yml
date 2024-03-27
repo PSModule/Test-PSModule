@@ -11,12 +11,40 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shell: [pwsh]
-        os: [ubuntu-latest, macos-latest, windows-latest]
         include:
-          - shell: powershell
-            os: windows-latest
-    name: Action-Test - [${{ matrix.os }}@${{ matrix.shell }}]
+          - os: ubuntu-latest
+            shell: pwsh
+            path: tests/src
+            testtype: SourceCode
+          - os: ubuntu-latest
+            shell: pwsh
+            path: tests/outputs/modules
+            testtype: Module
+          - os: macos-latest
+            shell: pwsh
+            path: tests/src
+            testtype: sourcecode
+          - os: macos-latest
+            shell: pwsh
+            path: tests/outputs/modules
+            testtype: module
+          - os: windows-latest
+            shell: pwsh
+            path: tests/src
+            testtype: sourcecode
+          - os: windows-latest
+            shell: pwsh
+            path: tests/outputs/modules
+            testtype: module
+          - os: windows-latest
+            shell: powershell
+            path: tests/src
+            testtype: sourcecode
+          - os: windows-latest
+            shell: powershell
+            path: tests/outputs/modules
+            testtype: module
+    name: Action-Test - [${{ matrix.os }}@${{ matrix.shell }}] - [${{ matrix.path }}]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo
@@ -33,5 +61,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModuleTest
-          Path: tests/outputs/modules
+          Path: ${{ matrix.path }}
           Shell: ${{ matrix.shell }}
+          TestType: ${{ matrix.TestType }}
