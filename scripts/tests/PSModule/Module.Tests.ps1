@@ -20,12 +20,12 @@ Describe 'PSModule - Module tests' {
     Context "Module Manifest" {
         BeforeAll {
             $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
+            Write-Verbose "Module Manifest Path: [$moduleManifestPath]" -Verbose
         }
         It 'Module Manifest exists' {
-            Write-Verbose "Module Manifest Path: [$moduleManifestPath]" -Verbose
             $result = Test-Path -Path $moduleManifestPath
-            Write-Verbose $result -Verbose
             $result | Should -Be $true
+            Write-Verbose $result -Verbose
         }
         It 'Module Manifest is valid' {
             $result = Test-ModuleManifest -Path $moduleManifestPath
