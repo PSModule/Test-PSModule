@@ -20,11 +20,11 @@ Param(
 )
 
 BeforeDiscovery {
-    $rules = [Collections.Generic.List[hashtable]]::new()
+    $rules = [Collections.Generic.List[System.Collections.Specialized.OrderedDictionary]]::new()
     $ruleObjects = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
     foreach ($ruleObject in $ruleObjects) {
         $rules.Add(
-            @{
+            [ordered]@{
                 RuleName    = $ruleObject.RuleName
                 CommonName  = $ruleObject.CommonName
                 Severity    = $ruleObject.Severity
