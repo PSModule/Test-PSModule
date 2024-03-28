@@ -37,8 +37,14 @@ runs:
         GITHUB_ACTION_INPUT_TestType: ${{ inputs.TestType }}
       run: |
         # Test-PSModule
-        $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
-        "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        try {
+            $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
+            "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+        } catch {
+            Write-Error $_
+            exit 1
+        }
+
         if (-not $passed) {
           exit 1
         }
