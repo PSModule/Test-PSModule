@@ -1,6 +1,15 @@
 ﻿#Requires -Modules @{ModuleName='PSSemVer'; ModuleVersion='1.0'}
 
 function New-PSModuleTest {
+    <#
+        .SYNOPSIS
+        Performs tests on a module.
+
+        .EXAMPLE
+        Test-PSModule -Name 'World'
+
+        "Hello, World!"
+    #>
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
         'PSUseShouldProcessForStateChangingFunctions', '', Scope = 'Function',
         Justification = 'Reason for suppressing'

@@ -14,6 +14,5 @@
         [Parameter(Mandatory)]
         [string] $Name
     )
-    
-    Write-Host "Hello, $Name!"
+    Write-Output "Hello, $Name!"
 }
