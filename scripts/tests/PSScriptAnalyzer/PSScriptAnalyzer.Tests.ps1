@@ -21,7 +21,7 @@ Param(
 
 BeforeDiscovery {
     $rules = [Collections.Generic.List[System.Collections.Specialized.OrderedDictionary]]::new()
-    $ruleObjects = Get-ScriptAnalyzerRule | Sort-Object -Property Severity, CommonName
+    $ruleObjects = Get-ScriptAnalyzerRule -Verbose:$false | Sort-Object -Property Severity, CommonName
     foreach ($ruleObject in $ruleObjects) {
         $rules.Add(
             [ordered]@{
@@ -38,7 +38,7 @@ BeforeDiscovery {
 
 Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]" {
     BeforeAll {
-        $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse
+        $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse -Verbose:$false
         Write-Warning "Found [$($testResults.Count)] issues"
     }
 
