@@ -11,7 +11,7 @@ concurrency:
 permissions:
   contents: read
   packages: read
-  statuses: write # To report GitHub Actions status checks
+  statuses: write
 
 jobs:
   Lint:
