@@ -42,7 +42,7 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
         Write-Warning "Found [$($testResults.Count)] issues"
     }
 
-    Context '<_>' -ForEach 'Error', 'Warning', 'Informational' {
+    Context 'Severity: [<_>]' -ForEach 'Error', 'Warning', 'Information' {
         It '<CommonName> (<RuleName>)' -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
             $issues = [Collections.Generic.List[string]]::new()
             $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
