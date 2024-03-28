@@ -21,7 +21,7 @@ Param(
 
 BeforeDiscovery {
     $rules = [Collections.Generic.List[System.Collections.Specialized.OrderedDictionary]]::new()
-    $ruleObjects = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
+    $ruleObjects = Get-ScriptAnalyzerRule | Sort-Object -Property Severity, CommonName
     foreach ($ruleObject in $ruleObjects) {
         $rules.Add(
             [ordered]@{
@@ -42,15 +42,17 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
         Write-Warning "Found [$($testResults.Count)] issues"
     }
 
-    It '<CommonName> (<RuleName>)' -ForEach $rules {
-        $issues = @('')
-        $issues += $testResults | Where-Object -Property RuleName -EQ $ruleName | ForEach-Object {
-            $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
-            " - $relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
+    Context '<Severity>' -ForEach ($rules.Severity | Select-Object -Unique) {
+        It '<CommonName> (<RuleName>)' -ForEach ($rules | Where-Object -Property Severity -EQ $Severity) {
+            $issues = @('')
+            $issues += $testResults | Where-Object -Property RuleName -EQ $ruleName | ForEach-Object {
+                $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
+                " - $relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
+            }
+            if ($issues.Count -gt 1) {
+                $issues[0] = "[$($issues.Count - 1)] issues found:"
+            }
+            $issues -join [Environment]::NewLine | Should -BeNullOrEmpty
         }
-        if ($issues.Count -gt 1) {
-            $issues[0] = "[$($issues.Count - 1)] issues found:"
-        }
-        $issues -join [Environment]::NewLine | Should -BeNullOrEmpty
     }
 }
