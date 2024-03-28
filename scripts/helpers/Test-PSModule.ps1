@@ -167,7 +167,6 @@ function Test-PSModule {
                 Verbosity           = 'Detailed'
             }
         }
-        Verbose       = $false
     }
     Write-Verbose 'PesterParams:'
     Write-Verbose "$($pesterParams | ConvertTo-Json -Depth 4 -WarningAction SilentlyContinue)"
