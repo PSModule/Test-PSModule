@@ -111,8 +111,9 @@ function Test-PSModule {
             $containerParams = @{
                 Path = $moduleTestsPath
                 Data = @{
-                    Path    = $Path
-                    Verbose = $true
+                    Parameters = @{
+                        Path = $Path
+                    }
                 }
             }
             Write-Verbose 'ContainerParams:'
