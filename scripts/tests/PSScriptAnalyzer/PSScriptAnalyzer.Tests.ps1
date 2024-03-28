@@ -42,17 +42,17 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
         Write-Warning "Found [$($testResults.Count)] issues"
     }
 
-    Context '<_>' -ForEach ($rules.Severity | Select-Object -Unique) {
+    Context '<_>' -ForEach 'Error', 'Warning', 'Informational' {
         It '<CommonName> (<RuleName>)' -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
-            $issues = @('')
-            $issues += $testResults | Where-Object -Property RuleName -EQ $ruleName | ForEach-Object {
+            $issues = [Collections.Generic.List[string]]::new()
+            $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
                 $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
-                " - $relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
+                $issues.Add(" - $relativePath`:L$($_.Line):C$($_.Column): $($_.Message)")
             }
             if ($issues.Count -gt 1) {
                 $issues[0] = "[$($issues.Count - 1)] issues found:"
             }
-            $issues -join [Environment]::NewLine | Should -BeNullOrEmpty
+            $issues -join [Environment]::NewLine | Should -BeNullOrEmpty -Because $Description
         }
     }
 }
