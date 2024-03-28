@@ -111,9 +111,7 @@ function Test-PSModule {
             $containerParams = @{
                 Path = $moduleTestsPath
                 Data = @{
-                    Parameters = @{
-                        Path = $Path
-                    }
+                    Path = $Path
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -128,7 +126,7 @@ function Test-PSModule {
 
     #region Import module
     if ((Test-Path -Path $moduleTestsPath) -and $testModule) {
-        Start-LogGroup "Install module dependencies"
+        Start-LogGroup 'Install module dependencies'
         $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
         Resolve-PSModuleDependency -ManifestFilePath $moduleManifestPath
         Stop-LogGroup
