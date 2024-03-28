@@ -47,7 +47,7 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
             $issues = [Collections.Generic.List[string]]::new()
             $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
                 $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
-                $issues.Add(" - $relativePath`:L$($_.Line):C$($_.Column): $($_.Message)")
+                $issues.Add(" - $relativePath`:L$($_.Line):C$($_.Column)")
             }
             if ($issues.Count -gt 1) {
                 $issues[0] = "[$($issues.Count - 1)] issues found:"
