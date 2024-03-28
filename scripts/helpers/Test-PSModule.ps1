@@ -167,7 +167,6 @@ function Test-PSModule {
                 Verbosity           = 'Detailed'
             }
         }
-        Verbose       = $false
     }
     Write-Verbose 'PesterParams:'
     Write-Verbose "$($pesterParams | ConvertTo-Json -Depth 4 -WarningAction SilentlyContinue)"
@@ -175,13 +174,10 @@ function Test-PSModule {
     #endregion
 
     #region Run tests
-    Start-LogGroup 'Run tests'
     $verbosepref = $VerbosePreference
     $VerbosePreference = 'SilentlyContinue'
     $results = Invoke-Pester @pesterParams
     $VerbosePreference = $verbosepref
-    Write-Verbose 'Done'
-    Stop-LogGroup
     #endregion
 
     $results

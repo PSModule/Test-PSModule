@@ -20,14 +20,17 @@ Param(
 )
 
 BeforeDiscovery {
-    $rules = @()
-    $ruleObjects = Get-ScriptAnalyzerRule | Sort-Object -Property Severity
+    $rules = [Collections.Generic.List[System.Collections.Specialized.OrderedDictionary]]::new()
+    $ruleObjects = Get-ScriptAnalyzerRule -Verbose:$false | Sort-Object -Property Severity, CommonName
     foreach ($ruleObject in $ruleObjects) {
-        $hashTable = @{}
-        foreach ($property in $ruleObject.PSObject.Properties) {
-            $hashTable[$property.Name] = $property.Value
-        }
-        $rules += $hashTable
+        $rules.Add(
+            [ordered]@{
+                RuleName    = $ruleObject.RuleName
+                CommonName  = $ruleObject.CommonName
+                Severity    = $ruleObject.Severity
+                Description = $ruleObject.Description
+            }
+        )
     }
     Write-Warning "Discovered [$($rules.Count)] rules"
     $relativeSettingsFilePath = $SettingsFilePath.Replace($PSScriptRoot, '').Trim('\').Trim('/')
@@ -35,19 +38,18 @@ BeforeDiscovery {
 
 Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]" {
     BeforeAll {
-        $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse
+        $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse -Verbose:$false
         Write-Warning "Found [$($testResults.Count)] issues"
     }
 
-    It '<CommonName> (<RuleName>)' -ForEach $rules {
-        $issues = @('')
-        $issues += $testResults | Where-Object -Property RuleName -EQ $ruleName | ForEach-Object {
-            $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
-            " - $relativePath`:L$($_.Line):C$($_.Column): $($_.Message)"
+    Context 'Severity: <_>' -ForEach 'Error', 'Warning', 'Information' {
+        It '<CommonName> (<RuleName>)' -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
+            $issues = [Collections.Generic.List[string]]::new()
+            $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
+                $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
+                $issues.Add(([Environment]::NewLine + " - $relativePath`:L$($_.Line):C$($_.Column)"))
+            }
+            $issues -join '' | Should -BeNullOrEmpty -Because $Description
         }
-        if ($issues.Count -gt 1) {
-            $issues[0] = "[$($issues.Count - 1)] issues found:"
-        }
-        $issues -join [Environment]::NewLine | Should -BeNullOrEmpty
     }
 }
