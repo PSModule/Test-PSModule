@@ -42,8 +42,8 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
         Write-Warning "Found [$($testResults.Count)] issues"
     }
 
-    Context '<Severity>' -ForEach ($rules.Severity | Select-Object -Unique) {
-        It '<CommonName> (<RuleName>)' -ForEach ($rules | Where-Object -Property Severity -EQ $Severity) {
+    Context '<_>' -ForEach ($rules.Severity | Select-Object -Unique) {
+        It '<CommonName> (<RuleName>)' -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
             $issues = @('')
             $issues += $testResults | Where-Object -Property RuleName -EQ $ruleName | ForEach-Object {
                 $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
