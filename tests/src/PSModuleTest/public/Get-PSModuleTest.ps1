@@ -16,5 +16,5 @@ function Get-PSModuleTest {
         [Parameter(Mandatory)]
         [string] $Name
     )
-    Write-Output "Hello, $Name!"
+    Write-Host "Hello, $Name!"
 }
