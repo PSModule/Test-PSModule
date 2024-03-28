@@ -37,13 +37,8 @@ runs:
         GITHUB_ACTION_INPUT_TestType: ${{ inputs.TestType }}
       run: |
         # Test-PSModule
-        try {
-            $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
-            "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-        } catch {
-            Write-Error $_
-            exit 1
-        }
+        $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
+        "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
         if (-not $passed) {
           exit 1
@@ -51,14 +46,14 @@ runs:
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
-      if: ${{ inputs.TestType == 'Module' }}
+      if: ${{ inputs.TestType == 'Module' && (success() || failure()) }}
       with:
         name: ${{ runner.os }}-${{ inputs.Shell }}-Test-Report
         path: ${{ github.workspace }}/outputs/Test-Report.xml
 
     - name: Upload code coverage report
       uses: actions/upload-artifact@v4
-      if: ${{ inputs.TestType == 'Module' }}
+      if: ${{ inputs.TestType == 'Module' && (success() || failure()) }}
       with:
         name: ${{ runner.os }}-${{ inputs.Shell }}-CodeCoverage-Report
         path: ${{ github.workspace }}/outputs/CodeCoverage-Report.xml
