@@ -53,7 +53,3 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
         }
     }
 }
-
-AfterAll {
-    $issues
-}
