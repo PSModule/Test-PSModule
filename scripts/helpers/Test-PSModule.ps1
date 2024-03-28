@@ -178,7 +178,6 @@ function Test-PSModule {
     $VerbosePreference = 'SilentlyContinue'
     $results = Invoke-Pester @pesterParams
     $VerbosePreference = $verbosepref
-    Write-Verbose 'Done'
     #endregion
 
     $results
