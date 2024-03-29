@@ -16,21 +16,21 @@ The action runs the following the Pester test framework:
 - [PSScriptAnalyzer tests](https://learn.microsoft.com/en-us/powershell/utility-modules/psscriptanalyzer/rules/readme?view=ps-modules)
 - [PSModule framework tests](#psmodule-tests)
 - If `TestType` is set to `Module`:
-  - The module manifest is:
-    - tested using [Test-ModuleManifest](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/test-modulemanifest).
-    - temporarily altered to version `999.0.0` to avoid version conflicts when running for dependencies of the framework.
+  - The module manifest is tested using [Test-ModuleManifest](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/test-modulemanifest).
   - The module is imported.
   - Custom module tests from the `tests` directory in the module repository are run.
   - CodeCoverage is calculated.
-  - The following reports are calculated and uploaded as artifacts:
-    - Test suite results.
-    - Code coverage results.
 - If `TestType` is set to `SourceCode`:
   - The source code is tested with:
     - `PSScriptAnalyzer` for best practices, using custom settings.
     - `PSModule.SourceCode` for other PSModule standards.
+- The action returns a `passed` output that is `true` if all tests pass, else `false`.
+- The following reports are calculated and uploaded as artifacts:
+  - Test suite results.
+  - Code coverage results.
 
 The action fails if any of the tests fail or it fails to run the tests.
+This is mitigated by the `continue-on-error` option in the workflow.
 
 ## How to use it
 
@@ -97,10 +97,17 @@ jobs:
 
 | Name | Description | Required | Default |
 | ---- | ----------- | -------- | ------- |
-| `Path` | The path to the module to test. | `true` | |
+| `Path` | The path to the code to test. | `true` | |
 | `TestType` | The type of tests to run. Can be either `Module` or `SourceCode`.  | `true` | |
 | `Name` | The name of the module to test. The name of the repository is used if not specified. | `false` | |
+| `TestsPath` | The path to the tests to run. | `false` | `tests` |
 | `Shell` | The shell to use for running the tests. | `false` | `pwsh` |
+
+### Outputs
+
+| Name | Description | Possible values |
+| ---- | ----------- | --------------- |
+| `passed` | If the tests passed. | `true`, `false` |
 
 ## PSModule tests
 
