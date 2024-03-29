@@ -15,13 +15,17 @@ function Test-PSModule {
         # Run module tests.
         [Parameter()]
         [ValidateSet('SourceCode', 'Module')]
-        [string] $TestType = 'SourceCode'
+        [string] $TestType = 'SourceCode',
+
+        # Path to the folder where the tests are located.
+        [Parameter()]
+        [string] $TestsPath = 'tests'
     )
 
     $moduleName = Split-Path -Path $Path -Leaf
     $testSourceCode = $TestType -eq 'SourceCode'
     $testModule = $TestType -eq 'Module'
-    $moduleTestsPath = Join-Path $env:GITHUB_WORKSPACE 'tests'
+    $moduleTestsPath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $TestsPath
 
     #region Get test kit versions
     Start-LogGroup 'Get test kit versions'

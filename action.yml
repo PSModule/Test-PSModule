@@ -10,11 +10,15 @@ inputs:
     description: The name of the module to test. The name of the repository is used if not specified.
     required: false
   Path:
-    description: The path to the module to test.
+    description: The path to the code to test.
     required: true
   TestType:
     description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
+  TestsPath:
+    description: The path to the tests to run.
+    required: false
+    default: tests
   Shell:
     description: The shell to use for running the tests.
     required: false
@@ -35,6 +39,7 @@ runs:
         GITHUB_ACTION_INPUT_Name: ${{ inputs.Name }}
         GITHUB_ACTION_INPUT_Path: ${{ inputs.Path }}
         GITHUB_ACTION_INPUT_TestType: ${{ inputs.TestType }}
+        GITHUB_ACTION_INPUT_TestsPath: ${{ inputs.TestsPath }}
       run: |
         # Test-PSModule
         $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
