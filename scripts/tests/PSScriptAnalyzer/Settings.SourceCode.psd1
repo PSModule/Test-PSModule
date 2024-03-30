@@ -50,6 +50,7 @@
         }
     }
     ExcludeRules = @(
+        'PSMissingModuleManifestField', # This rule is not applicable before the module is built.
         'PSAvoidUsingCmdletAliases',
         'PSUseToExportFieldsInManifest'
     )
