@@ -44,11 +44,12 @@ runs:
         # Test-PSModule
         $IsUnix = $PSVersionTable.Platform -eq 'Unix'
         if ($IsUnix) {
-            sudo pwsh "$env:GITHUB_ACTION_PATH\scripts\main.ps1"
+            $passed = sudo pwsh "$env:GITHUB_ACTION_PATH\scripts\main.ps1"
         } else {
             $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
-            "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         }
+
+        "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
         if (-not $passed) {
             exit 1
         }
