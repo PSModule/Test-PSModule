@@ -1,6 +1,6 @@
-﻿#Requires -Modules @{ModuleName='PSSemVer'; ModuleVersion='1.0'}
+﻿#Requires -Modules Utilities
 
-function New-PSModuleTest {
+function Get-PSModuleTest {
     <#
         .SYNOPSIS
         Performs tests on a module.
@@ -10,10 +10,6 @@ function New-PSModuleTest {
 
         "Hello, World!"
     #>
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-        'PSUseShouldProcessForStateChangingFunctions', '', Scope = 'Function',
-        Justification = 'Reason for suppressing'
-    )]
     [CmdletBinding()]
     param (
         # Name of the person to greet.
