@@ -1,6 +1,6 @@
 name: Action-Test [outputs]
 
-run-name: "${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }} by @${{ github.actor }}"
+run-name: "Action-Test [outputs] - ${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }} by @${{ github.actor }}"
 
 on: [pull_request]
 
@@ -20,7 +20,7 @@ jobs:
         include:
           - os: windows-latest
             shell: powershell
-    name: Action-Test - [${{ matrix.os }}@${{ matrix.shell }}]
+    name: Action-Test [outputs] - [${{ matrix.os }}@${{ matrix.shell }}]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo
