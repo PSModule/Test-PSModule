@@ -44,7 +44,7 @@ runs:
         # Test-PSModule
         $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
         "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-        
+
         if (-not $passed) {
           exit 1
         }
