@@ -1,6 +1,6 @@
-name: Action-Test [Src-UnnamedWithManifest]
+name: Action-Test [Src-WithManifest]
 
-run-name: "Action-Test [Src-UnnamedWithManifest] - ${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }} by @${{ github.actor }}"
+run-name: "Action-Test [Src-WithManifest] - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}"
 
 on: [pull_request]
 
@@ -20,7 +20,7 @@ jobs:
         include:
           - os: windows-latest
             shell: powershell
-    name: Action-Test [Src-UnnamedWithManifest] - [${{ matrix.os }}@${{ matrix.shell }}]
+    name: Action-Test [Src-WithManifest] - [${{ matrix.os }}@${{ matrix.shell }}]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo
@@ -37,6 +37,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModuleTest
-          Path: tests/srcNoWithManifest
+          Path: tests/srcWithManifest
           Shell: ${{ matrix.shell }}
           TestType: SourceCode

@@ -1,6 +1,6 @@
 name: Action-Test [Src-Default]
 
-run-name: "Action-Test [Src-Default] - ${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }} by @${{ github.actor }}"
+run-name: "Action-Test [Src-Default] - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}"
 
 on: [pull_request]
 
