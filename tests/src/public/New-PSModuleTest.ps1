@@ -26,5 +26,4 @@ function New-PSModuleTest {
         [string] $Name
     )
     Write-Output "Hello, $Name!"
-    Write-Output "Processor count: $env:NUMBER_OF_PROCESSORS"
 }
