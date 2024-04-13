@@ -17,6 +17,16 @@ BeforeAll {
 }
 
 Describe 'PSModule - Module tests' {
+    Context 'Module' {
+        It 'The module should be available' {
+            Get-Module -Name $moduleName -ListAvailable | Should -Not -BeNullOrEmpty
+            Write-Verbose (Get-Module -Name $moduleName -ListAvailable | Out-String) -Verbose
+        }
+        It 'The module should be importable' {
+            { Import-Module -Name $moduleName -Verbose -RequiredVersion 999.0.0 -Force } | Should -Not -Throw
+        }
+    }
+
     Context "Module Manifest" {
         BeforeAll {
             $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
@@ -37,7 +47,4 @@ Describe 'PSModule - Module tests' {
         # It 'has a valid icon URL' {}
         # It 'has a valid help URL' {}
     }
-    # Context "Root module file" {
-    #     It 'has a root module file' {}
-    # }
 }
