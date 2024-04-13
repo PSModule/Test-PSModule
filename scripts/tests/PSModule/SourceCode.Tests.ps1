@@ -8,6 +8,14 @@ Param(
     [string] $Path
 )
 
+BeforeAll {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSUseDeclaredVarsMoreThanAssignments', 'scriptFiles',
+        Justification = 'scriptFiles is used in the test.'
+    )]
+    $scriptFiles = Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File
+}
+
 Describe 'PSModule - SourceCode tests' {
 
     Context 'function/filter' {
@@ -34,7 +42,7 @@ Describe 'PSModule - SourceCode tests' {
                 " - $($_.filePath): Function/filter name [$($_.functionName)]. Change file name or function/filter name so they match."
             }
             $issues -join [Environment]::NewLine |
-            Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
+                Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
 
         # It 'Script file should only contain one function or filter' {}
@@ -66,5 +74,23 @@ Describe 'PSModule - SourceCode tests' {
         # It 'datatype for parameters are written on the same line as the parameter name' {}
         # It 'datatype for parameters and parameter name are separated by a single space' {}
         # It 'parameters are separated by a blank line' {}
+    }
+
+    Context 'Compatability checks' {
+        It "Should use '[System.Environment]::ProcessorCount' instead of '$env:NUMBER_OF_PROCESSORS'" {
+            $issues = @('')
+            $scriptFiles | ForEach-Object {
+                Select-String -Path $_.FullName -Pattern '\$env:NUMBER_OF_PROCESSORS' -AllMatches | ForEach-Object {
+                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because 'the script should use [System.Environment]::ProcessorCount instead of $env:NUMBER_OF_PROCESSORS'
+        }
+    }
+
+    Context 'Module manifest' {
+        # It 'Module Manifest exists (maifest.psd1 or modulename.psd1)' {}
+        # It 'Module Manifest is valid' {}
     }
 }
