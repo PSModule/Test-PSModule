@@ -42,7 +42,7 @@ Describe 'PSModule - SourceCode tests' {
                 " - $($_.filePath): Function/filter name [$($_.functionName)]. Change file name or function/filter name so they match."
             }
             $issues -join [Environment]::NewLine |
-            Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
+                Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
 
         # It 'Script file should only contain one function or filter' {}
@@ -81,18 +81,11 @@ Describe 'PSModule - SourceCode tests' {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 Select-String -Path $_.FullName -Pattern '\$env:NUMBER_OF_PROCESSORS' -AllMatches | ForEach-Object {
-                    $issues += " - $($_.Path):$($_.LineNumber):$($_.Line)"
-                    Write-Verbose ($_ | Out-String) -Verbose
+                    $issues += " - $($_.Path):L$($_.LineNumber)"
                 }
-                # $fileContent = Get-Content -Path $_.FullName -Raw
-                # if ($fileContent -match '\$env:NUMBER_OF_PROCESSORS') {
-                #     $issues += " - $($_.FullName)"
-                #     #Get linenumber of the match
-                #     Write-Verbose ($matches | Out-String) -Verbose
-                # }
             }
             $issues -join [Environment]::NewLine |
-            Should -BeNullOrEmpty -Because 'the script should use [System.Environment]::ProcessorCount instead of $env:NUMBER_OF_PROCESSORS'
+                Should -BeNullOrEmpty -Because 'the script should use [System.Environment]::ProcessorCount instead of $env:NUMBER_OF_PROCESSORS'
         }
     }
 
