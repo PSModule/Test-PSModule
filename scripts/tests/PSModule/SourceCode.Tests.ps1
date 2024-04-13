@@ -82,7 +82,9 @@ Describe 'PSModule - SourceCode tests' {
             $scriptFiles | ForEach-Object {
                 $fileContent = Get-Content -Path $_.FullName -Raw
                 if ($fileContent -match '\$env:NUMBER_OF_PROCESSORS') {
-                    $issues += " - $($_.FullName): Use [System.Environment]::ProcessorCount instead of $env:NUMBER_OF_PROCESSORS"
+                    $issues += " - $($_.FullName)"
+                    #Get linenumber of the match
+                    Write-Verbose ($matches | Out-String) -Verbose
                 }
             }
             $issues -join [Environment]::NewLine |
