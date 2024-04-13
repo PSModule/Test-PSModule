@@ -8,6 +8,14 @@ Param(
     [string] $Path
 )
 
+BeforeAll {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSUseDeclaredVarsMoreThanAssignments', 'scriptFiles',
+        Justification = 'scriptFiles is used in the test.'
+    )]
+    $scriptFiles = Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File
+}
+
 Describe 'PSModule - SourceCode tests' {
 
     Context 'function/filter' {
@@ -66,5 +74,24 @@ Describe 'PSModule - SourceCode tests' {
         # It 'datatype for parameters are written on the same line as the parameter name' {}
         # It 'datatype for parameters and parameter name are separated by a single space' {}
         # It 'parameters are separated by a blank line' {}
+    }
+
+    Context 'Compatability checks' {
+        It "Should use '[System.Environment]::ProcessorCount' instead of '$env:NUMBER_OF_PROCESSORS'" {
+            $issues = @('')
+            $scriptFiles | ForEach-Object {
+                $fileContent = Get-Content -Path $_.FullName -Raw
+                if ($fileContent -match '\$env:NUMBER_OF_PROCESSORS') {
+                    $issues += " - $($_.FullName): Use [System.Environment]::ProcessorCount instead of $env:NUMBER_OF_PROCESSORS"
+                }
+            }
+            $issues -join [Environment]::NewLine |
+            Should -BeNullOrEmpty -Because 'the script should use [System.Environment]::ProcessorCount instead of $env:NUMBER_OF_PROCESSORS'
+        }
+    }
+
+    Context 'Module manifest' {
+        # It 'Module Manifest exists (maifest.psd1 or modulename.psd1)' {}
+        # It 'Module Manifest is valid' {}
     }
 }
