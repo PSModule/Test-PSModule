@@ -8,6 +8,13 @@ Get-ChildItem -Path (Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts
     ForEach-Object { Write-Verbose "[$($_.FullName)]"; . $_.FullName }
 Stop-LogGroup
 
+if ($PSVersionTable.PSVersion -lt '6.0') {
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSAvoidAssignmentToAutomaticVariable', '', Justification = 'Compatibility with PowerShell 6.0 and newer.'
+    )]
+    $IsWindows = [System.Environment]::OSVersion.Platform -eq 'Win32NT'
+}
+
 Start-LogGroup 'Loading inputs'
 $moduleName = if ($env:GITHUB_ACTION_INPUT_Name | IsNullOrEmpty) { $env:GITHUB_REPOSITORY_NAME } else { $env:GITHUB_ACTION_INPUT_Name }
 Write-Verbose "Module name:       [$moduleName]"
@@ -34,8 +41,8 @@ if (-not (Test-Path -Path $testsPath)) {
 Stop-LogGroup
 
 $params = @{
-    Path     = $codeToTest
-    TestType = $env:GITHUB_ACTION_INPUT_TestType
+    Path      = $codeToTest
+    TestType  = $env:GITHUB_ACTION_INPUT_TestType
     TestsPath = $testsPath
 }
 $results = Test-PSModule @params
