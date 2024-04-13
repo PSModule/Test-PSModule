@@ -17,12 +17,9 @@ BeforeAll {
 }
 
 Describe 'PSModule - SourceCode tests' {
-
     Context 'function/filter' {
         It 'Script filename and function/filter name should match' {
-
             $scriptFiles = @()
-
             Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File | ForEach-Object {
                 $fileContent = Get-Content -Path $_.FullName -Raw
                 if ($fileContent -match '^(?:function|filter)\s+([a-zA-Z][a-zA-Z0-9-]*)') {
