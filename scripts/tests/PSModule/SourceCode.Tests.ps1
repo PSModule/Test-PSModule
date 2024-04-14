@@ -139,6 +139,7 @@ Describe 'PSModule - SourceCode tests' {
                 [System.Management.Automation.Language.Parser]::ParseFile($FilePath, [ref]$tokens, [ref]$errors)
 
                 foreach ($token in $tokens) {
+                    Write-Verbose ($token | Out-String) -Verbose
                     $keyword = $token.TokenFlags.Text
                     $lineNumber = $token.Extent.StartLineNumber
                     $columnNumber = $token.Extent.StartColumnNumber
