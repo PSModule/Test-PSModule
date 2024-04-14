@@ -10,5 +10,6 @@ function Get-PSModuleTest {
 
         "Hello, World!"
     #>
+    param()
     Write-Output "Hello, World!"
 }
