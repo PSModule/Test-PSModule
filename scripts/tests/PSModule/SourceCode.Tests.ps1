@@ -139,8 +139,11 @@ Describe 'PSModule - SourceCode tests' {
                 [System.Management.Automation.Language.Parser]::ParseFile($FilePath, [ref]$tokens, [ref]$errors)
 
                 foreach ($token in $tokens) {
-                    if (($token.TokenFlags -match 'Keyword') -and ($_.TokenFlags.Text -ceq ($_.TokenFlags.Text).ToLower())) {
-                        $issues += " - $relativePath`:L$($_.Extent.StartLineNumber):C$($_.Extent.StartColumnNumber) - $($_.Text)"
+                    $keyword = $token.TokenFlags.Text
+                    $lineNumber = $token.Extent.StartLineNumber
+                    $columnNumber = $token.Extent.StartColumnNumber
+                    if (($token.TokenFlags -match 'Keyword') -and ($keyword -ceq $keyword.ToLower())) {
+                        $issues += " - $relativePath`:L$lineNumber`:C$columnNumber - $keyword"
                     }
                 }
 
