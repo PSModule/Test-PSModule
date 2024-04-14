@@ -23,91 +23,87 @@ Describe 'PSModule - SourceCode tests' {
         It 'Should contain one function or filter' {
             $issues = @('')
             $functionFiles | ForEach-Object {
-                $path = $_.FullName
-                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($path, [ref]$null, [ref]$null)
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
                 if ($tokens.count -ne 1) {
-                    $issues += " - $path"
+                    $issues += " - $relativePath - $($tokens.Name)"
                 }
             }
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because 'the script should contain one function or filter'
         }
 
-        It 'Script filename and function/filter name should match' {
-            $scriptFiles = @()
-            Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File | ForEach-Object {
-                $fileContent = Get-Content -Path $_.FullName -Raw
-                if ($fileContent -match '^(?:function|filter)\s+([a-zA-Z][a-zA-Z0-9-]*)') {
-                    $functionName = $matches[1]
-                    $fileName = $_.BaseName
-                    $relativePath = $_.FullName.Replace($Path, '').Trim('\').Trim('/')
-                    $scriptFiles += @{
-                        fileName     = $fileName
-                        filePath     = $relativePath
-                        functionName = $functionName
-                    }
-                }
-            }
-
+        It 'Should have matching filename and function/filter name' {
             $issues = @('')
-            $issues += $scriptFiles | Where-Object { $_.filename -ne $_.functionName } | ForEach-Object {
-                " - $($_.filePath): Function/filter name [$($_.functionName)]. Change file name or function/filter name so they match."
+            $functionFiles | ForEach-Object {
+                $filePath = $_.FullName
+                $fileName = $_.BaseName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
+                $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
+                if ($tokens.Name -ne $fileName) {
+                    $issues += " - $relativePath - $($tokens.Name)"
+                }
             }
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
-
-
 
         # It 'All script files have tests' {} # Look for the folder name in tests called the same as section/folder name of functions
 
         It "Should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
-                Select-String -Path $_.FullName -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
-                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                Select-String -Path $filePath -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
+                    $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
             }
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because "the script should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it."
         }
 
-        It "Should use '`$null = <commands>' instead of '<commands> | Out-Null'" {
+        It "Should use '`$null = ...' instead of '... | Out-Null'" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
-                Select-String -Path $_.FullName -Pattern 'Out-Null' -AllMatches | ForEach-Object {
-                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                Select-String -Path $filePath -Pattern 'Out-Null' -AllMatches | ForEach-Object {
+                    $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
             }
             $issues -join [Environment]::NewLine |
-                Should -BeNullOrEmpty -Because "the script should use '`$null = <commands>' instead of '<commands> | Out-Null'"
+                Should -BeNullOrEmpty -Because "the script should use '`$null = ...' instead of '... | Out-Null'"
         }
 
         It 'Should not use ternary operations for compatability reasons' {
             $issues = @('')
             $scriptFiles | ForEach-Object {
-                Select-String -Path $_.FullName -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
-                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                Select-String -Path $filePath -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
+                    $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
             }
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatability with PS 5.1 and below'
         }
-    }
 
-    Context 'Function/filter design' {
         # It 'comment based doc block start is indented with 4 spaces' {}
         # It 'comment based doc is indented with 8 spaces' {}
         # It 'has synopsis for all functions' {}
         # It 'has description for all functions' {}
         # It 'has examples for all functions' {}
 
-        It 'should have [CmdletBinding()] attribute' {
+        It 'Should have [CmdletBinding()] attribute' {
             $issues = @('')
             $functionFiles | ForEach-Object {
                 $found = $false
                 $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $scriptAst.FindAll({ $true }, $true)
                 foreach ($token in $tokens) {
@@ -116,7 +112,7 @@ Describe 'PSModule - SourceCode tests' {
                     }
                 }
                 if (-not $found) {
-                    $issues += " - $filePath"
+                    $issues += " - $relativePath"
                 }
             }
             $issues -join [Environment]::NewLine |
