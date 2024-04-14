@@ -10,6 +10,7 @@ function Get-PSModuleTest {
 
         "Hello, World!"
     #>
+    [CmdletBinding()]
     param()
     Write-Output "Hello, World!"
 }
