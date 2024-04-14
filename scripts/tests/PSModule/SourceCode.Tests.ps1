@@ -37,10 +37,10 @@ Describe 'PSModule - SourceCode tests' {
         It 'Script filename and function/filter name should match' {
             $issues = @('')
             $functionFiles | ForEach-Object {
-                $path = $_.FullName
+                $filePath = $_.FullName
                 $fileName = $_.BaseName
-                $relativePath = $path.Replace($Path, '').Trim('\').Trim('/')
-                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($path, [ref]$null, [ref]$null)
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
                 if ($tokens.Name -ne $fileName) {
                     $issues += " - $relativePath - $($tokens.Name)"
