@@ -67,6 +67,17 @@ Describe 'PSModule - SourceCode tests' {
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because "the script should use '`$null = <commands>' instead of '<commands> | Out-Null'"
         }
+
+        It "Should not use ternary operations for compatability reasons" {
+            $issues = @('')
+            $scriptFiles | ForEach-Object {
+                Select-String -Path $_.FullName -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
+                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because "the script should not use ternary operations for compatability with PS 5.1 and below"
+        }
     }
 
     Context 'Function/filter design' {
