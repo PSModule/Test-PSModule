@@ -97,8 +97,9 @@ function Test-PSModule {
         $containerParams = @{
             Path = Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\tests\PSModule\SourceCode.Tests.ps1'
             Data = @{
-                Path    = $Path
-                Verbose = $true
+                Path      = $Path
+                TestsPath = $moduleTestsPath
+                Verbose   = $true
             }
         }
         Write-Verbose 'ContainerParams:'

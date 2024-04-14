@@ -1,11 +1,14 @@
 ﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-    'PSReviewUnusedParameter', 'Path',
-    Justification = 'Path is used to specify the path to the module to test.'
+    'PSReviewUnusedParameter', '',
+    Justification = 'Parameters are used in the test.'
 )]
 [CmdLetBinding()]
 Param(
     [Parameter(Mandatory)]
-    [string] $Path
+    [string] $Path,
+
+    [Parameter(Mandatory)]
+    [string] $TestsPath
 )
 
 BeforeAll {
@@ -14,8 +17,11 @@ BeforeAll {
         Where-Object { $_.Name -in 'public', 'private' } |
         Get-ChildItem -Filter '*.ps1' -File
 
+    $publicFunctionFiles = Get-ChildItem -Directory -Path (Join-Path -Path $Path -ChildPath 'public') -File -Filter '*.ps1'
+
     Write-Verbose "Found $($scriptFiles.Count) script files in $Path"
     Write-Verbose "Found $($functionFiles.Count) function files in $Path"
+    Write-Verbose "Found $($publicFunctionFiles.Count) public function files in $Path"
 }
 
 Describe 'PSModule - SourceCode tests' {
@@ -51,7 +57,37 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
 
-        # It 'All script files have tests' {} # Look for the folder name in tests called the same as section/folder name of functions
+        It 'All public functions/filters have tests' {
+            $issues = @('')
+
+            $testFiles = Get-ChildItem -Path $TestsPath -Recurse -File -Filter '*.ps1'
+            $functionsInTestFiles = $testFiles | ForEach-Object {
+                $ast = [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$null)
+                $ast.FindAll(
+                    {
+                        param($node)
+                        $node -is [System.Management.Automation.Language.CommandAst] -and
+                        $node.GetCommandName() -ne $null
+                    },
+                    $true
+                ) | ForEach-Object {
+                    $_.GetCommandName()
+                } | Sort-Object -Unique
+            }
+
+            $publicFunctionFiles | ForEach-Object {
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
+                $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
+                $functionName = $tokens.Name
+                if ($functionsInTestFiles -notcontains $functionName) {
+                    $issues += " - $relativePath - $functionName"
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because 'a test should exist for each of the functions in the module'
+        }
 
         It "Should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it" {
             $issues = @('')
@@ -143,13 +179,11 @@ Describe 'PSModule - SourceCode tests' {
         # It 'boolean parameters in CmdletBinding() attribute are written without assignments' {}
         #     I.e. [CmdletBinding(ShouldProcess)] instead of [CmdletBinding(ShouldProcess = $true)]
         # It 'has [OutputType()] attribute' {}
-        # It 'has verb 'New','Set','Disable','Enable' etc. and uses "ShoudProcess" in the [CmdletBinding()] attribute' {}
     }
 
     Context 'Parameter design' {
         # It 'has parameter description for all functions' {}
-        # It 'has parameter validation for all functions' {}
-        # It 'parameters have [Parameters()] attribute' {}
+        # It 'parameters have [Parameter()] attribute' {}
         # It 'boolean parameters to the [Parameter()] attribute are written without assignments' {}
         #     I.e. [Parameter(Mandatory)] instead of [Parameter(Mandatory = $true)]
         # It 'datatype for parameters are written on the same line as the parameter name' {}
