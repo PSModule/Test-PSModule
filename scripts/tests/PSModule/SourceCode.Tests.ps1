@@ -12,7 +12,7 @@ Param(
 )
 
 BeforeAll {
-    $scriptFiles = Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File
+    $scriptFiles = Get-ChildItem -Path $Path -Include *.psm1, *.ps1 -Recurse -File
     $functionFiles = Get-ChildItem -Directory -Path $Path |
         Where-Object { $_.Name -in 'public', 'private' } |
         Get-ChildItem -Filter '*.ps1' -File
@@ -130,7 +130,7 @@ Describe 'PSModule - SourceCode tests' {
 
         It 'all powershell keywords are lowercase' {
             $issues = @('')
-            $functionFiles | ForEach-Object {
+            $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
 
