@@ -68,7 +68,7 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because "the script should use '`$null = <commands>' instead of '<commands> | Out-Null'"
         }
 
-        It "Should not use ternary operations for compatability reasons" {
+        It 'Should not use ternary operations for compatability reasons' {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 Select-String -Path $_.FullName -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
@@ -76,7 +76,44 @@ Describe 'PSModule - SourceCode tests' {
                 }
             }
             $issues -join [Environment]::NewLine |
-                Should -BeNullOrEmpty -Because "the script should not use ternary operations for compatability with PS 5.1 and below"
+                Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatability with PS 5.1 and below'
+        }
+
+        It 'Should define all the required module of the script in the script file' {
+            $issues = @('')
+            $scriptFiles | ForEach-Object {
+                $scriptFile = $_.FullName
+                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($scriptFile, [ref]$null, [ref]$null)
+                $functionCalls = $ast.FindAll(
+                    {
+                        param($node)
+                        $node -is [System.Management.Automation.Language.CommandAst] -and $null -ne $node.GetCommandName()
+                    },
+                    $true
+                ) | ForEach-Object {
+                    $_.GetCommandName()
+                } | Sort-Object -Unique
+
+                $requiredModule = $functionCalls | ForEach-Object {
+                    (Get-Command -Name $_ -ErrorAction SilentlyContinue).ModuleName
+                } | Sort-Object -Unique
+
+                $includedModules = @(
+                    'Microsoft.PowerShell.Management'
+                    'Microsoft.PowerShell.Utility'
+                    'Microsoft.PowerShell.Core'
+                )
+
+                $requiredModule | Where-Object { $_ -notin $includedModules } | ForEach-Object {
+                    if ($_ -in $Ast.ScriptRequirements.RequiredModules.Name) {
+                        $null
+                    } else {
+                        $issues += " - $scriptFile - Missing [$_]"
+                    }
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because 'the script should define all the required module of the script in the script file'
         }
     }
 
