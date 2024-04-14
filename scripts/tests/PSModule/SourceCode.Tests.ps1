@@ -140,10 +140,10 @@ Describe 'PSModule - SourceCode tests' {
 
                 foreach ($token in $tokens) {
                     Write-Verbose ($token | Out-String) -Verbose
-                    $keyword = $token.TokenFlags.Text
+                    $keyword = $token.Text
                     $lineNumber = $token.Extent.StartLineNumber
                     $columnNumber = $token.Extent.StartColumnNumber
-                    if (($token.TokenFlags -match 'Keyword') -and ($keyword -ceq $keyword.ToLower())) {
+                    if (($token.TokenFlags -match 'Keyword') -and ($keyword -cne $keyword.ToLower())) {
                         $issues += " - $relativePath`:L$lineNumber`:C$columnNumber - $keyword"
                     }
                 }
