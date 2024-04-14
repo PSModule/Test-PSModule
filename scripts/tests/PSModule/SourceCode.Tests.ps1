@@ -92,11 +92,15 @@ Describe 'PSModule - SourceCode tests' {
         It 'should have [CmdletBinding()] attribute' {
             $issues = @('')
             $functionFiles | ForEach-Object {
+                $found = $false
                 $filePath = $_.FullName
+                Write-Verbose "Processing [$filePath]"
                 $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $scriptAst.FindAll({ $true }, $true)
                 foreach ($token in $tokens) {
+                    Write-Verbose "Looking at: [$($token.TypeName.Name)]"
                     if ($token.TypeName.Name -eq 'CmdletBinding') {
+                        Write-Verbose "--- Found CmdletBinding attribute"
                         $found = $true
                     }
                 }
