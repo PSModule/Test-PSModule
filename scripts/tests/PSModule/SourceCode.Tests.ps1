@@ -28,14 +28,14 @@ Describe 'PSModule - SourceCode tests' {
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
                 if ($tokens.count -ne 1) {
-                    $issues += " - $relativePath"
+                    $issues += " - $relativePath - $($tokens.Name)"
                 }
             }
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because 'the script should contain one function or filter'
         }
 
-        It 'Script filename and function/filter name should match' {
+        It 'Should have matching filename and function/filter name' {
             $issues = @('')
             $functionFiles | ForEach-Object {
                 $filePath = $_.FullName
@@ -59,7 +59,7 @@ Describe 'PSModule - SourceCode tests' {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 Select-String -Path $filePath -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
-                    $issues += " - $relativePath`:L$($_.LineNumber)"
+                    $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -72,7 +72,7 @@ Describe 'PSModule - SourceCode tests' {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 Select-String -Path $filePath -Pattern 'Out-Null' -AllMatches | ForEach-Object {
-                    $issues += " - $relativePath`:L$($_.LineNumber)"
+                    $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -85,7 +85,7 @@ Describe 'PSModule - SourceCode tests' {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 Select-String -Path $filePath -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
-                    $issues += " - $relativePath`:L$($_.LineNumber)"
+                    $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -98,7 +98,7 @@ Describe 'PSModule - SourceCode tests' {
         # It 'has description for all functions' {}
         # It 'has examples for all functions' {}
 
-        It 'should have [CmdletBinding()] attribute' {
+        It 'Should have [CmdletBinding()] attribute' {
             $issues = @('')
             $functionFiles | ForEach-Object {
                 $found = $false
