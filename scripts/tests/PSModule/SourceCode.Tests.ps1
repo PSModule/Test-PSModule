@@ -95,8 +95,11 @@ Describe 'PSModule - SourceCode tests' {
                 $tokens = $scriptAst.FindAll({ $true }, $true)
                 foreach ($token in $tokens) {
                     if ($token.TypeName.Name -eq 'CmdletBinding') {
-                        $issues += " - $($_.Extent.File)"
+                        $found = $true
                     }
+                }
+                if (-not $found) {
+                    $issues += " - $scriptFilePath"
                 }
             }
             $issues -join [Environment]::NewLine |
