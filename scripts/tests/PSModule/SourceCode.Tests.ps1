@@ -10,10 +10,13 @@ Param(
 
 BeforeAll {
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-        'PSUseDeclaredVarsMoreThanAssignments', 'scriptFiles',
+        'PSUseDeclaredVarsMoreThanAssignments', '',
         Justification = 'scriptFiles is used in the test.'
     )]
     $scriptFiles = Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File
+    $functionFiles = Get-ChildItem -Directory -Path $Path |
+        Where-Object { $_.Name -in 'public', 'private' } |
+        Get-ChildItem -Filter '*.ps1' -File
 }
 
 Describe 'PSModule - SourceCode tests' {
@@ -86,12 +89,11 @@ Describe 'PSModule - SourceCode tests' {
         # It 'has synopsis for all functions' {}
         # It 'has description for all functions' {}
         # It 'has examples for all functions' {}
-        # It 'has output documentation for all functions' {}
         It 'should have [CmdletBinding()] attribute' {
             $issues = @('')
-            $scriptFiles | ForEach-Object {
-                $scriptFilePath = $_.FullName
-                $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($scriptFilePath, [ref]$null, [ref]$null)
+            $functionFiles | ForEach-Object {
+                $filePath = $_.FullName
+                $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $scriptAst.FindAll({ $true }, $true)
                 foreach ($token in $tokens) {
                     if ($token.TypeName.Name -eq 'CmdletBinding') {
@@ -99,7 +101,7 @@ Describe 'PSModule - SourceCode tests' {
                     }
                 }
                 if (-not $found) {
-                    $issues += " - $scriptFilePath"
+                    $issues += " - $filePath"
                 }
             }
             $issues -join [Environment]::NewLine |
