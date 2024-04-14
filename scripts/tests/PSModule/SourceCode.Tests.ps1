@@ -12,7 +12,7 @@ Param(
 )
 
 BeforeAll {
-    $scriptFiles = Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File
+    $scriptFiles = Get-ChildItem -Path $Path -Include *.psm1, *.ps1 -Recurse -File
     $functionFiles = Get-ChildItem -Directory -Path $Path |
         Where-Object { $_.Name -in 'public', 'private' } |
         Get-ChildItem -Filter '*.ps1' -File
@@ -126,6 +126,28 @@ Describe 'PSModule - SourceCode tests' {
             }
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatability with PS 5.1 and below'
+        }
+
+        It 'all powershell keywords are lowercase' {
+            $issues = @('')
+            $scriptFiles | ForEach-Object {
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+
+                $errors = $null
+                $tokens = $null
+                [System.Management.Automation.Language.Parser]::ParseFile($FilePath, [ref]$tokens, [ref]$errors)
+
+                foreach ($token in $tokens) {
+                    $keyword = $token.Text
+                    $lineNumber = $token.Extent.StartLineNumber
+                    $columnNumber = $token.Extent.StartColumnNumber
+                    if (($token.TokenFlags -match 'Keyword') -and ($keyword -cne $keyword.ToLower())) {
+                        $issues += " - $relativePath`:L$lineNumber`:C$columnNumber - $keyword"
+                    }
+                }
+            }
+            $issues -join [Environment]::NewLine | Should -BeNullOrEmpty -Because 'all powershell keywords should be lowercase'
         }
 
         # It 'comment based doc block start is indented with 4 spaces' {}
