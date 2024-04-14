@@ -46,6 +46,16 @@ Describe 'PSModule - SourceCode tests' {
 
         # It 'All script files have tests' {} # Look for the folder name in tests called the same as section/folder name of functions
 
+        It "Should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it" {
+            $issues = @('')
+            $scriptFiles | ForEach-Object {
+                Select-String -Path $_.FullName -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
+                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because "the script should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it."
+        }
     }
 
     Context 'Function/filter design' {
