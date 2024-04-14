@@ -66,7 +66,7 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because "the script should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it."
         }
 
-        It "Should use '`$null = <<commands>>' instead of '<<commands>> | Out-Null'" {
+        It "Should use '`$null = ...' instead of '... | Out-Null'" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
@@ -76,7 +76,7 @@ Describe 'PSModule - SourceCode tests' {
                 }
             }
             $issues -join [Environment]::NewLine |
-                Should -BeNullOrEmpty -Because "the script should use '`$null = <<commands>>' instead of '<<commands>> | Out-Null'"
+                Should -BeNullOrEmpty -Because "the script should use '`$null = ...' instead of '... | Out-Null'"
         }
 
         It 'Should not use ternary operations for compatability reasons' {
