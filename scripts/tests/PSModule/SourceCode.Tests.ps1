@@ -128,6 +128,26 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatability with PS 5.1 and below'
         }
 
+        It 'all powershell keywords are lowercase' {
+            $issues = @('')
+            $functionFiles | ForEach-Object {
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+
+                $errors = $null
+                $tokens = $null
+                [System.Management.Automation.Language.Parser]::ParseFile($FilePath, [ref]$tokens, [ref]$errors)
+
+                foreach ($token in $tokens) {
+                    if (($token.TokenFlags -match 'Keyword') -and ($_.TokenFlags.Text -ceq ($_.TokenFlags.Text).ToLower())) {
+                        $issues += " - $relativePath`:L$($_.Extent.StartLineNumber):C$($_.Extent.StartColumnNumber) - $($_.Text)"
+                    }
+                }
+
+                $issues -join [Environment]::NewLine | Should -BeNullOrEmpty -Because 'all powershell keywords should be lowercase'
+            }
+        }
+
         # It 'comment based doc block start is indented with 4 spaces' {}
         # It 'comment based doc is indented with 8 spaces' {}
         # It 'has synopsis for all functions' {}
