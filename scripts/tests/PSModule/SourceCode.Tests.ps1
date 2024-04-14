@@ -68,7 +68,7 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because "the script should use '`$null = <commands>' instead of '<commands> | Out-Null'"
         }
 
-        It "Should not use ternary operations for compatability reasons" {
+        It 'Should not use ternary operations for compatability reasons' {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 Select-String -Path $_.FullName -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
@@ -76,7 +76,7 @@ Describe 'PSModule - SourceCode tests' {
                 }
             }
             $issues -join [Environment]::NewLine |
-                Should -BeNullOrEmpty -Because "the script should not use ternary operations for compatability with PS 5.1 and below"
+                Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatability with PS 5.1 and below'
         }
     }
 
@@ -87,7 +87,22 @@ Describe 'PSModule - SourceCode tests' {
         # It 'has description for all functions' {}
         # It 'has examples for all functions' {}
         # It 'has output documentation for all functions' {}
-        # It 'has [CmdletBinding()] attribute' {}
+        It 'should have [CmdletBinding()] attribute' {
+            $issues = @('')
+            $scriptFiles | ForEach-Object {
+                $scriptFilePath = $_.FullName
+                $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($scriptFilePath, [ref]$null, [ref]$null)
+                $tokens = $scriptAst.FindAll({ $true }, $true)
+                foreach ($token in $tokens) {
+                    if ($token.TypeName.Name -eq 'CmdletBinding') {
+                        $issues += " - $($_.Extent.File)"
+                    }
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because 'the script should have [CmdletBinding()] attribute'
+        }
+
         # It 'boolean parameters in CmdletBinding() attribute are written without assignments' {}
         #     I.e. [CmdletBinding(ShouldProcess)] instead of [CmdletBinding(ShouldProcess = $true)]
         # It 'has [OutputType()] attribute' {}
