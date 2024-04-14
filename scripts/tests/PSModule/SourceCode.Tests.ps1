@@ -54,7 +54,7 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
 
-        It 'All script files have tests' {
+        It 'All functions/filters have tests' {
             $issues = @('')
 
             $testFiles = Get-ChildItem -Path $TestsPath -Recurse -File -Filter '*.ps1'
@@ -72,11 +72,8 @@ Describe 'PSModule - SourceCode tests' {
                 } | Sort-Object -Unique
             }
 
-            Write-Verbose ($functionsInTestFiles -join [Environment]::NewLine | Out-String) -Verbose
-
             $functionFiles | ForEach-Object {
                 $filePath = $_.FullName
-                $fileName = $_.BaseName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
