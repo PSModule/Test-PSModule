@@ -26,4 +26,9 @@ function New-PSModuleTest {
         [string] $Name
     )
     Write-Output "Hello, $Name!"
+    if (IsAdmin) {
+        Write-Output 'You are an admin.'
+    } else {
+        Write-Output 'You are not an admin.'
+    }
 }
