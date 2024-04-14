@@ -39,10 +39,11 @@ Describe 'PSModule - SourceCode tests' {
             $functionFiles | ForEach-Object {
                 $path = $_.FullName
                 $fileName = $_.BaseName
+                $relativePath = $path.Replace($Path, '').Trim('\').Trim('/')
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($path, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
                 if ($tokens.Name -ne $fileName) {
-                    $issues += " - $path"
+                    $issues += " - $relativePath - $($tokens.Name)"
                 }
             }
 
