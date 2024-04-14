@@ -168,7 +168,7 @@ function Test-PSModule {
             }
             Output       = @{
                 CIFormat            = 'Auto'
-                StackTraceVerbosity = 'Full'
+                StackTraceVerbosity = 'None'
                 Verbosity           = 'Detailed'
             }
         }
