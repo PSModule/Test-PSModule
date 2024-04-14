@@ -9,11 +9,13 @@ Param(
 )
 
 BeforeAll {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-        'PSUseDeclaredVarsMoreThanAssignments', 'scriptFiles',
-        Justification = 'scriptFiles is used in the test.'
-    )]
     $scriptFiles = Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File
+    $functionFiles = Get-ChildItem -Directory -Path $Path |
+        Where-Object { $_.Name -in 'public', 'private' } |
+        Get-ChildItem -Filter '*.ps1' -File
+
+    Write-Verbose "Found $($scriptFiles.Count) script files in $Path"
+    Write-Verbose "Found $($functionFiles.Count) function files in $Path"
 }
 
 Describe 'PSModule - SourceCode tests' {
@@ -68,7 +70,7 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because "the script should use '`$null = <commands>' instead of '<commands> | Out-Null'"
         }
 
-        It "Should not use ternary operations for compatability reasons" {
+        It 'Should not use ternary operations for compatability reasons' {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 Select-String -Path $_.FullName -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
@@ -76,7 +78,7 @@ Describe 'PSModule - SourceCode tests' {
                 }
             }
             $issues -join [Environment]::NewLine |
-                Should -BeNullOrEmpty -Because "the script should not use ternary operations for compatability with PS 5.1 and below"
+                Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatability with PS 5.1 and below'
         }
     }
 
@@ -86,8 +88,27 @@ Describe 'PSModule - SourceCode tests' {
         # It 'has synopsis for all functions' {}
         # It 'has description for all functions' {}
         # It 'has examples for all functions' {}
-        # It 'has output documentation for all functions' {}
-        # It 'has [CmdletBinding()] attribute' {}
+
+        It 'should have [CmdletBinding()] attribute' {
+            $issues = @('')
+            $functionFiles | ForEach-Object {
+                $found = $false
+                $filePath = $_.FullName
+                $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
+                $tokens = $scriptAst.FindAll({ $true }, $true)
+                foreach ($token in $tokens) {
+                    if ($token.TypeName.Name -eq 'CmdletBinding') {
+                        $found = $true
+                    }
+                }
+                if (-not $found) {
+                    $issues += " - $filePath"
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because 'the script should have [CmdletBinding()] attribute'
+        }
+
         # It 'boolean parameters in CmdletBinding() attribute are written without assignments' {}
         #     I.e. [CmdletBinding(ShouldProcess)] instead of [CmdletBinding(ShouldProcess = $true)]
         # It 'has [OutputType()] attribute' {}
