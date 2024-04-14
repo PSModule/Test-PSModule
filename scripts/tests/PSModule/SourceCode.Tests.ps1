@@ -9,14 +9,13 @@ Param(
 )
 
 BeforeAll {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-        'PSUseDeclaredVarsMoreThanAssignments', '',
-        Justification = 'scriptFiles is used in the test.'
-    )]
     $scriptFiles = Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File
     $functionFiles = Get-ChildItem -Directory -Path $Path |
         Where-Object { $_.Name -in 'public', 'private' } |
         Get-ChildItem -Filter '*.ps1' -File
+
+    Write-Verbose "Found $($scriptFiles.Count) script files in $Path"
+    Write-Verbose "Found $($functionFiles.Count) function files in $Path"
 }
 
 Describe 'PSModule - SourceCode tests' {
@@ -89,7 +88,7 @@ Describe 'PSModule - SourceCode tests' {
         # It 'has synopsis for all functions' {}
         # It 'has description for all functions' {}
         # It 'has examples for all functions' {}
-        
+
         It 'should have [CmdletBinding()] attribute' {
             $issues = @('')
             $functionFiles | ForEach-Object {
