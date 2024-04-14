@@ -35,30 +35,20 @@ Describe 'PSModule - SourceCode tests' {
         }
 
         It 'Script filename and function/filter name should match' {
-            $scriptFiles = @()
-            Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File | ForEach-Object {
-                $fileContent = Get-Content -Path $_.FullName -Raw
-                if ($fileContent -match '^(?:function|filter)\s+([a-zA-Z][a-zA-Z0-9-]*)') {
-                    $functionName = $matches[1]
-                    $fileName = $_.BaseName
-                    $relativePath = $_.FullName.Replace($Path, '').Trim('\').Trim('/')
-                    $scriptFiles += @{
-                        fileName     = $fileName
-                        filePath     = $relativePath
-                        functionName = $functionName
-                    }
+            $issues = @('')
+            $functionFiles | ForEach-Object {
+                $path = $_.FullName
+                $fileName = $_.BaseName
+                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($path, [ref]$null, [ref]$null)
+                $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
+                if ($tokens.Name -ne $fileName) {
+                    $issues += " - $path"
                 }
             }
 
-            $issues = @('')
-            $issues += $scriptFiles | Where-Object { $_.filename -ne $_.functionName } | ForEach-Object {
-                " - $($_.filePath): Function/filter name [$($_.functionName)]. Change file name or function/filter name so they match."
-            }
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
-
-
 
         # It 'All script files have tests' {} # Look for the folder name in tests called the same as section/folder name of functions
 
