@@ -20,6 +20,20 @@ BeforeAll {
 
 Describe 'PSModule - SourceCode tests' {
     Context 'function/filter' {
+        It 'Should contain one function or filter' {
+            $issues = @('')
+            $functionFiles | ForEach-Object {
+                $path = $_.FullName
+                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($path, [ref]$null, [ref]$null)
+                $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
+                if ($tokens.count -ne 1) {
+                    $issues += " - $path"
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because 'the script should contain one function or filter'
+        }
+
         It 'Script filename and function/filter name should match' {
             $scriptFiles = @()
             Get-ChildItem -Path $Path -Filter '*.ps1' -Recurse -File | ForEach-Object {
@@ -44,7 +58,7 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
 
-        # It 'Script file should only contain one function or filter' {}
+
 
         # It 'All script files have tests' {} # Look for the folder name in tests called the same as section/folder name of functions
 
