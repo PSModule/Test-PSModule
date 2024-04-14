@@ -119,6 +119,27 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script should have [CmdletBinding()] attribute'
         }
 
+        It 'Should have a param() block' {
+            $issues = @('')
+            $functionFiles | ForEach-Object {
+                $found = $false
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
+                $tokens = $scriptAst.FindAll({ $args[0] -is [System.Management.Automation.Language.ParamBlockAst] }, $true)
+                foreach ($token in $tokens) {
+                    if ($token.count -eq 1) {
+                        $found = $true
+                    }
+                }
+                if (-not $found) {
+                    $issues += " - $relativePath"
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because 'the script should have a param() block'
+        }
+
         # It 'boolean parameters in CmdletBinding() attribute are written without assignments' {}
         #     I.e. [CmdletBinding(ShouldProcess)] instead of [CmdletBinding(ShouldProcess = $true)]
         # It 'has [OutputType()] attribute' {}
