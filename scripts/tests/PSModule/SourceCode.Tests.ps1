@@ -23,11 +23,12 @@ Describe 'PSModule - SourceCode tests' {
         It 'Should contain one function or filter' {
             $issues = @('')
             $functionFiles | ForEach-Object {
-                $path = $_.FullName
-                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($path, [ref]$null, [ref]$null)
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
                 if ($tokens.count -ne 1) {
-                    $issues += " - $path"
+                    $issues += " - $relativePath"
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -46,7 +47,6 @@ Describe 'PSModule - SourceCode tests' {
                     $issues += " - $relativePath - $($tokens.Name)"
                 }
             }
-
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
@@ -56,8 +56,10 @@ Describe 'PSModule - SourceCode tests' {
         It "Should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
-                Select-String -Path $_.FullName -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
-                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                Select-String -Path $filePath -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
+                    $issues += " - $relativePath`:L$($_.LineNumber)"
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -67,8 +69,10 @@ Describe 'PSModule - SourceCode tests' {
         It "Should use '`$null = <commands>' instead of '<commands> | Out-Null'" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
-                Select-String -Path $_.FullName -Pattern 'Out-Null' -AllMatches | ForEach-Object {
-                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                Select-String -Path $filePath -Pattern 'Out-Null' -AllMatches | ForEach-Object {
+                    $issues += " - $relativePath`:L$($_.LineNumber)"
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -78,8 +82,10 @@ Describe 'PSModule - SourceCode tests' {
         It 'Should not use ternary operations for compatability reasons' {
             $issues = @('')
             $scriptFiles | ForEach-Object {
-                Select-String -Path $_.FullName -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
-                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                Select-String -Path $filePath -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
+                    $issues += " - $relativePath`:L$($_.LineNumber)"
                 }
             }
             $issues -join [Environment]::NewLine |
