@@ -11,6 +11,10 @@ function Get-PSModuleTest {
         "Hello, World!"
     #>
     [CmdletBinding()]
-    param()
-    Write-Output "Hello, World!"
+    param (
+        # Name of the person to greet.
+        [Parameter(Mandatory)]
+        [string] $Name
+    )
+    Write-Output "Hello, $Name!"
 }
