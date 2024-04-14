@@ -89,6 +89,7 @@ Describe 'PSModule - SourceCode tests' {
         # It 'has synopsis for all functions' {}
         # It 'has description for all functions' {}
         # It 'has examples for all functions' {}
+        
         It 'should have [CmdletBinding()] attribute' {
             $issues = @('')
             $functionFiles | ForEach-Object {
