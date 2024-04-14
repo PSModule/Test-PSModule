@@ -146,9 +146,8 @@ Describe 'PSModule - SourceCode tests' {
                         $issues += " - $relativePath`:L$lineNumber`:C$columnNumber - $keyword"
                     }
                 }
-
-                $issues -join [Environment]::NewLine | Should -BeNullOrEmpty -Because 'all powershell keywords should be lowercase'
             }
+            $issues -join [Environment]::NewLine | Should -BeNullOrEmpty -Because 'all powershell keywords should be lowercase'
         }
 
         # It 'comment based doc block start is indented with 4 spaces' {}
