@@ -56,6 +56,17 @@ Describe 'PSModule - SourceCode tests' {
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because "the script should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it."
         }
+
+        It "Should use '`$null = <commands>' instead of '<commands> | Out-Null'" {
+            $issues = @('')
+            $scriptFiles | ForEach-Object {
+                Select-String -Path $_.FullName -Pattern 'Out-Null' -AllMatches | ForEach-Object {
+                    $issues += " - $($_.Path):L$($_.LineNumber)"
+                }
+            }
+            $issues -join [Environment]::NewLine |
+                Should -BeNullOrEmpty -Because "the script should use '`$null = <commands>' instead of '<commands> | Out-Null'"
+        }
     }
 
     Context 'Function/filter design' {
