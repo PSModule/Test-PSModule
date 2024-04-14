@@ -71,7 +71,7 @@ Describe 'PSModule - SourceCode tests' {
         It "Should not use ternary operations for compatability reasons" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
-                Select-String -Path $_.FullName -Pattern '(?<!\|)\?\s*' -AllMatches | ForEach-Object {
+                Select-String -Path $_.FullName -Pattern '(?<!\|)\s+\?\s+' -AllMatches | ForEach-Object {
                     $issues += " - $($_.Path):L$($_.LineNumber)"
                 }
             }
