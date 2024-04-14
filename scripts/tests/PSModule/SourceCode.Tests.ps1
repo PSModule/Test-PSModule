@@ -49,7 +49,7 @@ Describe 'PSModule - SourceCode tests' {
         It "Should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
-                Select-String -Path $_.FullName -Pattern '-Verbose(?!\:\$false)' -AllMatches | ForEach-Object {
+                Select-String -Path $_.FullName -Pattern '"(?<!Write-)Verbose(?!\:\$false)"' -AllMatches | ForEach-Object {
                     $issues += " - $($_.Path):L$($_.LineNumber)"
                 }
             }
