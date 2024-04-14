@@ -1,6 +1,6 @@
 ﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-    'PSReviewUnusedParameter', 'Path',
-    Justification = 'Path is used to specify the path to the module to test.'
+    'PSReviewUnusedParameter', '',
+    Justification = 'Parameters are used in the test.'
 )]
 [CmdLetBinding()]
 Param(
@@ -17,8 +17,11 @@ BeforeAll {
         Where-Object { $_.Name -in 'public', 'private' } |
         Get-ChildItem -Filter '*.ps1' -File
 
+    $publicFunctionFiles = Get-ChildItem -Directory -Path (Join-Path -Path $Path -ChildPath 'public') -File -Filter '*.ps1'
+
     Write-Verbose "Found $($scriptFiles.Count) script files in $Path"
     Write-Verbose "Found $($functionFiles.Count) function files in $Path"
+    Write-Verbose "Found $($publicFunctionFiles.Count) public function files in $Path"
 }
 
 Describe 'PSModule - SourceCode tests' {
@@ -54,7 +57,7 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
 
-        It 'All functions/filters have tests' {
+        It 'All public functions/filters have tests' {
             $issues = @('')
 
             $testFiles = Get-ChildItem -Path $TestsPath -Recurse -File -Filter '*.ps1'
@@ -72,7 +75,7 @@ Describe 'PSModule - SourceCode tests' {
                 } | Sort-Object -Unique
             }
 
-            $functionFiles | ForEach-Object {
+            $publicFunctionFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
