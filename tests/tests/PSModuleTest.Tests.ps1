@@ -1,11 +1,20 @@
-﻿Describe 'PSModuleTest.Tests.ps1' {
-    It 'Should be able to import the module' {
-        Import-Module -Name 'PSModuleTest' -Verbose
-        Get-Module -Name 'PSModuleTest' | Should -Not -BeNullOrEmpty
-        Write-Verbose (Get-Module -Name 'PSModuleTest' | Out-String) -Verbose
+﻿Describe 'Module' {
+    It 'Function: Get-InternalPSModule' {
+        Get-InternalPSModule -Name 'World' | Should -Be 'Hello, World!'
     }
-    It 'Should be able to call the function' {
+    It 'Function: Set-InternalPSModule' {
+        Set-InternalPSModule -Name 'World' | Should -Be 'Hello, World!'
+    }
+    It 'Function: Get-PSModuleTest' {
+        Get-PSModuleTest -Name 'World' | Should -Be 'Hello, World!'
+    }
+    It 'Function: New-PSModuleTest' {
+        New-PSModuleTest -Name 'World' | Should -Be 'Hello, World!'
+    }
+    It 'Function: Set-PSModuleTest' {
+        Set-PSModuleTest -Name 'World' | Should -Be 'Hello, World!'
+    }
+    It 'Function: Test-PSModuleTest' {
         Test-PSModuleTest -Name 'World' | Should -Be 'Hello, World!'
-        Write-Verbose (Test-PSModuleTest -Name 'World' | Out-String) -Verbose
     }
 }
