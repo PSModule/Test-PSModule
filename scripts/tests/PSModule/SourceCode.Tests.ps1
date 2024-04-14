@@ -66,7 +66,7 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because "the script should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it."
         }
 
-        It "Should use '`$null = <commands>' instead of '<commands> | Out-Null'" {
+        It "Should use '`$null = <<commands>>' instead of '<<commands>> | Out-Null'" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
@@ -76,7 +76,7 @@ Describe 'PSModule - SourceCode tests' {
                 }
             }
             $issues -join [Environment]::NewLine |
-                Should -BeNullOrEmpty -Because "the script should use '`$null = <commands>' instead of '<commands> | Out-Null'"
+                Should -BeNullOrEmpty -Because "the script should use '`$null = <<commands>>' instead of '<<commands>> | Out-Null'"
         }
 
         It 'Should not use ternary operations for compatability reasons' {
@@ -91,9 +91,7 @@ Describe 'PSModule - SourceCode tests' {
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatability with PS 5.1 and below'
         }
-    }
 
-    Context 'Function/filter design' {
         # It 'comment based doc block start is indented with 4 spaces' {}
         # It 'comment based doc is indented with 8 spaces' {}
         # It 'has synopsis for all functions' {}
@@ -105,6 +103,7 @@ Describe 'PSModule - SourceCode tests' {
             $functionFiles | ForEach-Object {
                 $found = $false
                 $filePath = $_.FullName
+                $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $scriptAst.FindAll({ $true }, $true)
                 foreach ($token in $tokens) {
@@ -113,7 +112,7 @@ Describe 'PSModule - SourceCode tests' {
                     }
                 }
                 if (-not $found) {
-                    $issues += " - $filePath"
+                    $issues += " - $relativePath"
                 }
             }
             $issues -join [Environment]::NewLine |
