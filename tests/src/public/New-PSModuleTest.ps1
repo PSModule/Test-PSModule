@@ -26,4 +26,8 @@ function New-PSModuleTest {
         [string] $Name
     )
     Write-Output "Hello, $Name!"
+    $test = Get-Process | ? { $_.Name -eq 'explorer' }
+    Write-Verbose $test
+    $os = $IsWindows ? 'Windows' : 'Linux'
+    Write-Verbose $os
 }
