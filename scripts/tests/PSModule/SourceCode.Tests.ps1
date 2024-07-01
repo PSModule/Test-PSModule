@@ -214,7 +214,7 @@ Describe 'PSModule - SourceCode tests' {
     }
 
     Context 'Compatability checks' {
-        It "Should use '[System.Environment]::ProcessorCount' instead of '$env:NUMBER_OF_PROCESSORS'" {
+        It "Should use '[System.Environment]::ProcessorCount' instead of '`$env:NUMBER_OF_PROCESSORS'" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 Select-String -Path $_.FullName -Pattern '\$env:NUMBER_OF_PROCESSORS' -AllMatches | ForEach-Object {
