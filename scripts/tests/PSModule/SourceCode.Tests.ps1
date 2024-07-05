@@ -120,7 +120,7 @@ Describe 'PSModule - SourceCode tests' {
             $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
-                Select-String -Path $filePath -Pattern '(?<!\|)\s+\?' -AllMatches | ForEach-Object {
+                Select-String -Path $filePath -Pattern '(?<!\|)\s+\?\s' -AllMatches | ForEach-Object {
                     $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
             }
