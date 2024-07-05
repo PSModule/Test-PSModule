@@ -19,7 +19,6 @@ if (Test-Path -Path $codeToTest) {
     $codeToTest = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $env:GITHUB_ACTION_INPUT_Path
 }
 
-
 Write-Verbose "Code to test:      [$codeToTest]"
 if (-not (Test-Path -Path $codeToTest)) {
     throw "Path [$codeToTest] does not exist."
