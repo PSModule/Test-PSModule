@@ -13,11 +13,14 @@ Param(
 
 BeforeAll {
     $scriptFiles = Get-ChildItem -Path $Path -Include *.psm1, *.ps1 -Recurse -File
-    $functionFiles = Get-ChildItem -Directory -Path $Path |
-        Where-Object { $_.Name -in 'public', 'private' } |
-        Get-ChildItem -Filter '*.ps1' -File
-
-    $publicFunctionFiles = Get-ChildItem -Directory -Path (Join-Path -Path $Path -ChildPath 'public') -File -Filter '*.ps1'
+    $functionsPath = Join-Path -Path $Path -ChildPath 'functions'
+    # $privateFunctionsPath = Join-Path -Path $functionsPath -ChildPath 'private'
+    $publicFunctionsPath = Join-Path -Path $functionsPath -ChildPath 'public'
+    # $variablesPath = Join-Path -Path $Path -ChildPath 'variables'
+    # $privateVariablesPath = Join-Path -Path $variablesPath -ChildPath 'private'
+    # $publicVariablesPath = Join-Path -Path $variablesPath -ChildPath 'public'
+    $functionFiles = (Test-Path -Path $functionsPath) ? (Get-ChildItem -Path $functionsPath -Filter '*.ps1' -File) : $null
+    $publicFunctionFiles = (Test-Path -Path $publicFunctionsPath) ? (Get-ChildItem -Path $publicFunctionsPath -File -Filter '*.ps1' -Recurse) : $null
 
     Write-Verbose "Found $($scriptFiles.Count) script files in $Path"
     Write-Verbose "Found $($functionFiles.Count) function files in $Path"

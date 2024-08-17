@@ -34,8 +34,8 @@ if (-not (Test-Path -Path $testsPath)) {
 Stop-LogGroup
 
 $params = @{
-    Path     = $codeToTest
-    TestType = $env:GITHUB_ACTION_INPUT_TestType
+    Path      = $codeToTest
+    TestType  = $env:GITHUB_ACTION_INPUT_TestType
     TestsPath = $testsPath
 }
 $results = Test-PSModule @params
