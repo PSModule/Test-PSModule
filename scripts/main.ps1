@@ -1,12 +1,13 @@
-﻿#REQUIRES -Modules Utilities
-
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param()
 
-Start-LogGroup 'Loading helper scripts'
-Get-ChildItem -Path (Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts\helpers') -Filter '*.ps1' -Recurse |
-    ForEach-Object { Write-Verbose "[$($_.FullName)]"; . $_.FullName }
-Stop-LogGroup
+$path = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
+LogGroup "Loading helper scripts from [$path]" {
+    Get-ChildItem -Path $path -Filter '*.ps1' -Recurse | ForEach-Object {
+        Write-Verbose "[$($_.FullName)]"
+        . $_.FullName
+    }
+}
 
 Start-LogGroup 'Loading inputs'
 $moduleName = if ($env:GITHUB_ACTION_INPUT_Name | IsNullOrEmpty) { $env:GITHUB_REPOSITORY_NAME } else { $env:GITHUB_ACTION_INPUT_Name }
@@ -26,7 +27,7 @@ if (-not (Test-Path -Path $codeToTest)) {
 Write-Verbose "Test type to run:  [$env:GITHUB_ACTION_INPUT_TestType]"
 
 $testsPath = $env:GITHUB_ACTION_INPUT_TestsPath
-Write-Verbose "Path to tests:    [$testsPath]"
+Write-Verbose "Path to tests:     [$testsPath]"
 if (-not (Test-Path -Path $testsPath)) {
     throw "Path [$testsPath] does not exist."
 }
@@ -34,8 +35,8 @@ if (-not (Test-Path -Path $testsPath)) {
 Stop-LogGroup
 
 $params = @{
-    Path     = $codeToTest
-    TestType = $env:GITHUB_ACTION_INPUT_TestType
+    Path      = $codeToTest
+    TestType  = $env:GITHUB_ACTION_INPUT_TestType
     TestsPath = $testsPath
 }
 $results = Test-PSModule @params

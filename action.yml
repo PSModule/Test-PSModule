@@ -33,21 +33,22 @@ runs:
   using: composite
   steps:
     - name: Run Test-PSModule
+      uses: PSModule/GitHub-Script@v1
       id: test
-      shell: ${{ inputs.Shell }}
       env:
         GITHUB_ACTION_INPUT_Name: ${{ inputs.Name }}
         GITHUB_ACTION_INPUT_Path: ${{ inputs.Path }}
         GITHUB_ACTION_INPUT_TestType: ${{ inputs.TestType }}
         GITHUB_ACTION_INPUT_TestsPath: ${{ inputs.TestsPath }}
-      run: |
-        # Test-PSModule
-        $passed = . "$env:GITHUB_ACTION_PATH\scripts\main.ps1" -Verbose
-        "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+      with:
+        Script: |
+          # Test-PSModule
+          $passed = . "${{ github.action_path }}\scripts\main.ps1" -Verbose
+          "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
-        if (-not $passed) {
-          exit 1
-        }
+          if (-not $passed) {
+            exit 1
+          }
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
