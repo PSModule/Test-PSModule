@@ -1,7 +1,7 @@
 ﻿[CmdletBinding()]
 param()
 
-$path = (Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'helpers')
+$path = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
 LogGroup "Loading helper scripts from [$path]" {
     Get-ChildItem -Path $path -Filter '*.ps1' -Recurse | ForEach-Object {
         Write-Verbose "[$($_.FullName)]"
