@@ -1,6 +1,4 @@
-﻿#REQUIRES -Modules Utilities
-
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param()
 
 Start-LogGroup 'Loading helper scripts'

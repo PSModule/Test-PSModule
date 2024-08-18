@@ -24,8 +24,6 @@ jobs:
 
       - name: Initialize environment
         uses: PSModule/Initialize-PSModule@main
-        with:
-          Shell: pwsh
 
       - name: Action-Test
         uses: ./
@@ -34,5 +32,4 @@ jobs:
         with:
           Name: PSModuleTest
           Path: tests/outputs/modules
-          Shell: pwsh
           TestType: Module
