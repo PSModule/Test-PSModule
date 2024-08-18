@@ -27,7 +27,7 @@ if (-not (Test-Path -Path $codeToTest)) {
 Write-Verbose "Test type to run:  [$env:GITHUB_ACTION_INPUT_TestType]"
 
 $testsPath = $env:GITHUB_ACTION_INPUT_TestsPath
-Write-Verbose "Path to tests:    [$testsPath]"
+Write-Verbose "Path to tests:     [$testsPath]"
 if (-not (Test-Path -Path $testsPath)) {
     throw "Path [$testsPath] does not exist."
 }
