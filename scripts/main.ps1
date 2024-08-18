@@ -2,7 +2,7 @@
 param()
 
 LogGroup 'Loading helper scripts' {
-    Get-ChildItem -Path (Join-Path -Path $PSScriptRoot -ChildPath 'helpers') -Filter '*.ps1' -Recurse |
+    Get-ChildItem -Path (Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'helpers') -Filter '*.ps1' -Recurse |
         ForEach-Object { Write-Verbose "[$($_.FullName)]"; . $_.FullName }
 }
 
