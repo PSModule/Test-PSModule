@@ -1,9 +1,12 @@
 ﻿[CmdletBinding()]
 param()
 
-LogGroup 'Loading helper scripts' {
-    Get-ChildItem -Path (Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'helpers') -Filter '*.ps1' -Recurse |
-        ForEach-Object { Write-Verbose "[$($_.FullName)]"; . $_.FullName }
+$path = (Join-Path -Path $env:GITHUB_ACTION_PATH -ChildPath 'scripts' 'helpers')
+LogGroup "Loading helper scripts from [$path]" {
+    Get-ChildItem -Path $path -Filter '*.ps1' -Recurse | ForEach-Object {
+        Write-Verbose "[$($_.FullName)]"
+        . $_.FullName
+    }
 }
 
 Start-LogGroup 'Loading inputs'
