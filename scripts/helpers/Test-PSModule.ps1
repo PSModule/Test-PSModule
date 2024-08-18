@@ -42,7 +42,7 @@ function Test-PSModule {
     #region Add test - Common - PSScriptAnalyzer
     Start-LogGroup 'Add test - Common - PSScriptAnalyzer'
     $containers = @()
-    $PSSATestsPath = Join-Path -Path $PSScriptRoot -ChildPath 'tests\PSScriptAnalyzer'
+    $PSSATestsPath = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSScriptAnalyzer'
     $settingsFileName = if ($testModule) { 'Settings.Module.psd1' } else { 'Settings.SourceCode.psd1' }
     $settingsFilePath = Join-Path -Path $PSSATestsPath -ChildPath $settingsFileName
     $containerParams = @{
@@ -62,7 +62,7 @@ function Test-PSModule {
     #region Add test - Common - PSModule
     Start-LogGroup 'Add test - Common - PSModule'
     $containerParams = @{
-        Path = Join-Path -Path $PSScriptRoot -ChildPath 'tests\PSModule\Common.Tests.ps1'
+        Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Common.Tests.ps1'
         Data = @{
             Path    = $Path
             Verbose = $true
@@ -78,7 +78,7 @@ function Test-PSModule {
     if ($testModule) {
         Start-LogGroup 'Add test - Module - PSModule'
         $containerParams = @{
-            Path = Join-Path -Path $PSScriptRoot -ChildPath 'tests\PSModule\Module.Tests.ps1'
+            Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Module.Tests.ps1'
             Data = @{
                 Path    = $Path
                 Verbose = $true
@@ -95,7 +95,7 @@ function Test-PSModule {
     if ($testSourceCode) {
         Start-LogGroup 'Add test - SourceCode - PSModule'
         $containerParams = @{
-            Path = Join-Path -Path $PSScriptRoot -ChildPath 'tests\PSModule\SourceCode.Tests.ps1'
+            Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\SourceCode.Tests.ps1'
             Data = @{
                 Path      = $Path
                 TestsPath = $moduleTestsPath
