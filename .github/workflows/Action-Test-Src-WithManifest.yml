@@ -27,9 +27,15 @@ jobs:
 
       - name: Action-Test
         uses: ./
+        id: action-test
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModuleTest
           Path: tests/srcWithManifest
           TestType: SourceCode
+
+      - name: Status
+        shell: pwsh
+        run: |
+          Write-Host "Passed: [${{ steps.action-test.outputs.passed }}]"
