@@ -27,9 +27,19 @@ jobs:
 
       - name: Action-Test
         uses: ./
+        id: action-test
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModuleTest
           Path: tests/outputs/modules
           TestType: Module
+
+      - name: Status
+        shell: pwsh
+        run: |
+          $passed = '${{ steps.action-test.outputs.passed }}'
+          Write-Host "Passed: [$Passed]"
+          if ($passed -eq 'False') {
+            exit 1
+          }
