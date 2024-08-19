@@ -38,4 +38,8 @@ jobs:
       - name: Status
         shell: pwsh
         run: |
-          Write-Host "Passed: [${{ steps.action-test.outputs.passed }}]"
+          $passed = '${{ steps.action-test.outputs.passed }}'
+          Write-Host "Passed: [$Passed]"
+          if ($passed -eq 'False') {
+            exit 1
+          }
