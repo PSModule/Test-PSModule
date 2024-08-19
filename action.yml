@@ -46,6 +46,8 @@ runs:
           $passed = . "${{ github.action_path }}\scripts\main.ps1" -Verbose
           "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
+          Write-Host "Passed: [$passed]"
+          
           if (-not $passed) {
             exit 1
           }
