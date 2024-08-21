@@ -151,7 +151,7 @@
                 }
                 Output       = @{
                     CIFormat            = 'Auto'
-                    StackTraceVerbosity = 'None'
+                    StackTraceVerbosity = 'Full'
                     Verbosity           = 'Detailed'
                 }
             }
