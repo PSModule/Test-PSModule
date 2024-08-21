@@ -19,6 +19,14 @@ inputs:
     description: The path to the tests to run.
     required: false
     default: tests
+  StackTraceVerbosity:
+    description: "Verbosity level of the stack trace. Allowed values: 'None', 'FirstLine', 'Filtered', 'Full'."
+    required: false
+    default: 'None'
+  Verbosity:
+    description: "Verbosity level of the test output. Allowed values: 'None', 'Normal', 'Detailed', 'Diagnostic'."
+    required: false
+    default: 'Detailed'
 
 outputs:
   passed:
@@ -39,6 +47,8 @@ runs:
         GITHUB_ACTION_INPUT_Path: ${{ inputs.Path }}
         GITHUB_ACTION_INPUT_TestType: ${{ inputs.TestType }}
         GITHUB_ACTION_INPUT_TestsPath: ${{ inputs.TestsPath }}
+        GITHUB_ACTION_INPUT_StackTraceVerbosity: ${{ inputs.StackTraceVerbosity }}
+        GITHUB_ACTION_INPUT_Verbosity: ${{ inputs.Verbosity }}
       run: |
         # Test-PSModule
         $passed = . "${{ github.action_path }}\scripts\main.ps1" -Verbose
