@@ -47,6 +47,8 @@ runs:
         GITHUB_ACTION_INPUT_Path: ${{ inputs.Path }}
         GITHUB_ACTION_INPUT_TestType: ${{ inputs.TestType }}
         GITHUB_ACTION_INPUT_TestsPath: ${{ inputs.TestsPath }}
+        GITHUB_ACTION_INPUT_StackTraceVerbosity: ${{ inputs.StackTraceVerbosity }}
+        GITHUB_ACTION_INPUT_Verbosity: ${{ inputs.Verbosity }}
       run: |
         # Test-PSModule
         $passed = . "${{ github.action_path }}\scripts\main.ps1" -Verbose
