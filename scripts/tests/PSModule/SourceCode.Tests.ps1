@@ -13,24 +13,23 @@ Param(
 
 BeforeAll {
     $scriptFiles = Get-ChildItem -Path $Path -Include *.psm1, *.ps1 -Recurse -File
-    Write-Verbose "Script files:" -Verbose
-    $scriptFiles | ForEach-Object {
-        Write-Verbose " - $($_.FullName)" -Verbose
+    LogGroup 'Script files:' {
+        $scriptFiles | ForEach-Object {
+            Write-Verbose " - $($_.FullName)" -Verbose
+        }
     }
     $functionsPath = Join-Path -Path $Path -ChildPath 'functions'
-    Write-Verbose "Functions path: [$functionsPath]" -Verbose
     # $privateFunctionsPath = Join-Path -Path $functionsPath -ChildPath 'private'
     $publicFunctionsPath = Join-Path -Path $functionsPath -ChildPath 'public'
-    Write-Verbose "Public functions path: [$publicFunctionsPath]" -Verbose
     # $variablesPath = Join-Path -Path $Path -ChildPath 'variables'
     # $privateVariablesPath = Join-Path -Path $variablesPath -ChildPath 'private'
     # $publicVariablesPath = Join-Path -Path $variablesPath -ChildPath 'public'
     $functionFiles = (Test-Path -Path $functionsPath) ? (Get-ChildItem -Path $functionsPath -Filter '*.ps1' -File) : $null
     $publicFunctionFiles = (Test-Path -Path $publicFunctionsPath) ? (Get-ChildItem -Path $publicFunctionsPath -File -Filter '*.ps1' -Recurse) : $null
 
-    Write-Verbose "Found $($scriptFiles.Count) script files in $Path" -Verbose
-    Write-Verbose "Found $($functionFiles.Count) function files in $Path" -Verbose
-    Write-Verbose "Found $($publicFunctionFiles.Count) public function files in $Path" -Verbose
+    Write-Verbose "Found $($scriptFiles.Count) script files in [$Path]" -Verbose
+    Write-Verbose "Found $($functionFiles.Count) function files in [$functionsPath]" -Verbose
+    Write-Verbose "Found $($publicFunctionFiles.Count) public function files in [$publicFunctionsPath]" -Verbose
 }
 
 Describe 'PSModule - SourceCode tests' {
