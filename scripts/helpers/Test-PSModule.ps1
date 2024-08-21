@@ -5,6 +5,10 @@
     #>
     [OutputType([int])]
     [CmdletBinding()]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSReviewUnusedParameter', '', Scope = 'Function',
+        Justification = 'Parameters are used in nested ScriptBlocks'
+    )]
     param(
         # Path to the folder where the code to test is located.
         [Parameter(Mandatory)]
@@ -17,7 +21,17 @@
 
         # Path to the folder where the tests are located.
         [Parameter()]
-        [string] $TestsPath = 'tests'
+        [string] $TestsPath = 'tests',
+
+        # Verbosity level of the stack trace.
+        [Parameter()]
+        [ValidateSet('None', 'FirstLine', 'Filtered', 'Full')]
+        [string] $StackTraceVerbosity = 'None',
+
+        # Verbosity level of the test output.
+        [Parameter()]
+        [ValidateSet('None', 'Normal', 'Detailed', 'Diagnostic')]
+        [string] $Verbosity = 'Detailed'
     )
 
     $moduleName = Split-Path -Path $Path -Leaf
@@ -151,8 +165,8 @@
                 }
                 Output       = @{
                     CIFormat            = 'Auto'
-                    StackTraceVerbosity = 'Full'
-                    Verbosity           = 'Detailed'
+                    StackTraceVerbosity = $StackTraceVerbosity
+                    Verbosity           = $Verbosity
                 }
             }
         }

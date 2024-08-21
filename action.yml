@@ -19,6 +19,14 @@ inputs:
     description: The path to the tests to run.
     required: false
     default: tests
+  StackTraceVerbosity:
+    description: "Verbosity level of the stack trace. Allowed values: 'None', 'FirstLine', 'Filtered', 'Full'."
+    required: false
+    default: 'None'
+  Verbosity:
+    description: "Verbosity level of the test output. Allowed values: 'None', 'Normal', 'Detailed', 'Diagnostic'."
+    required: false
+    default: 'Detailed'
 
 outputs:
   passed:
