@@ -101,7 +101,6 @@ jobs:
 | `TestType` | The type of tests to run. Can be either `Module` or `SourceCode`.  | `true` | |
 | `Name` | The name of the module to test. The name of the repository is used if not specified. | `false` | |
 | `TestsPath` | The path to the tests to run. | `false` | `tests` |
-| `Shell` | The shell to use for running the tests. | `false` | `pwsh` |
 | `StackTraceVerbosity` | Verbosity level of the stack trace. Allowed values: `None`, `FirstLine`, `Filtered`, `Full`. | `false` | `None` |
 | `Verbosity` | Verbosity level of the test output. Allowed values: `None`, `Normal`, `Detailed`, `Diagnostic`. | `false` | `Detailed` |
 
