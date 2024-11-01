@@ -116,9 +116,6 @@
             LogGroup "Add test - Module - $moduleName" {
                 $containerParams = @{
                     Path = $moduleTestsPath
-                    Data = @{
-                        Path = $Path
-                    }
                 }
                 Write-Verbose 'ContainerParams:'
                 Write-Verbose "$($containerParams | ConvertTo-Json)"
