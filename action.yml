@@ -22,7 +22,7 @@ inputs:
   StackTraceVerbosity:
     description: "Verbosity level of the stack trace. Allowed values: 'None', 'FirstLine', 'Filtered', 'Full'."
     required: false
-    default: 'None'
+    default: 'Filtered'
   Verbosity:
     description: "Verbosity level of the test output. Allowed values: 'None', 'Normal', 'Detailed', 'Diagnostic'."
     required: false

@@ -26,7 +26,7 @@
         # Verbosity level of the stack trace.
         [Parameter()]
         [ValidateSet('None', 'FirstLine', 'Filtered', 'Full')]
-        [string] $StackTraceVerbosity = 'None',
+        [string] $StackTraceVerbosity = 'Filtered',
 
         # Verbosity level of the test output.
         [Parameter()]
