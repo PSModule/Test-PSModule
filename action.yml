@@ -64,12 +64,12 @@ runs:
       uses: actions/upload-artifact@v4
       if: ${{ inputs.TestType == 'Module' && (success() || failure()) }}
       with:
-        name: ${{ runner.os }}-${{ inputs.Shell }}-Test-Report
+        name: ${{ runner.os }}-Test-Report
         path: ${{ github.workspace }}/outputs/Test-Report.xml
 
     - name: Upload code coverage report
       uses: actions/upload-artifact@v4
       if: ${{ inputs.TestType == 'Module' && (success() || failure()) }}
       with:
-        name: ${{ runner.os }}-${{ inputs.Shell }}-CodeCoverage-Report
+        name: ${{ runner.os }}-CodeCoverage-Report
         path: ${{ github.workspace }}/outputs/CodeCoverage-Report.xml
