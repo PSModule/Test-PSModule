@@ -27,6 +27,14 @@ inputs:
     description: "Verbosity level of the test output. Allowed values: 'None', 'Normal', 'Detailed', 'Diagnostic'."
     required: false
     default: 'Detailed'
+  VerbosePreference:
+    description: "The preference for verbose output. Allowed values: 'SilentlyContinue', 'Stop', 'Continue', 'Inquire', 'Break', 'Ignore','Suspend'."
+    required: false
+    default: 'SilentlyContinue'
+  DebugPreference:
+    description: "The preference for debug output. Allowed values: 'SilentlyContinue', 'Stop', 'Continue', 'Inquire', 'Break', 'Ignore','Suspend'."
+    required: false
+    default: 'SilentlyContinue'
 
 outputs:
   passed:
@@ -49,10 +57,12 @@ runs:
         GITHUB_ACTION_INPUT_TestsPath: ${{ inputs.TestsPath }}
         GITHUB_ACTION_INPUT_StackTraceVerbosity: ${{ inputs.StackTraceVerbosity }}
         GITHUB_ACTION_INPUT_Verbosity: ${{ inputs.Verbosity }}
+        GITHUB_ACTION_INPUT_VerbosePreference: ${{ inputs.VerbosePreference }}
+        GITHUB_ACTION_INPUT_DebugPreference: ${{ inputs.DebugPreference }}
       run: |
         # Test-PSModule
-        $VerbosePreference = 'Continue'
-        $DebugPreference = 'Continue'
+        $VerbosePreference = $env:GITHUB_ACTION_INPUT_VerbosePreference
+        $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
         $passed = . "${{ github.action_path }}\scripts\main.ps1" -Verbose
         "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
