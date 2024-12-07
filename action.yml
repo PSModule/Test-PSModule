@@ -51,6 +51,8 @@ runs:
         GITHUB_ACTION_INPUT_Verbosity: ${{ inputs.Verbosity }}
       run: |
         # Test-PSModule
+        $VerbosePreference = 'Continue'
+        $DebugPreference = 'Continue'
         $passed = . "${{ github.action_path }}\scripts\main.ps1" -Verbose
         "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
