@@ -179,8 +179,15 @@
     }
 
     #region Run tests
+    $verbosePref = $VerbosePreference
+    $debugPref = $DebugPreference
+    $VerbosePreference = $env:GITHUB_ACTION_INPUT_DebugPreference
+    $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
     $results = Invoke-Pester @pesterParams
+    $VerbosePreference = $verbosePref
+    $DebugPreference = $debugPref
     #endregion
+
 
     $results
 }
