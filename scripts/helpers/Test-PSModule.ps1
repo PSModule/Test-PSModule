@@ -151,9 +151,9 @@
                     Container = $containers
                     PassThru  = $true
                 }
-                Debug        = @{
-                    WriteDebugMessages = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
-                }
+                # Debug        = @{
+                #     WriteDebugMessages = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
+                # }
                 TestResult   = @{
                     Enabled       = $testModule
                     OutputFormat  = 'NUnitXml'
