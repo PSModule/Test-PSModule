@@ -131,9 +131,9 @@
         LogGroup "Importing module: $moduleName" {
             Add-PSModulePath -Path (Split-Path $Path -Parent)
             $existingModule = Get-Module -Name $ModuleName -ListAvailable
-            $existingModule | Remove-Module -Force -Verbose
-            $existingModule.RequiredModules | ForEach-Object { $_ | Remove-Module -Force -Verbose -ErrorAction SilentlyContinue }
-            $existingModule.NestedModules | ForEach-Object { $_ | Remove-Module -Force -Verbose -ErrorAction SilentlyContinue }
+            $existingModule | Remove-Module -Force
+            $existingModule.RequiredModules | ForEach-Object { $_ | Remove-Module -Force -ErrorAction SilentlyContinue }
+            $existingModule.NestedModules | ForEach-Object { $_ | Remove-Module -Force -ErrorAction SilentlyContinue }
             Import-Module -Name $moduleName -Force -RequiredVersion '999.0.0' -Global
         }
     }
