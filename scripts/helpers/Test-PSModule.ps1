@@ -156,6 +156,11 @@
                     Container = $containers
                     PassThru  = $true
                 }
+                Debug        = @{
+                    WriteDebugMessages = $env:GITHUB_ACTION_INPUT_DebugPreference
+                    ShowNavigationMarkers = $true
+
+                }
                 TestResult   = @{
                     Enabled       = $testModule
                     OutputFormat  = 'NUnitXml'
