@@ -60,7 +60,6 @@
                 Path             = $Path
                 SettingsFilePath = $settingsFilePath
                 Verbose          = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                Debug            = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -74,7 +73,6 @@
             Data = @{
                 Path    = $Path
                 Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -89,7 +87,6 @@
                 Data = @{
                     Path    = $Path
                     Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -106,7 +103,6 @@
                     Path      = $Path
                     TestsPath = $moduleTestsPath
                     Verbose   = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                    Debug     = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -121,7 +117,6 @@
                 $containerParams = @{
                     Path    = $moduleTestsPath
                     Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
                 }
                 Write-Verbose 'ContainerParams:'
                 Write-Verbose "$($containerParams | ConvertTo-Json)"
@@ -157,7 +152,7 @@
                     PassThru  = $true
                 }
                 Debug        = @{
-                    WriteDebugMessages = $env:GITHUB_ACTION_INPUT_DebugPreference = 'Continue'
+                    WriteDebugMessages = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
                 }
                 TestResult   = @{
                     Enabled       = $testModule
@@ -184,13 +179,7 @@
     }
 
     #region Run tests
-    $verbosepref = $VerbosePreference
-    $debugpref = $DebugPreference
-    $VerbosePreference = $env:GITHUB_ACTION_INPUT_VerbosePreference
-    $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
     $results = Invoke-Pester @pesterParams
-    $VerbosePreference = $verbosepref
-    $DebugPreference = $debugpref
     #endregion
 
     $results

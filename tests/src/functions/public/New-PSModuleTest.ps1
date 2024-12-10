@@ -27,6 +27,7 @@ function New-PSModuleTest {
         [Parameter(Mandatory)]
         [string] $Name
     )
+    Write-Debug "Debug message"
     Write-Output "Hello, $Name!"
 }
 
