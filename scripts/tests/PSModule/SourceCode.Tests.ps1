@@ -15,7 +15,7 @@ BeforeAll {
     $scriptFiles = Get-ChildItem -Path $Path -Include *.psm1, *.ps1 -Recurse -File
     LogGroup 'Script files:' {
         $scriptFiles | ForEach-Object {
-            Write-Verbose " - $($_.FullName)" -Verbose
+            Write-Verbose " - $($_.FullName)"
         }
     }
     $functionsPath = Join-Path -Path $Path -ChildPath 'functions'
@@ -27,9 +27,9 @@ BeforeAll {
     $functionFiles = (Test-Path -Path $functionsPath) ? (Get-ChildItem -Path $functionsPath -Filter '*.ps1' -File) : $null
     $publicFunctionFiles = (Test-Path -Path $publicFunctionsPath) ? (Get-ChildItem -Path $publicFunctionsPath -File -Filter '*.ps1' -Recurse) : $null
 
-    Write-Verbose "Found $($scriptFiles.Count) script files in [$Path]" -Verbose
-    Write-Verbose "Found $($functionFiles.Count) function files in [$functionsPath]" -Verbose
-    Write-Verbose "Found $($publicFunctionFiles.Count) public function files in [$publicFunctionsPath]" -Verbose
+    Write-Verbose "Found $($scriptFiles.Count) script files in [$Path]"
+    Write-Verbose "Found $($functionFiles.Count) function files in [$functionsPath]"
+    Write-Verbose "Found $($publicFunctionFiles.Count) public function files in [$publicFunctionsPath]"
 }
 
 Describe 'PSModule - SourceCode tests' {

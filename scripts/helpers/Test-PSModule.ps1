@@ -70,7 +70,7 @@
         $containerParams = @{
             Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Common.Tests.ps1'
             Data = @{
-                Path    = $Path
+                Path = $Path
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -83,7 +83,7 @@
             $containerParams = @{
                 Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Module.Tests.ps1'
                 Data = @{
-                    Path    = $Path
+                    Path = $Path
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -111,7 +111,7 @@
         if (Test-Path -Path $moduleTestsPath) {
             LogGroup "Add test - Module - $moduleName" {
                 $containerParams = @{
-                    Path    = $moduleTestsPath
+                    Path = $moduleTestsPath
                 }
                 Write-Verbose 'ContainerParams:'
                 Write-Verbose "$($containerParams | ConvertTo-Json)"
