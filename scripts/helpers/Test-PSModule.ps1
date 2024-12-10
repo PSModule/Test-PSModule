@@ -59,6 +59,8 @@
             Data = @{
                 Path             = $Path
                 SettingsFilePath = $settingsFilePath
+                Debug            = $false
+                Verbose          = $false
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -70,7 +72,9 @@
         $containerParams = @{
             Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Common.Tests.ps1'
             Data = @{
-                Path = $Path
+                Path    = $Path
+                Debug   = $false
+                Verbose = $false
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -83,7 +87,9 @@
             $containerParams = @{
                 Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Module.Tests.ps1'
                 Data = @{
-                    Path = $Path
+                    Path    = $Path
+                    Debug   = $false
+                    Verbose = $false
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -99,6 +105,8 @@
                 Data = @{
                     Path      = $Path
                     TestsPath = $moduleTestsPath
+                    Debug     = $false
+                    Verbose   = $false
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -171,15 +179,8 @@
     }
 
     #region Run tests
-    $verbosePref = $VerbosePreference
-    $debugPref = $DebugPreference
-    $VerbosePreference = $env:GITHUB_ACTION_INPUT_DebugPreference
-    $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
     $results = Invoke-Pester @pesterParams
-    $VerbosePreference = $verbosePref
-    $DebugPreference = $debugPref
     #endregion
-
 
     $results
 }
