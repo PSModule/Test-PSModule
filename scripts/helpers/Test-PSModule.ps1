@@ -59,7 +59,8 @@
             Data = @{
                 Path             = $Path
                 SettingsFilePath = $settingsFilePath
-                Verbose          = $true
+                Verbose          = $env:GITHUB_ACTION_INPUT_VerbosePreference
+                Debug            = $env:GITHUB_ACTION_INPUT_DebugPreference
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -72,7 +73,8 @@
             Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Common.Tests.ps1'
             Data = @{
                 Path    = $Path
-                Verbose = $true
+                Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference
+                Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -86,7 +88,8 @@
                 Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Module.Tests.ps1'
                 Data = @{
                     Path    = $Path
-                    Verbose = $true
+                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference
+                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -102,7 +105,8 @@
                 Data = @{
                     Path      = $Path
                     TestsPath = $moduleTestsPath
-                    Verbose   = $true
+                    Verbose   = $env:GITHUB_ACTION_INPUT_VerbosePreference
+                    Debug     = $env:GITHUB_ACTION_INPUT_DebugPreference
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -115,7 +119,9 @@
         if (Test-Path -Path $moduleTestsPath) {
             LogGroup "Add test - Module - $moduleName" {
                 $containerParams = @{
-                    Path = $moduleTestsPath
+                    Path    = $moduleTestsPath
+                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference
+                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference
                 }
                 Write-Verbose 'ContainerParams:'
                 Write-Verbose "$($containerParams | ConvertTo-Json)"
@@ -134,7 +140,10 @@
 
         LogGroup "Importing module: $moduleName" {
             Add-PSModulePath -Path (Split-Path $Path -Parent)
-            Get-Module -Name $moduleName -ListAvailable | Remove-Module -Force
+            $existingModule = Get-Module -Name $ModuleName -ListAvailable
+            $existingModule | Remove-Module -Force -Verbose
+            $existingModule.RequiredModules | ForEach-Object { $_ | Remove-Module -Force -Verbose -ErrorAction SilentlyContinue }
+            $existingModule.NestedModules | ForEach-Object { $_ | Remove-Module -Force -Verbose -ErrorAction SilentlyContinue }
             Import-Module -Name $moduleName -Force -RequiredVersion '999.0.0' -Global
         }
     }
@@ -173,9 +182,12 @@
 
     #region Run tests
     $verbosepref = $VerbosePreference
-    $VerbosePreference = 'SilentlyContinue'
+    $debugpref = $DebugPreference
+    $VerbosePreference = $env:GITHUB_ACTION_INPUT_VerbosePreference
+    $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
     $results = Invoke-Pester @pesterParams
     $VerbosePreference = $verbosepref
+    $DebugPreference = $debugpref
     #endregion
 
     $results
