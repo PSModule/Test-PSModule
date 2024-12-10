@@ -181,7 +181,6 @@
     #region Run tests
     $results = Invoke-Pester @pesterParams
     #endregion
-    
 
     $results
 }
