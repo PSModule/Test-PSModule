@@ -268,6 +268,7 @@ function Get-PSModuleTest {
         [string] $Name
     )
     Write-Debug 'Debug message'
+    Write-Verbose 'Verbose message'
     Write-Output "Hello, $Name!"
 }
 
@@ -298,6 +299,8 @@ function New-PSModuleTest {
         [Parameter(Mandatory)]
         [string] $Name
     )
+    Write-Debug 'Debug message'
+    Write-Verbose 'Verbose message'
     Write-Output "Hello, $Name!"
 }
 
@@ -326,6 +329,8 @@ function Set-PSModuleTest {
         [Parameter(Mandatory)]
         [string] $Name
     )
+    Write-Debug 'Debug message'
+    Write-Verbose 'Verbose message'
     if ($PSCmdlet.ShouldProcess($Name, 'Set-PSModuleTest')) {
         Write-Output "Hello, $Name!"
     }
@@ -352,6 +357,8 @@ function Test-PSModuleTest {
         [Parameter(Mandatory)]
         [string] $Name
     )
+    Write-Debug 'Debug message'
+    Write-Verbose 'Verbose message'
     Write-Output "Hello, $Name!"
 }
 
