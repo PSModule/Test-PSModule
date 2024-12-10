@@ -157,7 +157,7 @@
                     PassThru  = $true
                 }
                 Debug        = @{
-                    WriteDebugMessages = $env:GITHUB_ACTION_INPUT_DebugPreference
+                    WriteDebugMessages    = $env:GITHUB_ACTION_INPUT_DebugPreference = 'Continue'
                     ShowNavigationMarkers = $true
 
                 }
