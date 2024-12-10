@@ -267,6 +267,7 @@ function Get-PSModuleTest {
         [Parameter(Mandatory)]
         [string] $Name
     )
+    Write-Debug 'Debug message'
     Write-Output "Hello, $Name!"
 }
 
@@ -319,13 +320,15 @@ function Set-PSModuleTest {
         'PSUseShouldProcessForStateChangingFunctions', '', Scope = 'Function',
         Justification = 'Reason for suppressing'
     )]
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
         # Name of the person to greet.
         [Parameter(Mandatory)]
         [string] $Name
     )
-    Write-Output "Hello, $Name!"
+    if ($PSCmdlet.ShouldProcess($Name, 'Set-PSModuleTest')) {
+        Write-Output "Hello, $Name!"
+    }
 }
 
 Write-Verbose "[$scriptName] - [/public/Set-PSModuleTest.ps1] - Done"
