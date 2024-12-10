@@ -34,8 +34,6 @@ jobs:
           Name: PSModuleTest
           Path: tests/src
           TestType: SourceCode
-          DebugPreference: 'Continue'
-          VerbosePreference: 'Continue'
 
       - name: Status
         shell: pwsh

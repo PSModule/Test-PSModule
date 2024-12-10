@@ -34,7 +34,6 @@ jobs:
           Name: PSModuleTest
           Path: tests/outputs/modules
           TestType: Module
-          DebugPreference: Continue
 
       - name: Status
         shell: pwsh
