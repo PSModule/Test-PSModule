@@ -59,8 +59,8 @@
             Data = @{
                 Path             = $Path
                 SettingsFilePath = $settingsFilePath
-                Verbose          = $env:GITHUB_ACTION_INPUT_VerbosePreference
-                Debug            = $env:GITHUB_ACTION_INPUT_DebugPreference
+                Verbose          = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
+                Debug            = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -73,8 +73,8 @@
             Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Common.Tests.ps1'
             Data = @{
                 Path    = $Path
-                Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference
-                Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference
+                Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
+                Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -88,8 +88,8 @@
                 Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Module.Tests.ps1'
                 Data = @{
                     Path    = $Path
-                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference
-                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference
+                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
+                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -105,8 +105,8 @@
                 Data = @{
                     Path      = $Path
                     TestsPath = $moduleTestsPath
-                    Verbose   = $env:GITHUB_ACTION_INPUT_VerbosePreference
-                    Debug     = $env:GITHUB_ACTION_INPUT_DebugPreference
+                    Verbose   = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
+                    Debug     = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -120,8 +120,8 @@
             LogGroup "Add test - Module - $moduleName" {
                 $containerParams = @{
                     Path    = $moduleTestsPath
-                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference
-                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference
+                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
+                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
                 }
                 Write-Verbose 'ContainerParams:'
                 Write-Verbose "$($containerParams | ConvertTo-Json)"
