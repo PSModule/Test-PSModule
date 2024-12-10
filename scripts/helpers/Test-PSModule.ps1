@@ -59,7 +59,6 @@
             Data = @{
                 Path             = $Path
                 SettingsFilePath = $settingsFilePath
-                Verbose          = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -72,7 +71,6 @@
             Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Common.Tests.ps1'
             Data = @{
                 Path    = $Path
-                Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -86,7 +84,6 @@
                 Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Module.Tests.ps1'
                 Data = @{
                     Path    = $Path
-                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -102,7 +99,6 @@
                 Data = @{
                     Path      = $Path
                     TestsPath = $moduleTestsPath
-                    Verbose   = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -116,7 +112,6 @@
             LogGroup "Add test - Module - $moduleName" {
                 $containerParams = @{
                     Path    = $moduleTestsPath
-                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
                 }
                 Write-Verbose 'ContainerParams:'
                 Write-Verbose "$($containerParams | ConvertTo-Json)"
@@ -151,9 +146,6 @@
                     Container = $containers
                     PassThru  = $true
                 }
-                # Debug        = @{
-                #     WriteDebugMessages = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
-                # }
                 TestResult   = @{
                     Enabled       = $testModule
                     OutputFormat  = 'NUnitXml'
@@ -181,8 +173,8 @@
     #region Run tests
     $verbosePref = $VerbosePreference
     $debugPref = $DebugPreference
-    # $VerbosePreference = $env:GITHUB_ACTION_INPUT_DebugPreference
-    # $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
+    $VerbosePreference = $env:GITHUB_ACTION_INPUT_DebugPreference
+    $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
     $results = Invoke-Pester @pesterParams
     $VerbosePreference = $verbosePref
     $DebugPreference = $debugPref
