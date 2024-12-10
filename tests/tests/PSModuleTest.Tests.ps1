@@ -1,8 +1,9 @@
-﻿BeforeAll{
-    $DebugPreference = 'Continue'
-}
-
+﻿
 Describe 'Module' {
+    BeforeEach {
+        $DebugPreference = 'Continue'
+    }
+
     It 'Function: Get-PSModuleTest' {
         Get-PSModuleTest -Name 'World' -Verbose | Should -Be 'Hello, World!'
     }
