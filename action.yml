@@ -61,8 +61,8 @@ runs:
         GITHUB_ACTION_INPUT_DebugPreference: ${{ inputs.DebugPreference }}
       run: |
         # Test-PSModule
-        $VerbosePreference = $env:GITHUB_ACTION_INPUT_VerbosePreference
-        $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
+        # $VerbosePreference = $env:GITHUB_ACTION_INPUT_VerbosePreference
+        # $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
         $passed = . "${{ github.action_path }}\scripts\main.ps1" -Verbose
         "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
