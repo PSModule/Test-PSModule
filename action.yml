@@ -63,7 +63,7 @@ runs:
         # Test-PSModule
         # $VerbosePreference = $env:GITHUB_ACTION_INPUT_VerbosePreference
         # $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
-        $passed = . "${{ github.action_path }}\scripts\main.ps1" -Verbose
+        $passed = . "${{ github.action_path }}\scripts\main.ps1"
         "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
         Write-Host "Passed: [$passed]"
