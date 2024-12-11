@@ -56,13 +56,13 @@ $failedTests = $results.FailedCount
 
 if ($failedTests -gt 0) {
     Write-Host '::error::❌ Some tests failed.'
-    return $false
 }
 if ($results.Result -ne 'Passed') {
     Write-Host '::error::❌ Some tests failed.'
-    return $false
 }
 if ($failedTests -eq 0) {
     Write-Host '::notice::✅ All tests passed.'
-    return $true
 }
+
+Set-GitHubOutput -Name 'passed' -Value ($failedTests -eq 0)
+exit $failedTests

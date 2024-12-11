@@ -46,7 +46,7 @@ inputs:
 outputs:
   passed:
     description: If the tests passed.
-    value: ${{ steps.test.outputs.passed }}
+    value: ${{ fromJSON(steps.test.outputs.result).passed }}
 
 runs:
   using: composite
@@ -68,13 +68,7 @@ runs:
         Version: ${{ inputs.Version }}
         Script: |
           # Test-PSModule
-          $passed = . "${{ github.action_path }}\scripts\main.ps1"
-          Set-GitHubOutput -Name 'passed' -Value $passed
-
-          Write-Host "Passed: [$passed]"
-          if (-not $passed) {
-            exit 1
-          }
+          . "${{ github.action_path }}\scripts\main.ps1"
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
