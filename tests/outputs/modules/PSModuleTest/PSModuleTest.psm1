@@ -24,9 +24,9 @@ Write-Verbose "[$scriptName] - [/init] - Processing folder"
 #region - From /init/initializer.ps1
 Write-Verbose "[$scriptName] - [/init/initializer.ps1] - Importing"
 
-Write-Verbose '-------------------------------' -Verbose
-Write-Verbose '---  THIS IS AN INITIALIZER ---' -Verbose
-Write-Verbose '-------------------------------' -Verbose
+Write-Verbose '-------------------------------'
+Write-Verbose '---  THIS IS AN INITIALIZER ---'
+Write-Verbose '-------------------------------'
 
 Write-Verbose "[$scriptName] - [/init/initializer.ps1] - Done"
 #endregion - From /init/initializer.ps1
@@ -267,6 +267,8 @@ function Get-PSModuleTest {
         [Parameter(Mandatory)]
         [string] $Name
     )
+    Write-Debug 'Debug message'
+    Write-Verbose 'Verbose message'
     Write-Output "Hello, $Name!"
 }
 
@@ -297,6 +299,8 @@ function New-PSModuleTest {
         [Parameter(Mandatory)]
         [string] $Name
     )
+    Write-Debug 'Debug message'
+    Write-Verbose 'Verbose message'
     Write-Output "Hello, $Name!"
 }
 
@@ -319,13 +323,17 @@ function Set-PSModuleTest {
         'PSUseShouldProcessForStateChangingFunctions', '', Scope = 'Function',
         Justification = 'Reason for suppressing'
     )]
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     param (
         # Name of the person to greet.
         [Parameter(Mandatory)]
         [string] $Name
     )
-    Write-Output "Hello, $Name!"
+    Write-Debug 'Debug message'
+    Write-Verbose 'Verbose message'
+    if ($PSCmdlet.ShouldProcess($Name, 'Set-PSModuleTest')) {
+        Write-Output "Hello, $Name!"
+    }
 }
 
 Write-Verbose "[$scriptName] - [/public/Set-PSModuleTest.ps1] - Done"
@@ -349,6 +357,8 @@ function Test-PSModuleTest {
         [Parameter(Mandatory)]
         [string] $Name
     )
+    Write-Debug 'Debug message'
+    Write-Verbose 'Verbose message'
     Write-Output "Hello, $Name!"
 }
 
@@ -361,9 +371,9 @@ Write-Verbose "[$scriptName] - [/public] - Done"
 #region - From /finally.ps1
 Write-Verbose "[$scriptName] - [/finally.ps1] - Importing"
 
-Write-Verbose '------------------------------' -Verbose
-Write-Verbose '---  THIS IS A LAST LOADER ---' -Verbose
-Write-Verbose '------------------------------' -Verbose
+Write-Verbose '------------------------------'
+Write-Verbose '---  THIS IS A LAST LOADER ---'
+Write-Verbose '------------------------------'
 Write-Verbose "[$scriptName] - [/finally.ps1] - Done"
 #endregion - From /finally.ps1
 

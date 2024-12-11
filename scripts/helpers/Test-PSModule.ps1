@@ -59,8 +59,8 @@
             Data = @{
                 Path             = $Path
                 SettingsFilePath = $settingsFilePath
-                Verbose          = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                Debug            = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
+                Debug            = $false
+                Verbose          = $false
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -73,8 +73,8 @@
             Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Common.Tests.ps1'
             Data = @{
                 Path    = $Path
-                Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
+                Debug   = $false
+                Verbose = $false
             }
         }
         Write-Verbose 'ContainerParams:'
@@ -88,8 +88,8 @@
                 Path = Join-Path -Path $PSScriptRoot -ChildPath '..\tests\PSModule\Module.Tests.ps1'
                 Data = @{
                     Path    = $Path
-                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
+                    Debug   = $false
+                    Verbose = $false
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -105,8 +105,8 @@
                 Data = @{
                     Path      = $Path
                     TestsPath = $moduleTestsPath
-                    Verbose   = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                    Debug     = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
+                    Debug     = $false
+                    Verbose   = $false
                 }
             }
             Write-Verbose 'ContainerParams:'
@@ -119,9 +119,7 @@
         if (Test-Path -Path $moduleTestsPath) {
             LogGroup "Add test - Module - $moduleName" {
                 $containerParams = @{
-                    Path    = $moduleTestsPath
-                    Verbose = $env:GITHUB_ACTION_INPUT_VerbosePreference -eq 'Continue'
-                    Debug   = $env:GITHUB_ACTION_INPUT_DebugPreference -eq 'Continue'
+                    Path = $moduleTestsPath
                 }
                 Write-Verbose 'ContainerParams:'
                 Write-Verbose "$($containerParams | ConvertTo-Json)"
@@ -141,9 +139,9 @@
         LogGroup "Importing module: $moduleName" {
             Add-PSModulePath -Path (Split-Path $Path -Parent)
             $existingModule = Get-Module -Name $ModuleName -ListAvailable
-            $existingModule | Remove-Module -Force -Verbose
-            $existingModule.RequiredModules | ForEach-Object { $_ | Remove-Module -Force -Verbose -ErrorAction SilentlyContinue }
-            $existingModule.NestedModules | ForEach-Object { $_ | Remove-Module -Force -Verbose -ErrorAction SilentlyContinue }
+            $existingModule | Remove-Module -Force
+            $existingModule.RequiredModules | ForEach-Object { $_ | Remove-Module -Force -ErrorAction SilentlyContinue }
+            $existingModule.NestedModules | ForEach-Object { $_ | Remove-Module -Force -ErrorAction SilentlyContinue }
             Import-Module -Name $moduleName -Force -RequiredVersion '999.0.0' -Global
         }
     }
@@ -155,9 +153,6 @@
                     Path      = $Path
                     Container = $containers
                     PassThru  = $true
-                }
-                Debug        = @{
-                    WriteDebugMessages = $env:GITHUB_ACTION_INPUT_DebugPreference = 'Continue'
                 }
                 TestResult   = @{
                     Enabled       = $testModule
@@ -184,13 +179,7 @@
     }
 
     #region Run tests
-    $verbosepref = $VerbosePreference
-    $debugpref = $DebugPreference
-    $VerbosePreference = $env:GITHUB_ACTION_INPUT_VerbosePreference
-    $DebugPreference = $env:GITHUB_ACTION_INPUT_DebugPreference
     $results = Invoke-Pester @pesterParams
-    $VerbosePreference = $verbosepref
-    $DebugPreference = $debugpref
     #endregion
 
     $results

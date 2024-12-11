@@ -2,7 +2,11 @@ name: Action-Test [outputs]
 
 run-name: "Action-Test [outputs] - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}"
 
-on: [pull_request]
+on:
+  workflow_dispatch:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -37,9 +41,10 @@ jobs:
 
       - name: Status
         shell: pwsh
+        env:
+          PASSED: ${{ steps.action-test.outputs.passed }}
         run: |
-          $passed = '${{ steps.action-test.outputs.passed }}'
-          Write-Host "Passed: [$Passed]"
-          if ($passed -eq 'False') {
+          Write-Host "Passed: [$env:PASSED]"
+          if ($env:PASSED -ne 'true') {
             exit 1
           }
