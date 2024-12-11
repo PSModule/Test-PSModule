@@ -41,8 +41,11 @@ jobs:
 
       - name: Status
         shell: pwsh
+        env:
+          result: ${{ steps.action-test.outputs.result }}
         run: |
-          $passed = '${{ steps.action-test.outputs.passed }}'
+          $result = $env:result | ConvertFrom-Json
+          $passed = $result.Passed
           Write-Host "Passed: [$Passed]"
           if ($passed -eq 'False') {
             exit 1

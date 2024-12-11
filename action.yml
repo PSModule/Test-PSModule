@@ -69,10 +69,9 @@ runs:
         Script: |
           # Test-PSModule
           $passed = . "${{ github.action_path }}\scripts\main.ps1"
-          "passed=$passed" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          Set-GitHubOutput -Name 'passed' -Value $passed
 
           Write-Host "Passed: [$passed]"
-
           if (-not $passed) {
             exit 1
           }
