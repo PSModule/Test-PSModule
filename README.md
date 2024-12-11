@@ -103,8 +103,10 @@ jobs:
 | `TestsPath` | The path to the tests to run. | `false` | `tests` |
 | `StackTraceVerbosity` | Verbosity level of the stack trace. Allowed values: `None`, `FirstLine`, `Filtered`, `Full`. | `false` | `Filtered` |
 | `Verbosity` | Verbosity level of the test output. Allowed values: `None`, `Normal`, `Detailed`, `Diagnostic`. | `false` | `Detailed` |
-| `VerbosePreference` | The preference for verbose output. Allowed values: `SilentlyContinue`, `Stop`, `Continue`, `Inquire`, `Break`, `Ignore`, `Suspend`. | `false` | `SilentlyContinue` |
-| `DebugPreference` | The preference for debug output. Allowed values: `SilentlyContinue`, `Stop`, `Continue`, `Inquire`, `Break`, `Ignore`, `Suspend`. | `false` | `SilentlyContinue` |
+| `Debug` | Enable debug output. | `'false'` | `false` |
+| `Verbose` | Enable verbose output. | `'false'` | `false` |
+| `Version` | Specifies the version of the GitHub module to be installed. The value must be an exact version. | | `false` |
+| `Prerelease` | Allow prerelease versions if available. | `'false'` | `false` |
 
 ### Outputs
 
