@@ -45,6 +45,6 @@ jobs:
           PASSED: ${{ steps.action-test.outputs.passed }}
         run: |
           Write-Host "Passed: [$env:PASSED]"
-          if ($env:PASSED -eq 'False') {
+          if ($env:PASSED -ne 'true') {
             exit 1
           }
