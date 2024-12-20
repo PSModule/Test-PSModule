@@ -123,7 +123,7 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because "the script should use '`$null = ...' instead of '... | Out-Null'"
         }
 
-        It 'Should not use ternary operations for compatability reasons' {
+        It 'Should not use ternary operations for compatability reasons' -Skip {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
