@@ -1,5 +1,6 @@
 ﻿#Requires -Modules @{ModuleName='PSSemVer'; ModuleVersion='1.0'}
-
+#SkipTest:FunctionTest:Difficult to test due to the nature of the function.
+#SkipTest:Verbose:Just want to test that a function can have multiple skips.
 function New-PSModuleTest {
     <#
         .SYNOPSIS
@@ -28,11 +29,10 @@ function New-PSModuleTest {
         [string] $Name
     )
     Write-Debug "Debug message"
+    Write-Verbose "Verbose message" -Verbose
     Write-Output "Hello, $Name!"
 }
 
 New-Alias New-PSModuleTestAlias3 New-PSModuleTest
 New-Alias -Name New-PSModuleTestAlias4 -Value New-PSModuleTest
-
-
 Set-Alias New-PSModuleTestAlias5 New-PSModuleTest
