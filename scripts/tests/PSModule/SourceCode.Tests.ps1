@@ -346,7 +346,7 @@ Describe 'PSModule - SourceCode tests' {
                 $functionBearingPublicFiles | ForEach-Object {
                     $filePath = $_.FullName
                     $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
-                    $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                    $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)'
                     $skipTest | Out-String -Stream | ForEach-Object { Write-Verbose $_ -Verbose }
                     if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'FunctionTest') {
                         Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
