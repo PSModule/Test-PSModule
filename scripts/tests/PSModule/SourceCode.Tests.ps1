@@ -110,7 +110,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:NumberOfProcessors:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        Write-Verbose " - $relativePath - $skipReason" -Verbose
+                        Write-GitHubWarning " - $relativePath - $skipReason"
                         continue
                     }
                     $issues += " - $($_.Path):L$($_.LineNumber)"
@@ -127,7 +127,7 @@ Describe 'PSModule - SourceCode tests' {
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:Verbose:(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                    Write-Verbose " - $relativePath - $skipReason" -Verbose
+                    Write-GitHubWarning " - $relativePath - $skipReason"
                     continue
                 }
                 Select-String -Path $filePath -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
@@ -145,7 +145,7 @@ Describe 'PSModule - SourceCode tests' {
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:OutNull:(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                    Write-Verbose " - $relativePath - $skipReason" -Verbose
+                    Write-GitHubWarning " - $relativePath - $skipReason"
                     continue
                 }
                 Select-String -Path $filePath -Pattern 'Out-Null' -AllMatches | ForEach-Object {
@@ -163,7 +163,7 @@ Describe 'PSModule - SourceCode tests' {
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:NoTernary:(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                    Write-Verbose " - $relativePath - $skipReason" -Verbose
+                    Write-GitHubWarning " - $relativePath - $skipReason"
                     continue
                 }
                 Select-String -Path $filePath -Pattern '(?<!\|)\s+\?\s' -AllMatches | ForEach-Object {
@@ -181,7 +181,7 @@ Describe 'PSModule - SourceCode tests' {
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:LowercaseKeywords:(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                    Write-Verbose " - $relativePath - $skipReason" -Verbose
+                    Write-GitHubWarning " - $relativePath - $skipReason"
                     continue
                 }
                 $errors = $null
@@ -237,7 +237,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:FunctionCount:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        Write-Verbose " - $relativePath - $skipReason" -Verbose
+                        Write-GitHubWarning " - $relativePath - $skipReason"
                         continue
                     }
                     $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
@@ -258,7 +258,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:FunctionName:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        Write-Verbose " - $relativePath - $skipReason" -Verbose
+                        Write-GitHubWarning " - $relativePath - $skipReason"
                         continue
                     }
                     $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
@@ -279,7 +279,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:CmdletBinding:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        Write-Verbose " - $relativePath - $skipReason" -Verbose
+                        Write-GitHubWarning " - $relativePath - $skipReason"
                         continue
                     }
                     $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
@@ -305,7 +305,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:ParamBlock:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        Write-Verbose " - $relativePath - $skipReason" -Verbose
+                        Write-GitHubWarning " - $relativePath - $skipReason"
                         continue
                     }
                     $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
@@ -357,7 +357,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:FunctionTest:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        Write-Verbose " - $relativePath - $skipReason" -Verbose
+                        Write-GitHubWarning " - $relativePath - $skipReason"
                         continue
                     }
                     $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
