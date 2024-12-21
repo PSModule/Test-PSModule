@@ -99,7 +99,7 @@ Describe 'PSModule - SourceCode tests' {
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'FunctionCount') {
-                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                     continue
                 }
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
@@ -120,7 +120,7 @@ Describe 'PSModule - SourceCode tests' {
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'FunctionName') {
-                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                     continue
                 }
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
@@ -158,7 +158,7 @@ Describe 'PSModule - SourceCode tests' {
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'FunctionTest') {
-                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                     continue
                 }
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
@@ -180,7 +180,7 @@ Describe 'PSModule - SourceCode tests' {
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'Verbose') {
-                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                     continue
                 }
                 Select-String -Path $filePath -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
@@ -198,7 +198,7 @@ Describe 'PSModule - SourceCode tests' {
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'OutNull') {
-                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                     continue
                 }
                 Select-String -Path $filePath -Pattern 'Out-Null' -AllMatches | ForEach-Object {
@@ -216,7 +216,7 @@ Describe 'PSModule - SourceCode tests' {
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'NoTernary') {
-                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                     continue
                 }
                 Select-String -Path $filePath -Pattern '(?<!\|)\s+\?\s' -AllMatches | ForEach-Object {
@@ -234,7 +234,7 @@ Describe 'PSModule - SourceCode tests' {
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'LowercaseKeywords') {
-                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                     continue
                 }
 
@@ -268,7 +268,7 @@ Describe 'PSModule - SourceCode tests' {
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'CmdletBinding') {
-                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                     continue
                 }
                 $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
@@ -294,7 +294,7 @@ Describe 'PSModule - SourceCode tests' {
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'ParamBlock') {
-                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                     continue
                 }
                 $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
@@ -336,7 +336,7 @@ Describe 'PSModule - SourceCode tests' {
                     $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'NumberOfProcessors') {
-                        Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                        Write-Verbose " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)" -Verbose
                         continue
                     }
                     $issues += " - $($_.Path):L$($_.LineNumber)"
