@@ -21,7 +21,7 @@ BeforeAll {
         }
     }
     $functionsPath = Join-Path -Path $Path -ChildPath 'functions'
-    $functionFiles = (Test-Path -Path $functionsPath) ? (Get-ChildItem -Path $functionsPath -Filter '*.ps1' -File) : $null
+    $functionFiles = (Test-Path -Path $functionsPath) ? (Get-ChildItem -Path $functionsPath -File -Filter '*.ps1' -Recurse) : $null
     LogGroup "Found $($functionFiles.Count) function files in [$functionsPath]" {
         $functionFiles | ForEach-Object {
             Write-Verbose " - $($_.FullName)" -Verbose
