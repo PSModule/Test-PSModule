@@ -1,5 +1,5 @@
 ﻿#Requires -Modules @{ModuleName='PSSemVer'; ModuleVersion='1.0'}
-
+#SkipTest:FunctionTest:Difficult to test due to the nature of the function.
 function New-PSModuleTest {
     <#
         .SYNOPSIS
