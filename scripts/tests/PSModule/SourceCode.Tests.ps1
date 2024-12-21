@@ -92,11 +92,16 @@ BeforeAll {
 
 Describe 'PSModule - SourceCode tests' {
     Context 'function/filter' {
-        It 'Should contain one function or filter' {
+        It 'Should contain one function or filter (ID: FunctionCount)' {
             $issues = @('')
             $functionFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'FunctionCount') {
+                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    continue
+                }
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
                 if ($tokens.count -ne 1) {
@@ -107,12 +112,17 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script should contain one function or filter'
         }
 
-        It 'Should have matching filename and function/filter name' {
+        It 'Should have matching filename and function/filter name (ID: FunctionName)' {
             $issues = @('')
             $functionFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $fileName = $_.BaseName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'FunctionName') {
+                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    continue
+                }
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
                 if ($tokens.Name -ne $fileName) {
@@ -123,9 +133,10 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script files should be called the same as the function they contain'
         }
 
-        It 'All public functions/filters have tests' {
+        It 'All public functions/filters have tests (ID: FunctionTest)' {
             $issues = @('')
 
+            # Get commands used in tests from the files in 'tests' folder.
             $testFiles = Get-ChildItem -Path $TestsPath -Recurse -File -Filter '*.ps1'
             $functionsInTestFiles = $testFiles | ForEach-Object {
                 $ast = [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$null)
@@ -141,9 +152,15 @@ Describe 'PSModule - SourceCode tests' {
                 } | Sort-Object -Unique
             }
 
+            # Get all the functions in the public function files and check if they have a test.
             $publicFunctionFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'FunctionTest') {
+                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    continue
+                }
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
                 $functionName = $tokens.Name
@@ -155,11 +172,16 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'a test should exist for each of the functions in the module'
         }
 
-        It "Should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it" {
+        It "Should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it (ID: Verbose)" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'Verbose') {
+                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    continue
+                }
                 Select-String -Path $filePath -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
                     $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
@@ -168,11 +190,16 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because "the script should not contain '-Verbose' unless it is disabled using ':`$false' qualifier after it."
         }
 
-        It "Should use '`$null = ...' instead of '... | Out-Null'" {
+        It "Should use '`$null = ...' instead of '... | Out-Null' (ID: OutNull)" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'OutNull') {
+                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    continue
+                }
                 Select-String -Path $filePath -Pattern 'Out-Null' -AllMatches | ForEach-Object {
                     $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
@@ -181,11 +208,16 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because "the script should use '`$null = ...' instead of '... | Out-Null'"
         }
 
-        It 'Should not use ternary operations for compatability reasons' -Skip {
+        It 'Should not use ternary operations for compatability reasons (ID: NoTernary)' -Skip {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'NoTernary') {
+                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    continue
+                }
                 Select-String -Path $filePath -Pattern '(?<!\|)\s+\?\s' -AllMatches | ForEach-Object {
                     $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
                 }
@@ -194,11 +226,16 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatability with PS 5.1 and below'
         }
 
-        It 'all powershell keywords are lowercase' {
+        It 'all powershell keywords are lowercase (ID: LowercaseKeywords)' {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'LowercaseKeywords') {
+                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    continue
+                }
 
                 $errors = $null
                 $tokens = $null
@@ -222,12 +259,17 @@ Describe 'PSModule - SourceCode tests' {
         # It 'has description for all functions' {}
         # It 'has examples for all functions' {}
 
-        It 'Should have [CmdletBinding()] attribute' {
+        It 'Should have [CmdletBinding()] attribute (ID: CmdletBinding)' {
             $issues = @('')
             $functionFiles | ForEach-Object {
                 $found = $false
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'CmdletBinding') {
+                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    continue
+                }
                 $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $scriptAst.FindAll({ $true }, $true)
                 foreach ($token in $tokens) {
@@ -243,12 +285,17 @@ Describe 'PSModule - SourceCode tests' {
                 Should -BeNullOrEmpty -Because 'the script should have [CmdletBinding()] attribute'
         }
 
-        It 'Should have a param() block' {
+        It 'Should have a param() block (ID: ParamBlock)' {
             $issues = @('')
             $functionFiles | ForEach-Object {
                 $found = $false
                 $filePath = $_.FullName
                 $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'ParamBlock') {
+                    Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                    continue
+                }
                 $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $scriptAst.FindAll({ $args[0] -is [System.Management.Automation.Language.ParamBlockAst] }, $true)
                 foreach ($token in $tokens) {
@@ -280,10 +327,17 @@ Describe 'PSModule - SourceCode tests' {
     }
 
     Context 'Compatability checks' {
-        It "Should use '[System.Environment]::ProcessorCount' instead of '`$env:NUMBER_OF_PROCESSORS'" {
+        It "Should use '[System.Environment]::ProcessorCount' instead of '`$env:NUMBER_OF_PROCESSORS' (ID: NumberOfProcessors)" {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 Select-String -Path $_.FullName -Pattern '\$env:NUMBER_OF_PROCESSORS' -AllMatches | ForEach-Object {
+                    $filePath = $_.FullName
+                    $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
+                    $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
+                    if ($skipTest.Matches.Count -gt 0 -and $skipTest.Matches.Groups['Type'].Value -eq 'NumberOfProcessors') {
+                        Write-Warning " - $relativePath - $($skipTest.Matches.Groups['Reason'].Value)"
+                        continue
+                    }
                     $issues += " - $($_.Path):L$($_.LineNumber)"
                 }
             }

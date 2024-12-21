@@ -1,5 +1,5 @@
 ﻿#Requires -Modules @{ModuleName='PSSemVer'; ModuleVersion='1.0'}
-
+#SkipTest:FunctionTest:Difficult to test due to the nature of the function.
 function New-PSModuleTest {
     <#
         .SYNOPSIS
@@ -33,6 +33,4 @@ function New-PSModuleTest {
 
 New-Alias New-PSModuleTestAlias3 New-PSModuleTest
 New-Alias -Name New-PSModuleTestAlias4 -Value New-PSModuleTest
-
-
 Set-Alias New-PSModuleTestAlias5 New-PSModuleTest
