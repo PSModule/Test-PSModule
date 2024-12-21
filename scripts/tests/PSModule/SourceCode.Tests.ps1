@@ -111,9 +111,9 @@ Describe 'PSModule - SourceCode tests' {
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                         Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping NumberOfProcessors test'
-                        continue
+                    } else {
+                        $issues += " - $($_.Path):L$($_.LineNumber)"
                     }
-                    $issues += " - $($_.Path):L$($_.LineNumber)"
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -128,10 +128,10 @@ Describe 'PSModule - SourceCode tests' {
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                     Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping Verbose test'
-                    continue
-                }
-                Select-String -Path $filePath -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
-                    $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
+                } else {
+                    Select-String -Path $filePath -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
+                        $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
+                    }
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -146,10 +146,10 @@ Describe 'PSModule - SourceCode tests' {
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                     Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping OutNull test'
-                    continue
-                }
-                Select-String -Path $filePath -Pattern 'Out-Null' -AllMatches | ForEach-Object {
-                    $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
+                } else {
+                    Select-String -Path $filePath -Pattern 'Out-Null' -AllMatches | ForEach-Object {
+                        $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
+                    }
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -164,10 +164,10 @@ Describe 'PSModule - SourceCode tests' {
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                     Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping NoTernary test'
-                    continue
-                }
-                Select-String -Path $filePath -Pattern '(?<!\|)\s+\?\s' -AllMatches | ForEach-Object {
-                    $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
+                } else {
+                    Select-String -Path $filePath -Pattern '(?<!\|)\s+\?\s' -AllMatches | ForEach-Object {
+                        $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
+                    }
                 }
             }
             $issues -join [Environment]::NewLine |
@@ -182,18 +182,18 @@ Describe 'PSModule - SourceCode tests' {
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                     Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping LowercaseKeywords test'
-                    continue
-                }
-                $errors = $null
-                $tokens = $null
-                [System.Management.Automation.Language.Parser]::ParseFile($FilePath, [ref]$tokens, [ref]$errors)
+                } else {
+                    $errors = $null
+                    $tokens = $null
+                    [System.Management.Automation.Language.Parser]::ParseFile($FilePath, [ref]$tokens, [ref]$errors)
 
-                foreach ($token in $tokens) {
-                    $keyword = $token.Text
-                    $lineNumber = $token.Extent.StartLineNumber
-                    $columnNumber = $token.Extent.StartColumnNumber
-                    if (($token.TokenFlags -match 'Keyword') -and ($keyword -cne $keyword.ToLower())) {
-                        $issues += " - $relativePath`:L$lineNumber`:C$columnNumber - $keyword"
+                    foreach ($token in $tokens) {
+                        $keyword = $token.Text
+                        $lineNumber = $token.Extent.StartLineNumber
+                        $columnNumber = $token.Extent.StartColumnNumber
+                        if (($token.TokenFlags -match 'Keyword') -and ($keyword -cne $keyword.ToLower())) {
+                            $issues += " - $relativePath`:L$lineNumber`:C$columnNumber - $keyword"
+                        }
                     }
                 }
             }
@@ -238,12 +238,12 @@ Describe 'PSModule - SourceCode tests' {
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                         Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping FunctionCount test'
-                        continue
-                    }
-                    $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
-                    $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
-                    if ($tokens.count -ne 1) {
-                        $issues += " - $relativePath - $($tokens.Name)"
+                    } else {
+                        $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
+                        $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
+                        if ($tokens.count -ne 1) {
+                            $issues += " - $relativePath - $($tokens.Name)"
+                        }
                     }
                 }
                 $issues -join [Environment]::NewLine |
@@ -259,12 +259,12 @@ Describe 'PSModule - SourceCode tests' {
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                         Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping FunctionName test'
-                        continue
-                    }
-                    $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
-                    $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
-                    if ($tokens.Name -ne $fileName) {
-                        $issues += " - $relativePath - $($tokens.Name)"
+                    } else {
+                        $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
+                        $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
+                        if ($tokens.Name -ne $fileName) {
+                            $issues += " - $relativePath - $($tokens.Name)"
+                        }
                     }
                 }
                 $issues -join [Environment]::NewLine |
@@ -280,17 +280,17 @@ Describe 'PSModule - SourceCode tests' {
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                         Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping CmdletBinding test'
-                        continue
-                    }
-                    $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
-                    $tokens = $scriptAst.FindAll({ $true }, $true)
-                    foreach ($token in $tokens) {
-                        if ($token.TypeName.Name -eq 'CmdletBinding') {
-                            $found = $true
+                    } else {
+                        $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
+                        $tokens = $scriptAst.FindAll({ $true }, $true)
+                        foreach ($token in $tokens) {
+                            if ($token.TypeName.Name -eq 'CmdletBinding') {
+                                $found = $true
+                            }
                         }
-                    }
-                    if (-not $found) {
-                        $issues += " - $relativePath"
+                        if (-not $found) {
+                            $issues += " - $relativePath"
+                        }
                     }
                 }
                 $issues -join [Environment]::NewLine |
@@ -306,17 +306,17 @@ Describe 'PSModule - SourceCode tests' {
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                         Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping ParamBlock test'
-                        continue
-                    }
-                    $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
-                    $tokens = $scriptAst.FindAll({ $args[0] -is [System.Management.Automation.Language.ParamBlockAst] }, $true)
-                    foreach ($token in $tokens) {
-                        if ($token.count -eq 1) {
-                            $found = $true
+                    } else {
+                        $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
+                        $tokens = $scriptAst.FindAll({ $args[0] -is [System.Management.Automation.Language.ParamBlockAst] }, $true)
+                        foreach ($token in $tokens) {
+                            if ($token.count -eq 1) {
+                                $found = $true
+                            }
                         }
-                    }
-                    if (-not $found) {
-                        $issues += " - $relativePath"
+                        if (-not $found) {
+                            $issues += " - $relativePath"
+                        }
                     }
                 }
                 $issues -join [Environment]::NewLine |
@@ -358,14 +358,14 @@ Describe 'PSModule - SourceCode tests' {
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
                         Write-GitHubWarning -Message " - $relativePath - $skipReason" -Title 'Skipping FunctionTest test'
-                        continue
-                    }
-                    $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
-                    $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
-                    $functionName = $tokens.Name
-                    # If the file contains a function and the function name is not in the test files, add it as an issue.
-                    if ($functionName.count -eq 1 -and $functionsInTestFiles -notcontains $functionName) {
-                        $issues += " - $relativePath - $functionName"
+                    } else {
+                        $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
+                        $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
+                        $functionName = $tokens.Name
+                        # If the file contains a function and the function name is not in the test files, add it as an issue.
+                        if ($functionName.count -eq 1 -and $functionsInTestFiles -notcontains $functionName) {
+                            $issues += " - $relativePath - $functionName"
+                        }
                     }
                 }
                 $issues -join [Environment]::NewLine |
