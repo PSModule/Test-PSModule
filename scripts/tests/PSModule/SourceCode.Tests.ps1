@@ -1,4 +1,4 @@
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
     'PSReviewUnusedParameter', '',
     Justification = 'Parameters are used in the test.'
 )]
@@ -164,7 +164,8 @@ Describe 'PSModule - SourceCode tests' {
                 $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                 $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
                 $functionName = $tokens.Name
-                if ($functionsInTestFiles -notcontains $functionName) {
+                # If the file contains a function and the function name is not in the test files, add it as an issue.
+                if ($functionName.count -eq 1 -and $functionsInTestFiles -notcontains $functionName) {
                     $issues += " - $relativePath - $functionName"
                 }
             }
