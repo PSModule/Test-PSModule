@@ -2,6 +2,14 @@
     'PSReviewUnusedParameter', '',
     Justification = 'Parameters are used in the test.'
 )]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSUseDeclaredVarsMoreThanAssignments', 'functionBearingPublicFiles',
+    Justification = 'Variables are used in the test.'
+)]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSUseDeclaredVarsMoreThanAssignments', 'functionBearingFiles',
+    Justification = 'Variables are used in the test.'
+)]
 [CmdLetBinding()]
 Param(
     # The path to the 'src' folder of the repo.
@@ -189,10 +197,18 @@ Describe 'PSModule - SourceCode tests' {
         }
     }
 
-    Context 'classes' {}
+    Context 'classes' {
+    }
 
     Context 'functions' {
         Context 'Generic' {
+            BeforeAll {
+                $functionBearingFiles = $functionFiles | Where-Object {
+                    $Ast = [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$null)
+                    $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
+                    $tokens.count -ne 0
+                }
+            }
             # It 'has synopsis for all functions' {}
             # It 'has description for all functions' {}
             # It 'has examples for all functions' {}
@@ -211,7 +227,7 @@ Describe 'PSModule - SourceCode tests' {
             # It 'parameters are separated by a blank line' {}
             It 'Should contain one function or filter (ID: FunctionCount)' {
                 $issues = @('')
-                $functionFiles | ForEach-Object {
+                $functionBearingFiles | ForEach-Object {
                     $filePath = $_.FullName
                     $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
@@ -230,7 +246,7 @@ Describe 'PSModule - SourceCode tests' {
             }
             It 'Should have matching filename and function/filter name (ID: FunctionName)' {
                 $issues = @('')
-                $functionFiles | ForEach-Object {
+                $functionBearingFiles | ForEach-Object {
                     $filePath = $_.FullName
                     $fileName = $_.BaseName
                     $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
@@ -250,7 +266,7 @@ Describe 'PSModule - SourceCode tests' {
             }
             It 'Should have [CmdletBinding()] attribute (ID: CmdletBinding)' {
                 $issues = @('')
-                $functionFiles | ForEach-Object {
+                $functionBearingFiles | ForEach-Object {
                     $found = $false
                     $filePath = $_.FullName
                     $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
@@ -275,7 +291,7 @@ Describe 'PSModule - SourceCode tests' {
             }
             It 'Should have a param() block (ID: ParamBlock)' {
                 $issues = @('')
-                $functionFiles | ForEach-Object {
+                $functionBearingFiles | ForEach-Object {
                     $found = $false
                     $filePath = $_.FullName
                     $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
@@ -300,6 +316,13 @@ Describe 'PSModule - SourceCode tests' {
             }
         }
         Context 'public functions' {
+            BeforeAll {
+                $functionBearingPublicFiles = $publicFunctionFiles | Where-Object {
+                    $Ast = [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$null, [ref]$null)
+                    $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
+                    $tokens.count -ne 0
+                }
+            }
             It 'All public functions/filters have tests (ID: FunctionTest)' {
                 $issues = @('')
 
@@ -320,7 +343,7 @@ Describe 'PSModule - SourceCode tests' {
                 }
 
                 # Get all the functions in the public function files and check if they have a test.
-                $publicFunctionFiles | ForEach-Object {
+                $functionBearingPublicFiles | ForEach-Object {
                     $filePath = $_.FullName
                     $relativePath = $filePath.Replace($Path, '').Trim('\').Trim('/')
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:(?<Type>.+):(?<Reason>.+)' -AllMatches
@@ -343,7 +366,8 @@ Describe 'PSModule - SourceCode tests' {
         Context 'private functions' {}
     }
 
-    Context 'variables' {}
+    Context 'variables' {
+    }
 
     Context 'Module manifest' {
         # It 'Module Manifest exists (maifest.psd1 or modulename.psd1)' {}
