@@ -168,7 +168,7 @@
                     CoveragePercentTarget = 75
                 }
                 Output       = @{
-                    CIFormat            = 'Auto'
+                    CIFormat            = 'None'
                     StackTraceVerbosity = $StackTraceVerbosity
                     Verbosity           = $Verbosity
                 }
