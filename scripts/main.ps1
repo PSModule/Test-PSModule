@@ -24,7 +24,7 @@ LogGroup 'Loading inputs' {
     if (-not (Test-Path -Path $codeToTest)) {
         throw "Path [$codeToTest] does not exist."
     }
-    Write-Host "Test type to run:  [$env:GITHUB_ACTION_INPUT_TestType]"
+    Write-Host "Test type to run:    [$env:GITHUB_ACTION_INPUT_TestType]"
 
     $testsPath = $env:GITHUB_ACTION_INPUT_TestsPath
     Write-Host "Path to tests:       [$testsPath]"
