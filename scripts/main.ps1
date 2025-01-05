@@ -1,18 +1,15 @@
 ﻿[CmdletBinding()]
 param()
 
-Write-Host '┏━━━━━┫ Test-PSModule ┣━━━━━┓'
-
 $path = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
-LogGroup ' - Loading helper scripts' {
-    Write-Host "Loading from [$path]"
+LogGroup "Loading helper scripts from [$path]" {
     Get-ChildItem -Path $path -Filter '*.ps1' -Recurse | ForEach-Object {
-        Write-Host "$($_.FullName)"
+        Write-Host "[$($_.FullName)]"
         . $_.FullName
     }
 }
 
-LogGroup ' - Loading inputs' {
+LogGroup 'Loading inputs' {
     $moduleName = if ($env:GITHUB_ACTION_INPUT_Name | IsNullOrEmpty) { $env:GITHUB_REPOSITORY_NAME } else { $env:GITHUB_ACTION_INPUT_Name }
     Write-Host "Module name:         [$moduleName]"
 
@@ -41,19 +38,16 @@ LogGroup ' - Loading inputs' {
     Write-Host "Verbosity:           [$Verbosity]"
 }
 
-LogGroup ' - Running tests' {
-
-    $params = @{
-        Path                = $codeToTest
-        TestType            = $env:GITHUB_ACTION_INPUT_TestType
-        TestsPath           = $testsPath
-        StackTraceVerbosity = $StackTraceVerbosity
-        Verbosity           = $Verbosity
-    }
-    $testResults = Test-PSModule @params
+$params = @{
+    Path                = $codeToTest
+    TestType            = $env:GITHUB_ACTION_INPUT_TestType
+    TestsPath           = $testsPath
+    StackTraceVerbosity = $StackTraceVerbosity
+    Verbosity           = $Verbosity
 }
+$testResults = Test-PSModule @params
 
-LogGroup ' - Test results' {
+LogGroup 'Test results' {
     $testResults | Format-List
 }
 
