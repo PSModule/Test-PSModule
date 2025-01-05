@@ -10,7 +10,7 @@ LogGroup "Loading helper scripts from [$path]" {
 }
 
 LogGroup 'Loading inputs' {
-    $moduleName = $env:GITHUB_ACTION_INPUT_Name | IsNullOrEmpty ? $env:GITHUB_REPOSITORY_NAME : $env:GITHUB_ACTION_INPUT_Name
+    $moduleName = ($env:GITHUB_ACTION_INPUT_Name | IsNullOrEmpty) ? $env:GITHUB_REPOSITORY_NAME : $env:GITHUB_ACTION_INPUT_Name
     $codeToTest = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath "$env:GITHUB_ACTION_INPUT_Path\$moduleName"
     if (-not (Test-Path -Path $codeToTest)) {
         $codeToTest = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $env:GITHUB_ACTION_INPUT_Path
