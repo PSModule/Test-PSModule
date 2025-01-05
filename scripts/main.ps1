@@ -61,5 +61,5 @@ if ($failedTests -eq 0) {
 }
 
 Set-GitHubOutput -Name 'passed' -Value ($failedTests -eq 0)
-Write-Host '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━┛'
+Write-Host '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
 exit $failedTests
