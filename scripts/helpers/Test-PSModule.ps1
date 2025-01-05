@@ -43,10 +43,11 @@
         $PSSAModule = Get-PSResource -Name PSScriptAnalyzer -Verbose:$false | Sort-Object Version -Descending | Select-Object -First 1
         $pesterModule = Get-PSResource -Name Pester -Verbose:$false | Sort-Object Version -Descending | Select-Object -First 1
 
-        Write-Verbose 'Testing with:'
-        Write-Verbose "   PowerShell       $($PSVersionTable.PSVersion.ToString())"
-        Write-Verbose "   Pester           $($pesterModule.version)"
-        Write-Verbose "   PSScriptAnalyzer $($PSSAModule.version)"
+        [PSCustomObject]@{
+            PowerShell       = $PSVersionTable.PSVersion.ToString()
+            Pester           = $pesterModule.version
+            PSScriptAnalyzer = $PSSAModule.version
+        } | Format-List
     }
 
     LogGroup 'Add test - Common - PSScriptAnalyzer' {
@@ -63,8 +64,7 @@
                 Verbose          = $false
             }
         }
-        Write-Verbose 'ContainerParams:'
-        Write-Verbose "$($containerParams | ConvertTo-Json)"
+        Write-Host ($containerParams | ConvertTo-Json)
         $containers += New-PesterContainer @containerParams
     }
 
@@ -77,8 +77,7 @@
                 Verbose = $false
             }
         }
-        Write-Verbose 'ContainerParams:'
-        Write-Verbose "$($containerParams | ConvertTo-Json)"
+        Write-Host ($containerParams | ConvertTo-Json)
         $containers += New-PesterContainer @containerParams
     }
 
@@ -92,8 +91,7 @@
                     Verbose = $false
                 }
             }
-            Write-Verbose 'ContainerParams:'
-            Write-Verbose "$($containerParams | ConvertTo-Json)"
+            Write-Host ($containerParams | ConvertTo-Json)
             $containers += New-PesterContainer @containerParams
         }
     }
@@ -109,8 +107,7 @@
                     Verbose   = $false
                 }
             }
-            Write-Verbose 'ContainerParams:'
-            Write-Verbose "$($containerParams | ConvertTo-Json)"
+            Write-Host ($containerParams | ConvertTo-Json)
             $containers += New-PesterContainer @containerParams
         }
     }
@@ -121,12 +118,11 @@
                 $containerParams = @{
                     Path = $moduleTestsPath
                 }
-                Write-Verbose 'ContainerParams:'
-                Write-Verbose "$($containerParams | ConvertTo-Json)"
+                Write-Host ($containerParams | ConvertTo-Json)
                 $containers += New-PesterContainer @containerParams
             }
         } else {
-            Write-Warning "⚠️ No tests found - [$moduleTestsPath]"
+            Write-GitHubWarning "⚠️ No tests found - [$moduleTestsPath]"
         }
     }
 
@@ -174,13 +170,8 @@
                 }
             }
         }
-        Write-Verbose 'PesterParams:'
-        Write-Verbose "$($pesterParams | ConvertTo-Json -Depth 4 -WarningAction SilentlyContinue)"
+        Write-Host ($pesterParams | ConvertTo-Json -Depth 4 -WarningAction SilentlyContinue)
     }
 
-    #region Run tests
-    $results = Invoke-Pester @pesterParams
-    #endregion
-
-    $results
+    Invoke-Pester @pesterParams
 }
