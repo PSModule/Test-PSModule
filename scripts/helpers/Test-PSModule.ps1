@@ -170,7 +170,7 @@
                 }
             }
         }
-        Write-Host ($pesterParams | ConvertTo-Json -Depth 100 -WarningAction SilentlyContinue)
+        Write-Host ($pesterParams | ConvertTo-Json -Depth 5 -WarningAction SilentlyContinue)
     }
 
     Invoke-Pester @pesterParams
