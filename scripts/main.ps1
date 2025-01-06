@@ -4,65 +4,57 @@ param()
 $path = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
 LogGroup "Loading helper scripts from [$path]" {
     Get-ChildItem -Path $path -Filter '*.ps1' -Recurse | ForEach-Object {
-        Write-Verbose "[$($_.FullName)]"
+        Write-Host " - $($_.FullName)"
         . $_.FullName
     }
 }
 
 LogGroup 'Loading inputs' {
-    $moduleName = if ($env:GITHUB_ACTION_INPUT_Name | IsNullOrEmpty) { $env:GITHUB_REPOSITORY_NAME } else { $env:GITHUB_ACTION_INPUT_Name }
-    Write-Verbose "Module name:         [$moduleName]"
-
+    $moduleName = ($env:GITHUB_ACTION_INPUT_Name | IsNullOrEmpty) ? $env:GITHUB_REPOSITORY_NAME : $env:GITHUB_ACTION_INPUT_Name
     $codeToTest = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath "$env:GITHUB_ACTION_INPUT_Path\$moduleName"
-    if (Test-Path -Path $codeToTest) {
-        Write-Verbose "Code to test:        [$codeToTest]"
-    } else {
+    if (-not (Test-Path -Path $codeToTest)) {
         $codeToTest = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $env:GITHUB_ACTION_INPUT_Path
     }
-
-    Write-Verbose "Code to test:        [$codeToTest]"
     if (-not (Test-Path -Path $codeToTest)) {
         throw "Path [$codeToTest] does not exist."
     }
-    Write-Verbose "Test type to run:  [$env:GITHUB_ACTION_INPUT_TestType]"
 
-    $testsPath = $env:GITHUB_ACTION_INPUT_TestsPath
-    Write-Verbose "Path to tests:       [$testsPath]"
-    if (-not (Test-Path -Path $testsPath)) {
-        throw "Path [$testsPath] does not exist."
+    if (-not (Test-Path -Path $env:GITHUB_ACTION_INPUT_TestsPath)) {
+        throw "Path [$env:GITHUB_ACTION_INPUT_TestsPath] does not exist."
     }
 
-    $StackTraceVerbosity = $env:GITHUB_ACTION_INPUT_StackTraceVerbosity
-    Write-Verbose "StackTraceVerbosity: [$StackTraceVerbosity]"
-    $Verbosity = $env:GITHUB_ACTION_INPUT_Verbosity
-    Write-Verbose "Verbosity:           [$Verbosity]"
-
+    [pscustomobject]@{
+        ModuleName          = $moduleName
+        CodeToTest          = $codeToTest
+        TestType            = $env:GITHUB_ACTION_INPUT_TestType
+        TestsPath           = $env:GITHUB_ACTION_INPUT_TestsPath
+        StackTraceVerbosity = $env:GITHUB_ACTION_INPUT_StackTraceVerbosity
+        Verbosity           = $env:GITHUB_ACTION_INPUT_Verbosity
+    } | Format-List
 }
 
 $params = @{
     Path                = $codeToTest
     TestType            = $env:GITHUB_ACTION_INPUT_TestType
-    TestsPath           = $testsPath
-    StackTraceVerbosity = $StackTraceVerbosity
-    Verbosity           = $Verbosity
+    TestsPath           = $env:GITHUB_ACTION_INPUT_TestsPath
+    StackTraceVerbosity = $env:GITHUB_ACTION_INPUT_StackTraceVerbosity
+    Verbosity           = $env:GITHUB_ACTION_INPUT_Verbosity
 }
-$results = Test-PSModule @params
+$testResults = Test-PSModule @params
 
 LogGroup 'Test results' {
-    Write-Verbose ($results | Out-String)
+    $testResults | Format-List
 }
 
-$failedTests = $results.FailedCount
+$failedTests = [int]$testResults.FailedCount
 
-if ($failedTests -gt 0) {
-    Write-Host '::error::❌ Some tests failed.'
-}
-if ($results.Result -ne 'Passed') {
-    Write-Host '::error::❌ Some tests failed.'
+if (($failedTests -gt 0) -or ($testResults.Result -ne 'Passed')) {
+    Write-GitHubError "❌ Some [$failedTests] tests failed."
 }
 if ($failedTests -eq 0) {
-    Write-Host '::notice::✅ All tests passed.'
+    Write-GitHubNotice '✅ All tests passed.'
 }
 
 Set-GitHubOutput -Name 'passed' -Value ($failedTests -eq 0)
+Write-Host '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
 exit $failedTests
