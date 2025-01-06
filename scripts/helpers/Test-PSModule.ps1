@@ -173,5 +173,5 @@
         Write-Host ($pesterParams | ConvertTo-Json -Depth 5 -WarningAction SilentlyContinue)
     }
 
-    return Invoke-Pester @pesterParams
+    Invoke-Pester @pesterParams
 }
