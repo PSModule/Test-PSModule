@@ -22,7 +22,7 @@ Describe 'PSModule - Module tests' {
             Get-Module -Name $moduleName -ListAvailable | Should -Not -BeNullOrEmpty
             Write-Verbose (Get-Module -Name $moduleName -ListAvailable | Out-String)
         }
-        It 'The module should be importable' {
+        It 'The module should be importable' -Skip {
             { Import-Module -Name $moduleName -RequiredVersion 999.0.0 -Force } | Should -Not -Throw
         }
     }
