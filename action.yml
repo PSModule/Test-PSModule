@@ -69,7 +69,7 @@ runs:
         ShowOutput: true
         Script: |
           # Test-PSModule
-          . (Join-Path -Path '${{ github.action_path }}' -ChildPath 'scripts\main.ps1')
+          ${{ github.action_path }}/scripts/main.ps1
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
