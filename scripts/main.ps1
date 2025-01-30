@@ -52,8 +52,7 @@ if (($failedTests -gt 0) -or ($testResults.Result -ne 'Passed')) {
     Write-GitHubError "❌ Some [$failedTests] tests failed."
     Set-GitHubOutput -Name 'passed' -Value $false
     $return = 1
-}
-if ($failedTests -eq 0) {
+} elseif ($failedTests -eq 0) {
     Write-GitHubNotice '✅ All tests passed.'
     Set-GitHubOutput -Name 'passed' -Value $true
     $return = 0
