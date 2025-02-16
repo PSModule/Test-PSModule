@@ -1,5 +1,4 @@
-﻿#Requires -Modules Retry
-
+﻿
 function Resolve-PSModuleDependency {
     <#
         .SYNOPSIS
@@ -19,6 +18,11 @@ function Resolve-PSModuleDependency {
         and latest version within a range MinimumVersion - MaximumVersion.
     #>
     [Alias('Resolve-PSModuleDependencies')]
+    #Requires -Modules Retry
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSAvoidUsingWriteHost', '', Scope = 'Function',
+        Justification = 'Want to just write to the console, not the pipeline.'
+    )]
     [CmdletBinding()]
     param(
         # The path to the manifest file.
