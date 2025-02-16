@@ -9,6 +9,10 @@
         'PSReviewUnusedParameter', '', Scope = 'Function',
         Justification = 'Parameters are used in nested ScriptBlocks'
     )]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSAvoidUsingWriteHost', '', Scope = 'Function',
+        Justification = 'Want to just write to the console, not the pipeline.'
+    )]
     param(
         # Path to the folder where the code to test is located.
         [Parameter(Mandatory)]

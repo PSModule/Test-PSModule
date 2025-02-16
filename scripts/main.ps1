@@ -1,4 +1,8 @@
-﻿[CmdletBinding()]
+﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSAvoidUsingWriteHost', '',
+    Justification = 'Want to just write to the console, not the pipeline.'
+)]
+[CmdletBinding()]
 param()
 
 $path = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
