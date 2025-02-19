@@ -71,5 +71,5 @@ runs:
       uses: PSModule/Invoke-Pester@v1
       id: test
       with:
-        Path: ${{ inputs.TestsPath }}/${{ inputs.TestType }}
-        Run_Path: ${{ fromJson(steps.paths.outputs.result).Path }}
+        Path: ${{ github.action_path }}/${{ inputs.TestsPath }}/${{ inputs.TestType }}
+        Run_Path: ${{ github.workspace }}/${{ fromJson(steps.paths.outputs.result).Path }}
