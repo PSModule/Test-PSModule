@@ -65,11 +65,11 @@ runs:
           }
           Write-Host "Path: $path"
 
-          Set-GitHubOutput -Name Path -Value $path -Verbose -Debug -Confirm:$false
+          Set-GitHubOutput -Name Path -Value $path
 
     - name: Invoke-Pester
       uses: PSModule/Invoke-Pester@v1
       id: test
       with:
-        Path: ${{ github.action_path }}/${{ inputs.TestsPath }}/${{ inputs.TestType }}
+        Path: ${{ github.action_path }}${{ inputs.TestsPath }}/${{ inputs.TestType }}
         Run_Path: ${{ github.workspace }}/${{ fromJson(steps.paths.outputs.result).Path }}
