@@ -15,10 +15,6 @@ inputs:
   TestType:
     description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
-  TestsPath:
-    description: The path to the tests to run.
-    required: false
-    default: scripts/tests
   # Debug:
   #   description: Enable debug output.
   #   required: false
@@ -47,6 +43,8 @@ runs:
       uses: PSModule/Github-Script@v1
       id: paths
       env:
+        Name: ${{ inputs.Name }}
+        Path: ${{ inputs.Path }}
         TestType: ${{ inputs.TestType }}
       with:
         Script: |
@@ -54,10 +52,10 @@ runs:
           Write-Host "Test type: [$env:TestType]"
           $path = switch($env:TestType) {
             'Module' {
-              '${{ inputs.Path }}/${{ inputs.Name }}'
+              Resolve-Path -Path "$env:Path/$env:Name"
             }
             'SourceCode' {
-              '${{ inputs.Path }}'
+              Resolve-Path -Path $env:Path
             }
             default {
               throw "Invalid test type: [$env:TestType]"
@@ -71,5 +69,5 @@ runs:
       uses: PSModule/Invoke-Pester@v1.1.1-preview
       id: test
       with:
-        Path: ${{ github.action_path }}/${{ inputs.TestsPath }}/${{ inputs.TestType }}
+        Path: ${{ github.action_path }}/scripts/tests/${{ inputs.TestType }}
         Run_Path: ${{ github.workspace }}/${{ fromJson(steps.paths.outputs.result).Path }}
