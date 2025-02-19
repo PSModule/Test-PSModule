@@ -46,14 +46,20 @@ runs:
     - name: Get test paths
       uses: PSModule/Github-Script@v1
       id: paths
+      env:
+        TestType: ${{ inputs.TestType }}
       with:
         Script: |
           # If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
-          if (${{ inputs.TestType }} -eq 'Module') {
-            $path = "${{ inputs.Path }}/${{ inputs.Name }}"
-          } else {
-            $path = ${{ inputs.Path }}
+          $path = switch($env:TestType) {
+            'Module' {
+              Resolve-Path -Path "${{ inputs.Path }}/${{ inputs.Name }}"
+            }
+            default {
+              Resolve-Path -Path '${{ inputs.Path }}'
+            }
           }
+
           Set-GitHubOutput -Name Path -Value $path
 
     - name: Invoke-Pester
