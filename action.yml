@@ -43,9 +43,22 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Get test paths
+      uses: PSModule/Github-Script@v1
+      id: paths
+      with:
+        Script: |
+          # If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
+          if (${{ inputs.TestType }} -eq 'Module') {
+            $path = "${{ inputs.Path }}/${{ inputs.Name }}"
+          } else {
+            $path = ${{ inputs.Path }}
+          }
+          Set-GitHubOutput -Name Path -Value $path
+
     - name: Invoke-Pester
       uses: PSModule/Invoke-Pester@v1
       id: test
       with:
         Path: ${{ inputs.TestsPath }}/${{ inputs.TestType }}
-        Run_Path: ${{ inputs.Path }}/${{ inputs.Name }}
+        Run_Path: ${{ fromJson(steps.paths.outputs.result).Path }}
