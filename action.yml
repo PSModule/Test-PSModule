@@ -68,7 +68,7 @@ runs:
           Set-GitHubOutput -Name Path -Value $path
 
     - name: Invoke-Pester
-      uses: PSModule/Invoke-Pester@v1
+      uses: PSModule/Invoke-Pester@v1.1.1-preview
       id: test
       with:
         Path: ${{ github.action_path }}/${{ inputs.TestsPath }}/${{ inputs.TestType }}
