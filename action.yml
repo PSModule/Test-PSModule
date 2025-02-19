@@ -52,10 +52,10 @@ runs:
           Write-Host "Test type: [$env:TestType]"
           $path = switch($env:TestType) {
             'Module' {
-              Resolve-Path -Path "$env:Path/$env:Name"
+              Resolve-Path -Path "$env:Path/$env:Name" | Select-Object -ExpandProperty Path
             }
             'SourceCode' {
-              Resolve-Path -Path $env:Path
+              Resolve-Path -Path $env:Path | Select-Object -ExpandProperty Path
             }
             default {
               throw "Invalid test type: [$env:TestType]"
