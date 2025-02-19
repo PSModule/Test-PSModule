@@ -65,7 +65,7 @@ runs:
           }
           Write-Host "Path: $path"
 
-          Set-GitHubOutput -Name Path -Value $path -Verbose -Debug
+          Set-GitHubOutput -Name Path -Value $path -Verbose -Debug -Confirm:$false
 
     - name: Invoke-Pester
       uses: PSModule/Invoke-Pester@v1
