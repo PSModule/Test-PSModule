@@ -18,7 +18,7 @@ inputs:
   TestsPath:
     description: The path to the tests to run.
     required: false
-    default: tests
+    default: scripts/tests
   # Debug:
   #   description: Enable debug output.
   #   required: false
@@ -71,5 +71,5 @@ runs:
       uses: PSModule/Invoke-Pester@v1
       id: test
       with:
-        Path: ${{ github.action_path }}${{ inputs.TestsPath }}/${{ inputs.TestType }}
+        Path: ${{ github.action_path }}/${{ inputs.TestsPath }}/${{ inputs.TestType }}
         Run_Path: ${{ github.workspace }}/${{ fromJson(steps.paths.outputs.result).Path }}
