@@ -55,8 +55,11 @@ runs:
             'Module' {
               Resolve-Path -Path "${{ inputs.Path }}/${{ inputs.Name }}"
             }
-            default {
+            'SourceCode' {
               Resolve-Path -Path '${{ inputs.Path }}'
+            }
+            default {
+              throw "Invalid test type: $env:TestType"
             }
           }
 
