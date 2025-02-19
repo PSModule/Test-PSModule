@@ -37,11 +37,20 @@
             Kind                = 'space'
         }
         PSUseConsistentWhitespace          = @{
-            Enable = $false
+            Enable                                  = $true
+            CheckInnerBrace                         = $true
+            CheckOpenBrace                          = $true
+            CheckOpenParen                          = $true
+            CheckOperator                           = $true
+            CheckPipe                               = $true
+            CheckPipeForRedundantWhitespace         = $true
+            CheckSeparator                          = $true
+            CheckParameter                          = $true
+            IgnoreAssignmentOperatorInsideHashTable = $true
         }
     }
     ExcludeRules = @(
-        'PSAvoidUsingCmdletAliases',
+        'PSMissingModuleManifestField', # This rule is not applicable until the module is built.
         'PSUseToExportFieldsInManifest'
     )
 }
