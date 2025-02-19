@@ -51,19 +51,21 @@ runs:
       with:
         Script: |
           # If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
+          Write-Host "Test type: $env:TestType"
           $path = switch($env:TestType) {
             'Module' {
-              Resolve-Path -Path "${{ inputs.Path }}/${{ inputs.Name }}"
+              '${{ inputs.Path }}/${{ inputs.Name }}'
             }
             'SourceCode' {
-              Resolve-Path -Path '${{ inputs.Path }}'
+              '${{ inputs.Path }}'
             }
             default {
               throw "Invalid test type: $env:TestType"
             }
           }
+          Write-Host "Path: $path"
 
-          Set-GitHubOutput -Name Path -Value $path
+          Set-GitHubOutput -Name Path -Value $path -Verbose -Debug
 
     - name: Invoke-Pester
       uses: PSModule/Invoke-Pester@v1
