@@ -51,7 +51,7 @@ runs:
       with:
         Script: |
           # If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
-          Write-Host "Test type: $env:TestType"
+          Write-Host "Test type: [$env:TestType]"
           $path = switch($env:TestType) {
             'Module' {
               '${{ inputs.Path }}/${{ inputs.Name }}'
@@ -60,10 +60,10 @@ runs:
               '${{ inputs.Path }}'
             }
             default {
-              throw "Invalid test type: $env:TestType"
+              throw "Invalid test type: [$env:TestType]"
             }
           }
-          Write-Host "Path: $path"
+          Write-Host "Path: [$path]"
 
           Set-GitHubOutput -Name Path -Value $path
 
