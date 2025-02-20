@@ -38,6 +38,7 @@ jobs:
           Name: PSModuleTest
           Path: tests/outputs/modules
           TestType: Module
+          OS: ${{ matrix.os }}
 
       - name: Status
         shell: pwsh

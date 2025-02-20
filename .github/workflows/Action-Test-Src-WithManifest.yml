@@ -38,6 +38,7 @@ jobs:
           Name: PSModuleTest
           Path: tests/srcWithManifest
           TestType: SourceCode
+          OS: ${{ matrix.os }}
 
       - name: Status
         shell: pwsh

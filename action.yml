@@ -15,6 +15,9 @@ inputs:
   TestType:
     description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
+  OS:
+    description: The operating system to run the tests on.
+    required: true
   # Debug:
   #   description: Enable debug output.
   #   required: false
@@ -46,6 +49,7 @@ runs:
         GITHUB_ACTION_INPUT_TEST_PSMODULE_Name: ${{ inputs.Name }}
         GITHUB_ACTION_INPUT_TEST_PSMODULE_Path: ${{ inputs.Path }}
         GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType: ${{ inputs.TestType }}
+        GITHUB_ACTION_INPUT_TEST_PSMODULE_OS: ${{ inputs.OS }}
       with:
         Script: |
           # If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
@@ -72,5 +76,6 @@ runs:
       uses: PSModule/Invoke-Pester@fix
       id: test
       with:
+        TestResult_TestSuiteName: ${{ inputs.OS }}-${{ inputs.TestType }}
         Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}
         Run_Path: ${{ fromJson(steps.paths.outputs.result).CodePath }}
