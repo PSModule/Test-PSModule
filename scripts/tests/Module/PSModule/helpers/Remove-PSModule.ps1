@@ -40,6 +40,6 @@
             Write-Host " - Uninstalling module [$($module.Name)]"
             $module | Uninstall-PSResource -SkipDependencyCheck
         }
-        Get-ChildItem -Path Function: | Where-Object { $_.Source -eq $Name } | Format-Table -AutoSize
+        Get-Command -Module $Name | Format-Table -AutoSize
     }
 }
