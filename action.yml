@@ -10,8 +10,9 @@ inputs:
     description: The name of the module to test. The name of the repository is used if not specified.
     required: false
   Path:
-    description: The path to the code to test.
+    description: The path to the repo.
     required: true
+    default: ${{ github.workspace }}
   TestType:
     description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
@@ -51,26 +52,7 @@ runs:
         GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType: ${{ inputs.TestType }}
         GITHUB_ACTION_INPUT_TEST_PSMODULE_OS: ${{ inputs.OS }}
       with:
-        Script: |
-          # If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
-          Write-Host "Test type: [$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType]"
-          $codePath = switch($env:GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType) {
-            'Module' {
-              Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name" | Select-Object -ExpandProperty Path
-            }
-            'SourceCode' {
-              Resolve-Path -Path $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path | Select-Object -ExpandProperty Path
-            }
-            default {
-              throw "Invalid test type: [$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType]"
-            }
-          }
-          Write-Host "Path to code:  [$codePath]"
-          Set-GitHubOutput -Name CodePath -Value $codePath
-
-          $testPath = Resolve-Path -Path "${{ github.action_path }}/scripts/tests/${{ inputs.TestType }}" | Select-Object -ExpandProperty Path
-          Write-Host "Path to tests: [$testPath]"
-          Set-GitHubOutput -Name TestPath -Value $testPath
+        Script: ${{ github.action_path }}/scripts/main.ps1
 
     - name: Invoke-Pester
       uses: PSModule/Invoke-Pester@fix

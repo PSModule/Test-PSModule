@@ -1,6 +1,4 @@
-﻿#Requires -Modules Utilities
-
-function Get-PSModuleTest {
+﻿function Test-PSModuleTest {
     <#
         .SYNOPSIS
         Performs tests on a module.

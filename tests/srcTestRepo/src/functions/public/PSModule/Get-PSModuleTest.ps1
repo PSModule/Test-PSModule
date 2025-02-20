@@ -1,5 +1,9 @@
-﻿#SkipTest:Verbose:Just want to test that a function can have multiple skips.
-function Test-PSModuleTest {
+﻿#Requires -Modules Utilities
+#Requires -Modules @{ ModuleName = 'PSSemVer'; RequiredVersion = '1.1.4' }
+#Requires -Modules @{ ModuleName = 'DynamicParams'; ModuleVersion = '1.1.8' }
+#Requires -Modules @{ ModuleName = 'Store'; ModuleVersion = '0.3.1' }
+
+function Get-PSModuleTest {
     <#
         .SYNOPSIS
         Performs tests on a module.
@@ -16,5 +20,4 @@ function Test-PSModuleTest {
         [string] $Name
     )
     Write-Output "Hello, $Name!"
-    Write-Verbose 'Verbose message' -Verbose
 }
