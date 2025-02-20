@@ -1,6 +1,6 @@
 ﻿@{
     TestResult = @{
-        Enabled       = $true
+        Enabled = $true
     }
     Output     = @{
         Verbosity = 'Detailed'
