@@ -1,7 +1,6 @@
 ﻿@{
     TestResult   = @{
-        Enabled       = $true
-        TestSuiteName = 'Module'
+        Enabled = $true
     }
     CodeCoverage = @{
         Enabled        = $true

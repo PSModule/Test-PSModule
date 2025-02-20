@@ -57,6 +57,8 @@ runs:
     - name: Invoke-Pester
       uses: PSModule/Invoke-Pester@fix
       id: test
+      env:
+        ModuleName: ${{ fromJson(steps.paths.outputs.result).ModuleName }}
       with:
         TestResult_TestSuiteName: ${{ inputs.TestType }}-${{ inputs.OS }}
         Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}

@@ -22,5 +22,6 @@ $codePath = "$env:GITHUB_WORKSPACE/$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path"
     TestPath   = $testPath
 } | Format-List
 
+Set-GitHubOutput -Name ModuleName -Value $moduleName
 Set-GitHubOutput -Name CodePath -Value $codePath
 Set-GitHubOutput -Name TestPath -Value $testPath

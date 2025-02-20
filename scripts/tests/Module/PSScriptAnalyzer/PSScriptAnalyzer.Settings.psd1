@@ -49,8 +49,5 @@
             IgnoreAssignmentOperatorInsideHashTable = $true
         }
     }
-    ExcludeRules = @(
-        'PSMissingModuleManifestField', # This rule is not applicable until the module is built.
-        'PSUseToExportFieldsInManifest'
-    )
+    ExcludeRules = @()
 }
