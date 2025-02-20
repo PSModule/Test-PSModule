@@ -21,10 +21,11 @@ BeforeAll {
 
     $moduleName = Split-Path -Path $Path -Leaf
     Write-Verbose "Module Name: [$moduleName]"
+    $outputFolder = (Split-Path -Path $Path -Parent)
     $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
     Resolve-PSModuleDependency -ManifestFilePath $moduleManifestPath
-    Add-PSModulePath -Path (Split-Path -Path $ModuleOutputFolder -Parent)
-    Import-PSModule -Path $ModuleOutputFolder -ModuleName $ModuleName
+    Add-PSModulePath -Path $outputFolder
+    Import-PSModule -Path $outputFolder -ModuleName $ModuleName
 }
 
 Describe 'PSModule - Module tests' {
