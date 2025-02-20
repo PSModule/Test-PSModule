@@ -32,8 +32,8 @@
     Write-Host 'Resolving dependencies'
 
     $manifest = Import-PowerShellDataFile -Path $ManifestFilePath
-    Write-Host "Reading [$ManifestFilePath]"
-    Write-Host "Found [$($manifest.RequiredModules.Count)] modules to install"
+    Write-Host " - Reading [$ManifestFilePath]"
+    Write-Host " - Found [$($manifest.RequiredModules.Count)] modules to install"
 
     foreach ($requiredModule in $manifest.RequiredModules) {
         $installParams = @{}
@@ -51,19 +51,19 @@
 
         $VerbosePreferenceOriginal = $VerbosePreference
         $VerbosePreference = 'SilentlyContinue'
-        Write-Host "[$($installParams.Name)] - Uninstalling module"
+        Write-Host " - [$($installParams.Name)] - Uninstalling module"
         Remove-PSModule -Name $installParams.Name
-        Write-Host "[$($installParams.Name)] - Installing module"
+        Write-Host " - [$($installParams.Name)] - Installing module"
         Retry -Count 5 -Delay 10 {
             Install-Module @installParams
         }
         $VerbosePreference = $VerbosePreferenceOriginal
-        Write-Host "[$($installParams.Name)] - Importing module"
+        Write-Host " - [$($installParams.Name)] - Importing module"
         $VerbosePreferenceOriginal = $VerbosePreference
         $VerbosePreference = 'SilentlyContinue'
         Import-Module @installParams
         $VerbosePreference = $VerbosePreferenceOriginal
-        Write-Host "[$($installParams.Name)] - Done"
+        Write-Host " - [$($installParams.Name)] - Done"
     }
-    Write-Host 'Resolving dependencies - Done'
+    Write-Host ' - Resolving dependencies - Done'
 }

@@ -9,21 +9,18 @@ Param(
 )
 
 BeforeAll {
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-        'PSUseDeclaredVarsMoreThanAssignments', 'moduleName',
-        Justification = 'moduleName is used in the test.'
-    )]
+    LogGroup "Load module from path [$Path]" {
+        $helperPath = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
+        Get-ChildItem -Path $helperPath -Filter '*.ps1' -Recurse | ForEach-Object {
+            . $_.FullName
+        }
 
-    $helperPath = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
-    Get-ChildItem -Path $helperPath -Filter '*.ps1' -Recurse | ForEach-Object {
-        . $_.FullName
+        $moduleName = Split-Path -Path $Path -Leaf
+        Write-Verbose "[$moduleName] - Processing" -Verbose
+        $outputFolder = Split-Path -Path $Path -Parent
+        Add-PSModulePath -Path $outputFolder
+        Import-PSModule -Path $Path
     }
-
-    $moduleName = Split-Path -Path $Path -Leaf
-    Write-Verbose "Module Name: [$moduleName]" -Verbose
-    $outputFolder = Split-Path -Path $Path -Parent
-    Add-PSModulePath -Path $outputFolder
-    Import-PSModule -Path $Path
 }
 
 Describe 'PSModule - Module tests' {

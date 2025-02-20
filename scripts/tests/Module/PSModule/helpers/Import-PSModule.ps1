@@ -28,15 +28,15 @@
     $manifestFilePath = Join-Path -Path $Path $manifestFileName
     $manifestFile = Get-ModuleManifest -Path $manifestFilePath -As FileInfo -Verbose
 
-    Write-Host "Manifest file path: [$($manifestFile.FullName)]"
+    Write-Host " - Manifest file path: [$($manifestFile.FullName)]"
     Remove-PSModule -Name $ModuleName
     Resolve-PSModuleDependency -ManifestFilePath $manifestFile
     Import-Module -Name $ModuleName -RequiredVersion '999.0.0'
 
-    Write-Host 'List loaded modules'
+    Write-Host ' - List loaded modules'
     $availableModules = Get-Module -ListAvailable -Refresh -Verbose:$false
     $availableModules | Select-Object Name, Version, Path | Sort-Object Name | Format-Table -AutoSize
-    Write-Host 'List commands'
+    Write-Host ' - List commands'
     Write-Host (Get-Command -Module $moduleName -ListImported | Format-Table -AutoSize | Out-String)
 
     if ($ModuleName -notin $availableModules.Name) {
