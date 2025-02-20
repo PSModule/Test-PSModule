@@ -2,7 +2,7 @@
 $moduleName = [string]::IsNullOrEmpty($env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name) ? $env:GITHUB_REPOSITORY_NAME : $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name
 $testType = $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType
 $testPath = Resolve-Path -Path "$PSScriptRoot/tests/$testType" | Select-Object -ExpandProperty Path
-$codePath = $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path
+$codePath = "$env:GITHUB_WORKSPACE/$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path"
 # switch ($testType) {
 #     'Module' {
 #         Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/outputs/modules/$moduleName" | Select-Object -ExpandProperty Path
