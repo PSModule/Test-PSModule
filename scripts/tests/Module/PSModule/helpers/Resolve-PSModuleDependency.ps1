@@ -1,5 +1,4 @@
-﻿
-function Resolve-PSModuleDependency {
+﻿function Resolve-PSModuleDependency {
     <#
         .SYNOPSIS
         Resolve dependencies for a module based on the manifest file.
@@ -50,9 +49,11 @@ function Resolve-PSModuleDependency {
         $installParams.Force = $true
         $installParams.Verbose = $false
 
-        Write-Host "[$($installParams.Name)] - Installing module"
         $VerbosePreferenceOriginal = $VerbosePreference
         $VerbosePreference = 'SilentlyContinue'
+        Write-Host "[$($installParams.Name)] - Uninstalling module"
+        Remove-PSModule -Name $installParams.Name
+        Write-Host "[$($installParams.Name)] - Installing module"
         Retry -Count 5 -Delay 10 {
             Install-Module @installParams -AllowPrerelease:$false
         }

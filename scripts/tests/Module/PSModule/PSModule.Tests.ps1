@@ -13,7 +13,18 @@ BeforeAll {
         'PSUseDeclaredVarsMoreThanAssignments', 'moduleName',
         Justification = 'moduleName is used in the test.'
     )]
+
+    $helperPath = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
+    Get-ChildItem -Path $helperPath -Filter '*.ps1' -Recurse | ForEach-Object {
+        . $_.FullName
+    }
+
     $moduleName = Split-Path -Path $Path -Leaf
+    Write-Verbose "Module Name: [$moduleName]"
+    $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
+    Resolve-PSModuleDependency -ManifestFilePath $moduleManifestPath
+    Add-PSModulePath -Path (Split-Path -Path $ModuleOutputFolder -Parent)
+    Import-PSModule -Path $ModuleOutputFolder -ModuleName $ModuleName
 }
 
 Describe 'PSModule - Module tests' {
@@ -27,7 +38,7 @@ Describe 'PSModule - Module tests' {
         }
     }
 
-    Context "Module Manifest" {
+    Context 'Module Manifest' {
         BeforeAll {
             $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
             Write-Verbose "Module Manifest Path: [$moduleManifestPath]"
