@@ -19,7 +19,7 @@ $codePath = switch ($testType) {
     TestType   = $testType
     CodePath   = $codePath
     TestPath   = $testPath
-} | Format-List -AutoSize
+} | Format-List
 
 Set-GitHubOutput -Name CodePath -Value $codePath
 Set-GitHubOutput -Name TestPath -Value $testPath
