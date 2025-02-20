@@ -61,11 +61,11 @@ runs:
               throw "Invalid test type: [$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType]"
             }
           }
-          Write-Host "Path: [$path]"
+          Write-Host "Path to code:  [$codePath]"
           Set-GitHubOutput -Name CodePath -Value $codePath
 
           $testPath = Resolve-Path -Path "${{ github.action_path }}/scripts/tests/${{ inputs.TestType }}" | Select-Object -ExpandProperty Path
-          Write-Host "Test path: [$testPath]"
+          Write-Host "Path to tests: [$testPath]"
           Set-GitHubOutput -Name TestPath -Value $testPath
 
     - name: Invoke-Pester
