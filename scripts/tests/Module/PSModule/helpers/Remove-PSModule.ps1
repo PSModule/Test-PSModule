@@ -23,7 +23,7 @@
     if ($PSCmdlet.ShouldProcess('Target', "Remove module [$Name]")) {
         Write-Host "[$Name] - Remove module"
         $importedModule = Get-Module -ListAvailable | Where-Object { $_.Name -eq $Name }
-        $commands = Get-Command -Module $Name
+        $commands = Get-ChildItem -Path Function: | Where-Object { $_.Source -eq $Name }
         foreach ($command in $commands) {
             $command | Remove-Item -Force
         }
