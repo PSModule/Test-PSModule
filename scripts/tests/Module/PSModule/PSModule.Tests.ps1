@@ -20,7 +20,7 @@ BeforeAll {
     }
 
     $moduleName = Split-Path -Path $Path -Leaf
-    Write-Verbose "Module Name: [$moduleName]"
+    Write-Verbose "Module Name: [$moduleName]" -Verbose
     $outputFolder = (Split-Path -Path $Path -Parent)
     $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
     Resolve-PSModuleDependency -ManifestFilePath $moduleManifestPath
