@@ -37,7 +37,7 @@ inputs:
 outputs:
   passed:
     description: If the tests passed.
-    value: ${{ fromJSON(steps.test.outputs.result).passed }}
+    value: ${{ steps.test.outputs.Passed }}
 
 runs:
   using: composite
