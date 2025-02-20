@@ -22,16 +22,19 @@ Param(
 )
 
 BeforeAll {
+    $rootPath = Split-Path -Path $Path -Parent
+
     $scriptFiles = Get-ChildItem -Path $Path -Include *.psm1, *.ps1 -Recurse -File
-    LogGroup "[$Path] - Found $($scriptFiles.Count) script files" {
+    $relativePath = (Resolve-Path -Path $Path -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativePath] - Found $($scriptFiles.Count) script files" {
         $scriptFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
     }
     $functionsPath = Join-Path -Path $Path -ChildPath 'functions'
     $functionFiles = (Test-Path -Path $functionsPath) ? (Get-ChildItem -Path $functionsPath -File -Filter '*.ps1' -Recurse) : $null
-
-    LogGroup "[$functionsPath] - Found $($functionFiles.Count) function files" {
+    $relativeFunctionsPath = (Resolve-Path -Path $functionsPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativeFunctionsPath] - Found $($functionFiles.Count) function files" {
         $functionFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
@@ -39,21 +42,24 @@ BeforeAll {
     $privateFunctionsPath = Join-Path -Path $functionsPath -ChildPath 'private'
     $privateFunctionFiles = (Test-Path -Path $privateFunctionsPath) ?
         (Get-ChildItem -Path $privateFunctionsPath -File -Filter '*.ps1' -Recurse) : $null
-    LogGroup "[$privateFunctionsPath] - Found $($privateFunctionFiles.Count) private function files" {
+    $relativePrivateFunctionsPath = (Resolve-Path -Path $privateFunctionsPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativePrivateFunctionsPath] - Found $($privateFunctionFiles.Count) private function files" {
         $privateFunctionFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
     }
     $publicFunctionsPath = Join-Path -Path $functionsPath -ChildPath 'public'
     $publicFunctionFiles = (Test-Path -Path $publicFunctionsPath) ? (Get-ChildItem -Path $publicFunctionsPath -File -Filter '*.ps1' -Recurse) : $null
-    LogGroup "[$publicFunctionsPath] - Found $($publicFunctionFiles.Count) public function files" {
+    $relativePublicFunctionsPath = (Resolve-Path -Path $publicFunctionsPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativePublicFunctionsPath] - Found $($publicFunctionFiles.Count) public function files" {
         $publicFunctionFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
     }
     $variablesPath = Join-Path -Path $Path -ChildPath 'variables'
     $variableFiles = (Test-Path -Path $variablesPath) ? (Get-ChildItem -Path $variablesPath -File -Filter '*.ps1' -Recurse) : $null
-    LogGroup "[$variablesPath] - Found $($variableFiles.Count) variable files" {
+    $relativeVariablesPath = (Resolve-Path -Path $variablesPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativeVariablesPath] - Found $($variableFiles.Count) variable files" {
         $variableFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
@@ -61,7 +67,8 @@ BeforeAll {
     $privateVariablesPath = Join-Path -Path $variablesPath -ChildPath 'private'
     $privateVariableFiles = (Test-Path -Path $privateVariablesPath) ?
         (Get-ChildItem -Path $privateVariablesPath -File -Filter '*.ps1' -Recurse) : $null
-    LogGroup "[$privateVariablesPath] - Found $($privateVariableFiles.Count) private variable files" {
+    $relativePrivateVariablesPath = (Resolve-Path -Path $privateVariablesPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativePrivateVariablesPath] - Found $($privateVariableFiles.Count) private variable files" {
         $privateVariableFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
@@ -69,14 +76,16 @@ BeforeAll {
     $publicVariablesPath = Join-Path -Path $variablesPath -ChildPath 'public'
     $publicVariableFiles = (Test-Path -Path $publicVariablesPath) ?
         (Get-ChildItem -Path $publicVariablesPath -File -Filter '*.ps1' -Recurse) : $null
-    LogGroup "[$publicVariablesPath] - Found $($publicVariableFiles.Count) public variable files" {
+    $relativePublicVariablesPath = (Resolve-Path -Path $publicVariablesPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativePublicVariablesPath] - Found $($publicVariableFiles.Count) public variable files" {
         $publicVariableFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
     }
     $classPath = Join-Path -Path $Path -ChildPath 'classes'
     $classFiles = (Test-Path -Path $classPath) ? (Get-ChildItem -Path $classPath -File -Filter '*.ps1' -Recurse) : $null
-    LogGroup "[$classPath] - Found $($classFiles.Count) class files" {
+    $relativeClassPath = (Resolve-Path -Path $classPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativeClassPath] - Found $($classFiles.Count) class files" {
         $classFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
@@ -84,7 +93,8 @@ BeforeAll {
     $privateClassPath = Join-Path -Path $classPath -ChildPath 'private'
     $privateClassFiles = (Test-Path -Path $privateClassPath) ?
         (Get-ChildItem -Path $privateClassPath -File -Filter '*.ps1' -Recurse) : $null
-    LogGroup "[$privateClassPath] - Found $($privateClassFiles.Count) private class files" {
+    $relativePrivateClassPath = (Resolve-Path -Path $privateClassPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativePrivateClassPath] - Found $($privateClassFiles.Count) private class files" {
         $privateClassFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
@@ -92,13 +102,15 @@ BeforeAll {
     $publicClassPath = Join-Path -Path $classPath -ChildPath 'public'
     $publicClassFiles = (Test-Path -Path $publicClassPath) ?
         (Get-ChildItem -Path $publicClassPath -File -Filter '*.ps1' -Recurse) : $null
-    LogGroup "[$publicClassPath] - Found $($publicClassFiles.Count) public class files" {
+    $relativePublicClassPath = (Resolve-Path -Path $publicClassPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativePublicClassPath] - Found $($publicClassFiles.Count) public class files" {
         $publicClassFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
     }
     $testFiles = Get-ChildItem -Path $TestsPath -Include *.Tests.ps1 -Recurse -File
-    LogGroup "[$TestsPath] - Found $($testFiles.Count) test files" {
+    $relativeTestsPath = (Resolve-Path -Path $TestsPath -Relative -RelativeBasePath $rootPath).Path
+    LogGroup "[$relativeTestsPath] - Found $($testFiles.Count) test files" {
         $testFiles | ForEach-Object {
             Write-Host " - $($_.FullName)"
         }
