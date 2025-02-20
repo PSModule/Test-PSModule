@@ -24,14 +24,20 @@
         Write-Host "[$Name] - Remove module"
         $importedModule = Get-Module -ListAvailable | Where-Object { $_.Name -eq $Name }
         $commands = Get-ChildItem -Path Function: | Where-Object { $_.Source -eq $Name }
+        Write-Host "Found [$($commands.Count)] commands to remove"
         foreach ($command in $commands) {
+            Write-Host "Removing command [$($command.Name)]"
             $command | Remove-Item -Force
         }
+        Write-Host "Found [$($importedModule.Count)] modules to remove"
         foreach ($module in $importedModule) {
+            Write-Host "Removing module [$($module.Name)]"
             $module | Remove-Module -Force
         }
         $installedModule = Get-InstalledPSResource | Where-Object { $_.Name -eq $Name }
+        Write-Host "Found [$($installedModule.Count)] installed modules to remove"
         foreach ($module in $installedModule) {
+            Write-Host "Uninstalling module [$($module.Name)]"
             $module | Uninstall-PSResource -SkipDependencyCheck
         }
     }
