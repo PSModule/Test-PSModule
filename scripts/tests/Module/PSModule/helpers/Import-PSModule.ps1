@@ -28,7 +28,7 @@
     $manifestFilePath = Join-Path -Path $Path $manifestFileName
     $manifestFile = Get-ModuleManifest -Path $manifestFilePath -As FileInfo -Verbose
 
-    Write-Host "Manifest file path: [$($manifestFile.FullName)]" -Verbose
+    Write-Host "Manifest file path: [$($manifestFile.FullName)]"
     Remove-PSModule -Name $ModuleName
     Resolve-PSModuleDependency -ManifestFilePath $manifestFile
     Import-Module -Name $ModuleName -RequiredVersion '999.0.0'
