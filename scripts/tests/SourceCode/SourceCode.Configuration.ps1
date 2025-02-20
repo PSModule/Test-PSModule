@@ -1,7 +1,5 @@
 ﻿@{
-    Configuration = @{
-        Output = @{
-            Verbosity = 'Detailed'
-        }
+    Output = @{
+        Verbosity = 'Detailed'
     }
 }
