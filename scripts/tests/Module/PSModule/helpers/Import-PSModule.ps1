@@ -20,11 +20,7 @@
     param(
         # Path to the folder where the module source code is located.
         [Parameter(Mandatory)]
-        [string] $Path,
-
-        # Name of the module.
-        [Parameter(Mandatory)]
-        [string] $ModuleName
+        [string] $Path
     )
 
     $moduleName = Split-Path -Path $Path -Leaf
