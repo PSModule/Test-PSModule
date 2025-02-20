@@ -23,12 +23,12 @@
     if ($PSCmdlet.ShouldProcess('Target', "Remove module [$Name]")) {
         Write-Host "Removing module [$Name]"
         $importedModule = Get-Module -Name $Name -ListAvailable
-        if ($importedModule) {
-            Remove-Module -Force -Name $Name
+        foreach ($module in $importedModule) {
+            $module | Remove-Module -Force
         }
         $installedModule = Get-InstalledPSResource -Name $Name
-        if ($installedModule) {
-            Uninstall-PSResource -Name $Name -SkipDependencyCheck
+        foreach ($module in $installedModule) {
+            $module | Uninstall-PSResource -SkipDependencyCheck
         }
     }
 }
