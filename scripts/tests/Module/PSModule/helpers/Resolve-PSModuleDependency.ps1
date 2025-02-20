@@ -55,7 +55,7 @@
         Remove-PSModule -Name $installParams.Name
         Write-Host " - [$($installParams.Name)] - Installing module"
         Retry -Count 5 -Delay 10 {
-            Install-Module @installParams
+            Install-Module @installParams -AllowClobber
         }
         $VerbosePreference = $VerbosePreferenceOriginal
         Write-Host " - [$($installParams.Name)] - Importing module"
