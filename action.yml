@@ -1,4 +1,4 @@
-name: Test-PSModule (by PSModule)
+name: Test_PSModule (by PSModule)
 description: Test a PowerShell module before publishing the module to the PowerShell Gallery.
 author: PSModule
 branding:
@@ -43,22 +43,22 @@ runs:
       uses: PSModule/Github-Script@v1
       id: paths
       env:
-        GITHUB_ACTION_INPUT_TEST-PSMODULE_Name: ${{ inputs.Name }}
-        GITHUB_ACTION_INPUT_TEST-PSMODULE_Path: ${{ inputs.Path }}
-        GITHUB_ACTION_INPUT_TEST-PSMODULE_TestType: ${{ inputs.TestType }}
+        GITHUB_ACTION_INPUT_TEST_PSMODULE_Name: ${{ inputs.Name }}
+        GITHUB_ACTION_INPUT_TEST_PSMODULE_Path: ${{ inputs.Path }}
+        GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType: ${{ inputs.TestType }}
       with:
         Script: |
           # If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
-          Write-Host "Test type: [$env:GITHUB_ACTION_INPUT_TEST-PSMODULE_TestType]"
-          $codePath = switch($env:GITHUB_ACTION_INPUT_TEST-PSMODULE_TestType) {
+          Write-Host "Test type: [$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType]"
+          $codePath = switch($env:GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType) {
             'Module' {
-              Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST-PSMODULE_Path/$env:GITHUB_ACTION_INPUT_TEST-PSMODULE_Name" | Select-Object -ExpandProperty Path
+              Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name" | Select-Object -ExpandProperty Path
             }
             'SourceCode' {
-              Resolve-Path -Path $env:GITHUB_ACTION_INPUT_TEST-PSMODULE_Path | Select-Object -ExpandProperty Path
+              Resolve-Path -Path $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path | Select-Object -ExpandProperty Path
             }
             default {
-              throw "Invalid test type: [$env:GITHUB_ACTION_INPUT_TEST-PSMODULE_TestType]"
+              throw "Invalid test type: [$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType]"
             }
           }
           Write-Host "Path: [$path]"
