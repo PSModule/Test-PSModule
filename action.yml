@@ -1,4 +1,4 @@
-name: Test_PSModule (by PSModule)
+name: Test-PSModule (by PSModule)
 description: Test a PowerShell module before publishing the module to the PowerShell Gallery.
 author: PSModule
 branding:
@@ -69,7 +69,7 @@ runs:
           Set-GitHubOutput -Name TestPath -Value $testPath
 
     - name: Invoke-Pester
-      uses: PSModule/Invoke-Pester@v1
+      uses: PSModule/Invoke-Pester@fix
       id: test
       with:
         Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}
