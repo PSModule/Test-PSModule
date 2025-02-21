@@ -40,12 +40,12 @@ BeforeDiscovery {
 
 Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]" {
     BeforeAll {
-        $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse -Verbose
+        $testResults = Invoke-ScriptAnalyzer -Path $Path -Settings $SettingsFilePath -Recurse -Verbose:$false
         Write-Warning "Found [$($testResults.Count)] issues"
     }
 
     Context 'Severity: <_>' -ForEach 'Error', 'Warning', 'Information' {
-        It '<CommonName> (<RuleName>)' -Skip:$Skip -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
+        It '<CommonName> (<RuleName>)' -Skip:$_.Skip -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
             $issues = [Collections.Generic.List[string]]::new()
             $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
                 $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
