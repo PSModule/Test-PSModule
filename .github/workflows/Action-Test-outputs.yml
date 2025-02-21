@@ -36,8 +36,9 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModuleTest
-          Path: tests/outputs/modules
+          Path: tests/outputTestRepo
           TestType: Module
+          OS: ${{ matrix.os }}
 
       - name: Status
         shell: pwsh
