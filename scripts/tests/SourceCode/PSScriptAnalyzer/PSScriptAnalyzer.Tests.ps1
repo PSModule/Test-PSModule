@@ -20,6 +20,7 @@ Param(
 )
 
 BeforeDiscovery {
+    $settings = Import-PowerShellDataFile -Path $SettingsFilePath
     $rules = [Collections.Generic.List[System.Collections.Specialized.OrderedDictionary]]::new()
     $ruleObjects = Get-ScriptAnalyzerRule -Verbose:$false | Sort-Object -Property Severity, CommonName
     foreach ($ruleObject in $ruleObjects) {
@@ -29,6 +30,7 @@ BeforeDiscovery {
                 CommonName  = $ruleObject.CommonName
                 Severity    = $ruleObject.Severity
                 Description = $ruleObject.Description
+                Skip        = $ruleObject.RuleName -in $settings.ExcludeRules
             }
         )
     }
@@ -43,7 +45,7 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
     }
 
     Context 'Severity: <_>' -ForEach 'Error', 'Warning', 'Information' {
-        It '<CommonName> (<RuleName>)' -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
+        It '<CommonName> (<RuleName>)' -Skip:$Skip -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
             $issues = [Collections.Generic.List[string]]::new()
             $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
                 $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
