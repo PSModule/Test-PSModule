@@ -23,6 +23,7 @@ BeforeDiscovery {
     $settings = Import-PowerShellDataFile -Path $SettingsFilePath
     $rules = [Collections.Generic.List[System.Collections.Specialized.OrderedDictionary]]::new()
     $ruleObjects = Get-ScriptAnalyzerRule -Verbose:$false | Sort-Object -Property Severity, CommonName
+    $Severeties = $ruleObjects | Select-Object -ExpandProperty Severity -Unique
     foreach ($ruleObject in $ruleObjects) {
         $rules.Add(
             [ordered]@{
@@ -44,14 +45,29 @@ Describe "PSScriptAnalyzer tests using settings file [$relativeSettingsFilePath]
         Write-Warning "Found [$($testResults.Count)] issues"
     }
 
-    Context 'Severity: <_>' -ForEach 'Error', 'Warning', 'Information' {
-        It '<CommonName> (<RuleName>)' -Skip:$_.Skip -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
-            $issues = [Collections.Generic.List[string]]::new()
-            $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
-                $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
-                $issues.Add(([Environment]::NewLine + " - $relativePath`:L$($_.Line):C$($_.Column)"))
+    foreach ($Severety in $Severeties) {
+        Context "Severity: $Severety" {
+            foreach ($rule in $rules | Where-Object -Property Severity -EQ $Severety) {
+                It "$($rule.CommonName) ($($rule.RuleName))" -Skip:$rule.Skip {
+                    $issues = [Collections.Generic.List[string]]::new()
+                    $testResults | Where-Object -Property RuleName -EQ $rule.RuleName | ForEach-Object {
+                        $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
+                        $issues.Add(([Environment]::NewLine + " - $relativePath`:L$($_.Line):C$($_.Column)"))
+                    }
+                    $issues -join '' | Should -BeNullOrEmpty -Because $rule.Description
+                }
             }
-            $issues -join '' | Should -BeNullOrEmpty -Because $Description
         }
     }
+
+
+        # It '<CommonName> (<RuleName>)' -Skip:$_.Skip -ForEach ($rules | Where-Object -Property Severity -EQ $_) {
+        #     $issues = [Collections.Generic.List[string]]::new()
+        #     $testResults | Where-Object -Property RuleName -EQ $RuleName | ForEach-Object {
+        #         $relativePath = $_.ScriptPath.Replace($Path, '').Trim('\').Trim('/')
+        #         $issues.Add(([Environment]::NewLine + " - $relativePath`:L$($_.Line):C$($_.Column)"))
+        #     }
+        #     $issues -join '' | Should -BeNullOrEmpty -Because $Description
+        # }
+
 }
