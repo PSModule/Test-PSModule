@@ -19,26 +19,6 @@ inputs:
   OS:
     description: The operating system to run the tests on.
     required: true
-  # Debug:
-  #   description: Enable debug output.
-  #   required: false
-  #   default: 'false'
-  # Verbose:
-  #   description: Enable verbose output.
-  #   required: false
-  #   default: 'false'
-  # Version:
-  #   description: Specifies the version of the GitHub module to be installed. The value must be an exact version.
-  #   required: false
-  # Prerelease:
-  #   description: Allow prerelease versions if available.
-  #   required: false
-  #   default: 'false'
-
-outputs:
-  passed:
-    description: If the tests passed.
-    value: ${{ steps.test.outputs.Passed }}
 
 runs:
   using: composite
