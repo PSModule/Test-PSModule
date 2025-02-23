@@ -10,6 +10,10 @@
     'PSUseDeclaredVarsMoreThanAssignments', 'functionBearingFiles',
     Justification = 'Variables are used in the test.'
 )]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSAvoidUsingWriteHost', '',
+    Justification = 'Logging to Github Actions.'
+)]
 [CmdLetBinding()]
 Param(
     # The path to the 'src' folder of the repo.

@@ -1,5 +1,5 @@
 ﻿@{
-    Output     = @{
+    Output = @{
         Verbosity = 'Detailed'
     }
 }
