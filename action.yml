@@ -17,10 +17,12 @@ inputs:
     description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
 
-
 runs:
   using: composite
   steps:
+    - name: Initialize environment
+      uses: PSModule/Initialize-PSModule@main
+
     - name: Get test paths
       uses: PSModule/Github-Script@v1
       id: paths
