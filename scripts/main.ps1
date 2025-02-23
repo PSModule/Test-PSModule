@@ -1,8 +1,12 @@
 ﻿# If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
-$moduleName = [string]::IsNullOrEmpty($env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name) ? $env:GITHUB_REPOSITORY_NAME : $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name
-$testType = $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_TestType
-$testPath = Resolve-Path -Path "$PSScriptRoot/tests/$testType" | Select-Object -ExpandProperty Path
-$codePath = switch ($testType) {
+$moduleName = if ([string]::IsNullOrEmpty($env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name)) {
+    $env:GITHUB_REPOSITORY_NAME
+} else {
+    $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name
+}
+$settings = $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Settings
+$testPath = Resolve-Path -Path "$PSScriptRoot/tests/$settings" | Select-Object -ExpandProperty Path
+$codePath = switch ($settings) {
     'Module' {
         Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/outputs/modules/$moduleName" | Select-Object -ExpandProperty Path
     }
@@ -10,13 +14,13 @@ $codePath = switch ($testType) {
         Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/src" | Select-Object -ExpandProperty Path
     }
     default {
-        throw "Invalid test type: [$testType]"
+        throw "Invalid test type: [$settings]"
     }
 }
 
 [pscustomobject]@{
     ModuleName = $moduleName
-    TestType   = $testType
+    Settings   = $settings
     CodePath   = $codePath
     TestPath   = $testPath
 } | Format-List
