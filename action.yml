@@ -55,7 +55,7 @@ runs:
         Script: ${{ github.action_path }}/scripts/main.ps1
 
     - name: Invoke-Pester
-      uses: PSModule/Invoke-Pester@fix
+      uses: PSModule/Invoke-Pester@v3
       id: test
       with:
         TestResult_TestSuiteName: ${{ inputs.TestType }}-${{ inputs.OS }}
