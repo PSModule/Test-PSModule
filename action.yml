@@ -16,6 +16,21 @@ inputs:
   Settings:
     description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
+  Debug:
+    description: Enable debug output.
+    required: false
+    default: 'false'
+  Verbose:
+    description: Enable verbose output.
+    required: false
+    default: 'false'
+  Version:
+    description: Specifies the version of the GitHub module to be installed. The value must be an exact version.
+    required: false
+  Prerelease:
+    description: Allow prerelease versions if available.
+    required: false
+    default: 'false'
 
 runs:
   using: composite
@@ -31,12 +46,20 @@ runs:
         GITHUB_ACTION_INPUT_TEST_PSMODULE_Path: ${{ inputs.Path }}
         GITHUB_ACTION_INPUT_TEST_PSMODULE_Settings: ${{ inputs.Settings }}
       with:
+        Debug: ${{ inputs.Debug }}
+        Prerelease: ${{ inputs.Prerelease }}
+        Verbose: ${{ inputs.Verbose }}
+        Version: ${{ inputs.Version }}
         Script: ${{ github.action_path }}/scripts/main.ps1
 
     - name: Invoke-Pester
       uses: PSModule/Invoke-Pester@v3
       id: test
       with:
+        Debug: ${{ inputs.Debug }}
+        Prerelease: ${{ inputs.Prerelease }}
+        Verbose: ${{ inputs.Verbose }}
+        Version: ${{ inputs.Version }}
         TestResult_TestSuiteName: ${{ inputs.Settings }}-${{ runner.os }}
         Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}
         Run_Path: ${{ fromJson(steps.paths.outputs.result).CodePath }}
