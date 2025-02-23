@@ -16,77 +16,61 @@ permissions: {}
 
 jobs:
   ActionTestOutputs:
+    name: Action-Test [outputs] - [${{ matrix.os }}]
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    name: Action-Test [outputs] - [${{ matrix.os }}]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Initialize environment
-        uses: PSModule/Initialize-PSModule@main
-
       - name: Action-Test
         uses: ./
         id: action-test
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModuleTest
           Path: tests/outputTestRepo
-          TestType: Module
-          OS: ${{ matrix.os }}
+          Settings: Module
+          TestSuiteName: outputs-Module-${{ matrix.os }}
 
   ActionTestSrcDefault:
+    name: Action-Test [Src-Default] - [${{ matrix.os }}]
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    name: Action-Test [Src-Default] - [${{ matrix.os }}]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Initialize environment
-        uses: PSModule/Initialize-PSModule@main
-
       - name: Action-Test
         uses: ./
         id: action-test
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModuleTest
           Path: tests/srcTestRepo
-          TestType: SourceCode
-          OS: ${{ matrix.os }}
-
+          Settings: SourceCode
+          TestSuiteName: SrcDefault-SourceCode-${{ matrix.os }}
 
   ActionTestsSrcWithManifest:
+    name: Action-Test [Src-WithManifest] - [${{ matrix.os }}]
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    name: Action-Test [Src-WithManifest] - [${{ matrix.os }}]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Initialize environment
-        uses: PSModule/Initialize-PSModule@main
-
       - name: Action-Test
         uses: ./
         id: action-test
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModuleTest
           Path: tests/srcWithManifestTestRepo
-          TestType: SourceCode
-          OS: ${{ matrix.os }}
+          Settings: SourceCode
+          TestSuiteName: SrcWithManifest-SourceCode-${{ matrix.os }}

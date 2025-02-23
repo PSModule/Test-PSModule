@@ -38,6 +38,6 @@ runs:
       uses: PSModule/Invoke-Pester@v3
       id: test
       with:
-        TestResult_TestSuiteName: ${{ inputs.TestType }}-${{ inputs.OS }}
+        TestResult_TestSuiteName: ${{ inputs.TestSuiteName}}
         Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}
         Run_Path: ${{ fromJson(steps.paths.outputs.result).CodePath }}
