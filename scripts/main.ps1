@@ -6,12 +6,12 @@ $moduleName = if ([string]::IsNullOrEmpty($env:GITHUB_ACTION_INPUT_TEST_PSMODULE
 }
 $settings = $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Settings
 $testPath = Resolve-Path -Path "$PSScriptRoot/tests/$settings" | Select-Object -ExpandProperty Path
-$localTestPath = Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/tests" | Select-Object -ExpandProperty Path
 $codePath = switch ($settings) {
     'Module' {
         Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/outputs/modules/$moduleName" | Select-Object -ExpandProperty Path
     }
     'SourceCode' {
+        $localTestPath = Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/tests" | Select-Object -ExpandProperty Path
         Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/src" | Select-Object -ExpandProperty Path
     }
     default {
