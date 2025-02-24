@@ -1,0 +1,82 @@
+name: Action-Test
+
+run-name: "Action-Test - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}"
+
+on:
+  workflow_dispatch:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  ActionTestOutputs:
+    name: Action-Test [outputs] - [${{ matrix.os }}]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Initialize environment
+        uses: PSModule/Initialize-PSModule@main
+
+      - name: Action-Test
+        uses: ./
+        id: action-test
+        with:
+          Name: PSModuleTest
+          Path: tests/outputTestRepo
+          Settings: Module
+
+  ActionTestSrcDefault:
+    name: Action-Test [Src-Default] - [${{ matrix.os }}]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Initialize environment
+        uses: PSModule/Initialize-PSModule@main
+
+      - name: Action-Test
+        uses: ./
+        id: action-test
+        with:
+          Name: PSModuleTest
+          Path: tests/srcTestRepo
+          Settings: SourceCode
+
+  ActionTestsSrcWithManifest:
+    name: Action-Test [Src-WithManifest] - [${{ matrix.os }}]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Initialize environment
+        uses: PSModule/Initialize-PSModule@main
+
+      - name: Action-Test
+        uses: ./
+        id: action-test
+        with:
+          Name: PSModuleTest
+          Path: tests/srcWithManifestTestRepo
+          Settings: SourceCode
