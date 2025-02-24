@@ -85,7 +85,7 @@ jobs:
       - name: Test-PSModule
         uses: PSModule/Test-PSModule@main
         with:
-          Path: outputs/modules
+          Path: outputs/module
           TestType: Module
 
 ```

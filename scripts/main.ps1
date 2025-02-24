@@ -9,7 +9,7 @@ $testPath = Resolve-Path -Path "$PSScriptRoot/tests/$settings" | Select-Object -
 $localTestPath = Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/tests" | Select-Object -ExpandProperty Path
 $codePath = switch ($settings) {
     'Module' {
-        Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/outputs/modules/$moduleName" | Select-Object -ExpandProperty Path
+        Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/outputs/module/$moduleName" | Select-Object -ExpandProperty Path
     }
     'SourceCode' {
         Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/src" | Select-Object -ExpandProperty Path
