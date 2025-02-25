@@ -16,8 +16,6 @@
         Should later be adapted to take 4 parameters sets: specific version ("requiredVersion" | "GUID"), latest version ModuleVersion,
         and latest version within a range MinimumVersion - MaximumVersion.
     #>
-    [Alias('Resolve-PSModuleDependencies')]
-    #Requires -Modules Retry
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
         'PSAvoidUsingWriteHost', '', Scope = 'Function',
         Justification = 'Want to just write to the console, not the pipeline.'
@@ -54,8 +52,22 @@
         Write-Host " - [$($installParams.Name)] - Uninstalling module"
         Remove-PSModule -Name $installParams.Name
         Write-Host " - [$($installParams.Name)] - Installing module"
-        Retry -Count 5 -Delay 10 {
-            Install-Module @installParams -AllowClobber
+        $Count = 5
+        $Delay = 10
+        for ($i = 0; $i -lt $Count; $i++) {
+            try {
+                Install-Module @installParams
+                break
+            } catch {
+                Write-Warning 'The command:'
+                Write-Warning $Run.ToString()
+                Write-Warning "failed with error: $_"
+                if ($i -eq $Count - 1) {
+                    throw
+                }
+                Write-Warning "Retrying in $Delay seconds..."
+                Start-Sleep -Seconds $Delay
+            }
         }
         $VerbosePreference = $VerbosePreferenceOriginal
         Write-Host " - [$($installParams.Name)] - Importing module"

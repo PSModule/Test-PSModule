@@ -3,7 +3,6 @@
         .SYNOPSIS
         Removes and uninstalls a PowerShell module.
 
-
         .EXAMPLE
         Remove-PSModule -ModuleName 'Utilities'
 
