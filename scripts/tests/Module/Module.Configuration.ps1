@@ -1,5 +1,5 @@
 ﻿@{
-    TestRestult = @{
+    TestRestult  = @{
         Enabled = $true
     }
     CodeCoverage = @{
