@@ -1,15 +1,17 @@
 ﻿function Resolve-PSModuleDependency {
     <#
         .SYNOPSIS
-        Resolve dependencies for a module based on the manifest file.
+            Resolves module dependencies from a manifest file using Install-PSResource.
 
         .DESCRIPTION
-        Resolve dependencies for a module based on the manifest file, following PSModuleInfo structure
+            Reads a module manifest (PSD1) and for each required module converts the old
+            Install-Module parameters (MinimumVersion, MaximumVersion, RequiredVersion)
+            into a single NuGet version range string for Install-PSResource's –Version parameter.
+            (Note: If RequiredVersion is set, that value takes precedence.)
 
         .EXAMPLE
-        Resolve-PSModuleDependency -Path 'C:\MyModule\MyModule.psd1'
-
-        Installs all modules defined in the manifest file, following PSModuleInfo structure.
+            Resolve-PSModuleDependency -ManifestFilePath 'C:\MyModule\MyModule.psd1'
+    Installs all modules defined in the manifest file, following PSModuleInfo structure.
 
         .NOTES
         Should later be adapted to support both pre-reqs, and dependencies.
@@ -27,53 +29,101 @@
         [string] $ManifestFilePath
     )
 
-    Write-Host 'Resolving dependencies'
+    # Helper: Convert legacy version parameters into a NuGet version range string.
+    function Convert-VersionSpec {
+        param(
+            [string]$MinimumVersion,
+            [string]$MaximumVersion,
+            [string]$RequiredVersion
+        )
+        if ($RequiredVersion) {
+            # Use exact match in bracket notation.
+            return "[$RequiredVersion]"
+        } elseif ($MinimumVersion -and $MaximumVersion) {
+            # Both bounds provided; both are inclusive.
+            return "[$MinimumVersion,$MaximumVersion]"
+        } elseif ($MinimumVersion) {
+            # Only a minimum is provided. Use a minimum-inclusive range.
+            return "[$MinimumVersion, ]"
+        } elseif ($MaximumVersion) {
+            # Only a maximum is provided; lower bound open.
+            return "(, $MaximumVersion]"
+        } else {
+            return $null
+        }
+    }
 
+    Write-Host 'Resolving dependencies'
     $manifest = Import-PowerShellDataFile -Path $ManifestFilePath
     Write-Host " - Reading [$ManifestFilePath]"
-    Write-Host " - Found [$($manifest.RequiredModules.Count)] modules to install"
+    Write-Host " - Found [$($manifest.RequiredModules.Count)] module(s) to install"
 
     foreach ($requiredModule in $manifest.RequiredModules) {
-        $installParams = @{}
+        # Build parameters for Install-PSResource (new version spec).
+        $psResourceParams = @{
+            TrustRepository = $true
+        }
+        # Build parameters for Import-Module (legacy version spec).
+        $importParams = @{
+            Force   = $true
+            Verbose = $false
+        }
 
         if ($requiredModule -is [string]) {
-            $installParams.Name = $requiredModule
+            $psResourceParams.Name = $requiredModule
+            $importParams.Name = $requiredModule
         } else {
-            $installParams.Name = $requiredModule.ModuleName
-            $installParams.MinimumVersion = $requiredModule.ModuleVersion
-            $installParams.RequiredVersion = $requiredModule.RequiredVersion
-            $installParams.MaximumVersion = $requiredModule.MaximumVersion
-        }
-        $installParams.Force = $true
-        $installParams.Verbose = $false
+            $psResourceParams.Name = $requiredModule.ModuleName
+            $importParams.Name = $requiredModule.ModuleName
 
+            # Convert legacy version info for Install-PSResource.
+            $versionSpec = Convert-VersionSpec `
+                -MinimumVersion $requiredModule.ModuleVersion `
+                -MaximumVersion $requiredModule.MaximumVersion `
+                -RequiredVersion $requiredModule.RequiredVersion
+
+            if ($versionSpec) {
+                $psResourceParams.Version = $versionSpec
+            }
+
+            # For Import-Module, keep the original version parameters.
+            if ($requiredModule.ModuleVersion) {
+                $importParams.MinimumVersion = $requiredModule.ModuleVersion
+            }
+            if ($requiredModule.RequiredVersion) {
+                $importParams.RequiredVersion = $requiredModule.RequiredVersion
+            }
+            if ($requiredModule.MaximumVersion) {
+                $importParams.MaximumVersion = $requiredModule.MaximumVersion
+            }
+        }
+
+        Write-Host " - [$($psResourceParams.Name)] - Installing module with Install-PSResource using version spec: $($psResourceParams.Version)"
         $VerbosePreferenceOriginal = $VerbosePreference
         $VerbosePreference = 'SilentlyContinue'
-        Write-Host " - [$($installParams.Name)] - Installing module"
-        $Count = 5
-        $Delay = 10
-        for ($i = 0; $i -lt $Count; $i++) {
+        $retryCount = 5
+        $retryDelay = 10
+        for ($i = 0; $i -lt $retryCount; $i++) {
             try {
-                Install-Module @installParams
+                Install-PSResource @psResourceParams
                 break
             } catch {
-                Write-Warning 'The command:'
-                Write-Warning $Run.ToString()
-                Write-Warning "failed with error: $_"
-                if ($i -eq $Count - 1) {
+                Write-Warning "Installation of $($psResourceParams.Name) failed with error: $_"
+                if ($i -eq $retryCount - 1) {
                     throw
                 }
-                Write-Warning "Retrying in $Delay seconds..."
-                Start-Sleep -Seconds $Delay
+                Write-Warning "Retrying in $retryDelay seconds..."
+                Start-Sleep -Seconds $retryDelay
             }
         }
         $VerbosePreference = $VerbosePreferenceOriginal
-        Write-Host " - [$($installParams.Name)] - Importing module"
+
+        Write-Host " - [$($importParams.Name)] - Importing module with legacy version spec"
         $VerbosePreferenceOriginal = $VerbosePreference
         $VerbosePreference = 'SilentlyContinue'
-        Import-Module @installParams
+        Import-Module @importParams
         $VerbosePreference = $VerbosePreferenceOriginal
-        Write-Host " - [$($installParams.Name)] - Done"
+        Write-Host " - [$($importParams.Name)] - Done"
     }
     Write-Host ' - Resolving dependencies - Done'
 }
