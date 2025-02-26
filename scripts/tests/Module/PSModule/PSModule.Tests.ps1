@@ -17,8 +17,6 @@ BeforeAll {
 
         $moduleName = Split-Path -Path $Path -Leaf
         Write-Verbose "[$moduleName] - Processing" -Verbose
-        $outputFolder = Split-Path -Path $Path -Parent
-        Add-PSModulePath -Path $outputFolder
         Import-PSModule -Path $Path
     }
 }

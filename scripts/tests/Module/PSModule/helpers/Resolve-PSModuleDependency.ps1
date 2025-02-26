@@ -49,8 +49,6 @@
 
         $VerbosePreferenceOriginal = $VerbosePreference
         $VerbosePreference = 'SilentlyContinue'
-        Write-Host " - [$($installParams.Name)] - Uninstalling module"
-        Remove-PSModule -Name $installParams.Name
         Write-Host " - [$($installParams.Name)] - Installing module"
         $Count = 5
         $Delay = 10

@@ -26,14 +26,13 @@
     $manifestFilePath = Join-Path -Path $Path "$moduleName.psd1"
 
     Write-Host " - Manifest file path: [$manifestFilePath]"
-    Remove-PSModule -Name $moduleName
     Resolve-PSModuleDependency -ManifestFilePath $manifestFilePath
 
     Write-Host ' - List installed modules'
     Get-InstalledPSResource | Format-Table -AutoSize
 
     Write-Host " - Importing module [$moduleName] v999"
-    Import-Module -Name $moduleName -RequiredVersion '999.0.0'
+    Import-Module $Path
 
     Write-Host ' - List loaded modules'
     $availableModules = Get-Module -ListAvailable -Refresh -Verbose:$false
