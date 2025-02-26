@@ -33,7 +33,7 @@
             Write-Host " - Removing command [$($command.Name)]"
             $command | Remove-Item -Force
         }
-        $installedModule = Get-InstalledPSResource | Where-Object { $_.Name -eq $Name }
+        $installedModule = Get-InstalledPSResource -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $Name }
         Write-Host " - Found [$($installedModule.Count)] installed modules to remove"
         foreach ($module in $installedModule) {
             Write-Host " - Uninstalling module [$($module.Name)]"
