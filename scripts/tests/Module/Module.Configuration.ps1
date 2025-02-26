@@ -1,4 +1,7 @@
 ﻿@{
+    TestRestults = @{
+        Enabled = $true
+    }
     CodeCoverage = @{
         Enabled        = $true
         OutputFormat   = 'JaCoCo'
