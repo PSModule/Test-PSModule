@@ -27,7 +27,7 @@ BeforeAll {
 Describe 'PSModule - Module tests' {
     Context 'Module' {
         It 'The module should be importable' {
-            { Import-Module -Path $Path } | Should -Not -Throw
+            { Import-Module -Name $Path } | Should -Not -Throw
         }
     }
 
