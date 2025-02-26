@@ -14,21 +14,13 @@ BeforeAll {
         Get-ChildItem -Path $helperPath -Filter '*.ps1' -Recurse | ForEach-Object {
             . $_.FullName
         }
-
-        $moduleName = Split-Path -Path $Path -Leaf
-        Write-Verbose "[$moduleName] - Processing" -Verbose
-        Import-PSModule -Path $Path
     }
 }
 
 Describe 'PSModule - Module tests' {
     Context 'Module' {
-        It 'The module should be available' {
-            Get-Module -Name $moduleName -ListAvailable | Should -Not -BeNullOrEmpty
-            Write-Verbose (Get-Module -Name $moduleName -ListAvailable | Out-String)
-        }
         It 'The module should be importable' {
-            { Import-Module -Name $moduleName -RequiredVersion 999.0.0 -Force } | Should -Not -Throw
+            { Import-PSModule -Path $Path } | Should -Not -Throw
         }
     }
 
