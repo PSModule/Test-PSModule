@@ -50,7 +50,7 @@ runs:
         Script: ${{ github.action_path }}/scripts/main.ps1
 
     - name: Invoke-Pester
-      uses: PSModule/Invoke-Pester@v3
+      # uses: PSModule/Invoke-Pester@v3
       uses: PSModule/Invoke-Pester@fixDefaultsForMerge
       id: test
       env:
