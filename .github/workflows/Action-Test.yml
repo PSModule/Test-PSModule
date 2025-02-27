@@ -26,9 +26,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Initialize environment
-        uses: PSModule/Initialize-PSModule@main
-
       - name: Action-Test
         uses: ./
         id: action-test
@@ -48,9 +45,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Initialize environment
-        uses: PSModule/Initialize-PSModule@main
-
       - name: Action-Test
         uses: ./
         id: action-test
@@ -69,9 +63,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
-      - name: Initialize environment
-        uses: PSModule/Initialize-PSModule@main
 
       - name: Action-Test
         uses: ./
