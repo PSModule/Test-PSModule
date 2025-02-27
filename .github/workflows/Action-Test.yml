@@ -71,5 +71,3 @@ jobs:
           Name: PSModuleTest
           Path: tests/srcWithManifestTestRepo
           Settings: SourceCode
-
-          
