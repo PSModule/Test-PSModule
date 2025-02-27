@@ -51,6 +51,7 @@ runs:
 
     - name: Invoke-Pester
       uses: PSModule/Invoke-Pester@v3
+      uses: PSModule/Invoke-Pester@fixDefaultsForMerge
       id: test
       env:
         LocalTestPath: ${{ fromJson(steps.paths.outputs.result).LocalTestPath }}
