@@ -29,30 +29,6 @@
         [string] $ManifestFilePath
     )
 
-    # Helper: Convert legacy version parameters into a NuGet version range string.
-    function Convert-VersionSpec {
-        param(
-            [string]$MinimumVersion,
-            [string]$MaximumVersion,
-            [string]$RequiredVersion
-        )
-        if ($RequiredVersion) {
-            # Use exact match in bracket notation.
-            return "[$RequiredVersion]"
-        } elseif ($MinimumVersion -and $MaximumVersion) {
-            # Both bounds provided; both are inclusive.
-            return "[$MinimumVersion,$MaximumVersion]"
-        } elseif ($MinimumVersion) {
-            # Only a minimum is provided. Use a minimum-inclusive range.
-            return "[$MinimumVersion, ]"
-        } elseif ($MaximumVersion) {
-            # Only a maximum is provided; lower bound open.
-            return "(, $MaximumVersion]"
-        } else {
-            return $null
-        }
-    }
-
     Write-Host 'Resolving dependencies'
     $manifest = Import-PowerShellDataFile -Path $ManifestFilePath
     Write-Host " - Reading [$ManifestFilePath]"
