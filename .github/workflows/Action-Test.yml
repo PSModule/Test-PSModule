@@ -1,6 +1,6 @@
 name: Action-Test
 
-run-name: "Action-Test - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}"
+run-name: 'Action-Test - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}'
 
 on:
   workflow_dispatch:
@@ -31,7 +31,7 @@ jobs:
         id: action-test
         with:
           Name: PSModuleTest
-          Path: tests/outputTestRepo
+          WorkingDirectory: tests/outputTestRepo
           Settings: Module
 
   ActionTestSrcDefault:
@@ -50,7 +50,7 @@ jobs:
         id: action-test
         with:
           Name: PSModuleTest
-          Path: tests/srcTestRepo
+          WorkingDirectory: tests/srcTestRepo
           Settings: SourceCode
 
   ActionTestsSrcWithManifest:
@@ -69,5 +69,5 @@ jobs:
         id: action-test
         with:
           Name: PSModuleTest
-          Path: tests/srcWithManifestTestRepo
+          WorkingDirectory: tests/srcWithManifestTestRepo
           Settings: SourceCode

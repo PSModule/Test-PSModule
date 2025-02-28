@@ -9,9 +9,6 @@ inputs:
   Name:
     description: The name of the module to test. The name of the repository is used if not specified.
     required: false
-  Path:
-    description: The path to the repo.
-    required: true
   Settings:
     description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
@@ -31,7 +28,7 @@ inputs:
     required: false
     default: 'false'
   WorkingDirectory:
-    description: The working directory to use for the action.
+    description: The working directory to use for the action. This is the root folder where tests and outputs are expected.
     required: false
     default: ${{ github.workspace }}
 
@@ -43,7 +40,6 @@ runs:
       id: paths
       env:
         PSMODULE_TEST_PSMODULE_INPUT_Name: ${{ inputs.Name }}
-        PSMODULE_TEST_PSMODULE_INPUT_Path: ${{ inputs.Path }}
         PSMODULE_TEST_PSMODULE_INPUT_Settings: ${{ inputs.Settings }}
         PSMODULE_TEST_PSMODULE_INPUT_WorkingDirectory: ${{ inputs.WorkingDirectory }}
       with:

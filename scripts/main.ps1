@@ -1,4 +1,4 @@
-﻿# If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
+﻿# If test type is module, the code we ought to test is in the WorkingDirectory/outputs/module/Name folder, otherwise it's in the WorkingDirectory/src folder.
 $moduleName = if ([string]::IsNullOrEmpty($env:PSMODULE_TEST_PSMODULE_INPUT_Name)) {
     $env:GITHUB_REPOSITORY_NAME
 } else {

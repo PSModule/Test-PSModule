@@ -15,12 +15,12 @@ Test-PSModule enables:
 The action runs the following the Pester test framework:
 - [PSScriptAnalyzer tests](https://learn.microsoft.com/en-us/powershell/utility-modules/psscriptanalyzer/rules/readme?view=ps-modules)
 - [PSModule framework tests](#psmodule-tests)
-- If `TestType` is set to `Module`:
+- If `Settings` is set to `Module`:
   - The module manifest is tested using [Test-ModuleManifest](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/test-modulemanifest).
   - The module is imported.
   - Custom module tests from the `tests` directory in the module repository are run.
   - CodeCoverage is calculated.
-- If `TestType` is set to `SourceCode`:
+- If `Settings` is set to `SourceCode`:
   - The source code is tested with:
     - `PSScriptAnalyzer` for best practices, using custom settings.
     - `PSModule.SourceCode` for other PSModule standards.
@@ -57,8 +57,8 @@ jobs:
       - name: Test-PSModule
         uses: PSModule/Test-PSModule@main
         with:
-          Path: src
-          TestType: SourceCode
+          Settings: SourceCode
+          WorkingDirectory: ${{ github.workspace }}
 
 ```
 </details>
@@ -85,8 +85,8 @@ jobs:
       - name: Test-PSModule
         uses: PSModule/Test-PSModule@main
         with:
-          Path: outputs/module
-          TestType: Module
+          Settings: Module
+          WorkingDirectory: ${{ github.workspace }}
 
 ```
 </details>
@@ -97,16 +97,13 @@ jobs:
 
 | Name | Description | Required | Default |
 | ---- | ----------- | -------- | ------- |
-| `Path` | The path to the code to test. | `true` | |
-| `TestType` | The type of tests to run. Can be either `Module` or `SourceCode`.  | `true` | |
+| `Settings` | The type of tests to run. Can be either `Module` or `SourceCode`.  | `true` | |
 | `Name` | The name of the module to test. The name of the repository is used if not specified. | `false` | |
-| `TestsPath` | The path to the tests to run. | `false` | `tests` |
-| `StackTraceVerbosity` | Verbosity level of the stack trace. Allowed values: `None`, `FirstLine`, `Filtered`, `Full`. | `false` | `Filtered` |
-| `Verbosity` | Verbosity level of the test output. Allowed values: `None`, `Normal`, `Detailed`, `Diagnostic`. | `false` | `Detailed` |
-| `Debug` | Enable debug output. | `'false'` | `false` |
-| `Verbose` | Enable verbose output. | `'false'` | `false` |
-| `Version` | Specifies the version of the GitHub module to be installed. The value must be an exact version. | | `false` |
-| `Prerelease` | Allow prerelease versions if available. | `'false'` | `false` |
+| `WorkingDirectory` | The working directory to use for the action. This is the root folder where tests and outputs are expected. | `false` | `${{ github.workspace }}` |
+| `Debug` | Enable debug output. | `false` | `'false'` |
+| `Verbose` | Enable verbose output. | `false` | `'false'` |
+| `Version` | Specifies the version of the GitHub module to be installed. The value must be an exact version. | `false` | |
+| `Prerelease` | Allow prerelease versions if available. | `false` | `'false'` |
 
 ### Outputs
 
