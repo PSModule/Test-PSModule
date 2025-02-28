@@ -1,18 +1,18 @@
 ﻿# If test type is module, the code we ought to test is in the path/name folder, otherwise it's in the path folder.
-$moduleName = if ([string]::IsNullOrEmpty($env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name)) {
+$moduleName = if ([string]::IsNullOrEmpty($env:PSMODULE_TEST_PSMODULE_INPUT_Name)) {
     $env:GITHUB_REPOSITORY_NAME
 } else {
-    $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Name
+    $env:PSMODULE_TEST_PSMODULE_INPUT_Name
 }
-$settings = $env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Settings
+$settings = $env:PSMODULE_TEST_PSMODULE_INPUT_Settings
 $testPath = Resolve-Path -Path "$PSScriptRoot/tests/$settings" | Select-Object -ExpandProperty Path
-$localTestPath = Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/tests" | Select-Object -ExpandProperty Path
+$localTestPath = Resolve-Path -Path "$env:PSMODULE_TEST_PSMODULE_INPUT_Path/tests" | Select-Object -ExpandProperty Path
 $codePath = switch ($settings) {
     'Module' {
-        Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/outputs/module/$moduleName" | Select-Object -ExpandProperty Path
+        Resolve-Path -Path "$env:PSMODULE_TEST_PSMODULE_INPUT_Path/outputs/module/$moduleName" | Select-Object -ExpandProperty Path
     }
     'SourceCode' {
-        Resolve-Path -Path "$env:GITHUB_ACTION_INPUT_TEST_PSMODULE_Path/src" | Select-Object -ExpandProperty Path
+        Resolve-Path -Path "$env:PSMODULE_TEST_PSMODULE_INPUT_Path/src" | Select-Object -ExpandProperty Path
     }
     default {
         throw "Invalid test type: [$settings]"

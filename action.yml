@@ -39,9 +39,9 @@ runs:
       uses: PSModule/Github-Script@v1
       id: paths
       env:
-        GITHUB_ACTION_INPUT_TEST_PSMODULE_Name: ${{ inputs.Name }}
-        GITHUB_ACTION_INPUT_TEST_PSMODULE_Path: ${{ inputs.Path }}
-        GITHUB_ACTION_INPUT_TEST_PSMODULE_Settings: ${{ inputs.Settings }}
+        PSMODULE_TEST_PSMODULE_INPUT_Name: ${{ inputs.Name }}
+        PSMODULE_TEST_PSMODULE_INPUT_Path: ${{ inputs.Path }}
+        PSMODULE_TEST_PSMODULE_INPUT_Settings: ${{ inputs.Settings }}
       with:
         Debug: ${{ inputs.Debug }}
         Prerelease: ${{ inputs.Prerelease }}
