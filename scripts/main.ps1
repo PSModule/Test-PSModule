@@ -21,11 +21,11 @@ $codePath = switch ($settings) {
 }
 
 [pscustomobject]@{
-    ModuleName       = $moduleName
-    Settings         = $settings
-    CodePath         = $codePath
-    LocalTestPath    = $localTestPath
-    TestPath         = $testPath
+    ModuleName    = $moduleName
+    Settings      = $settings
+    CodePath      = $codePath
+    LocalTestPath = $localTestPath
+    TestPath      = $testPath
 } | Format-List
 
 Set-GitHubOutput -Name ModuleName -Value $moduleName
