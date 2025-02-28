@@ -7,24 +7,24 @@ $moduleName = if ([string]::IsNullOrEmpty($env:PSMODULE_TEST_PSMODULE_INPUT_Name
 $settings = $env:PSMODULE_TEST_PSMODULE_INPUT_Settings
 $workingDirectory = $env:PSMODULE_TEST_PSMODULE_INPUT_WorkingDirectory
 $testPath = Resolve-Path -Path "$PSScriptRoot/tests/$settings" | Select-Object -ExpandProperty Path
-$localTestPath = Resolve-Path -Path (Join-Path -Path $workingDirectory -ChildPath "tests") | Select-Object -ExpandProperty Path
+$localTestPath = Resolve-Path -Path (Join-Path -Path $workingDirectory -ChildPath 'tests') | Select-Object -ExpandProperty Path
 $codePath = switch ($settings) {
     'Module' {
         Resolve-Path -Path (Join-Path -Path $workingDirectory -ChildPath "outputs/module/$moduleName") | Select-Object -ExpandProperty Path
     }
     'SourceCode' {
-        Resolve-Path -Path (Join-Path -Path $workingDirectory -ChildPath "src") | Select-Object -ExpandProperty Path
+        Resolve-Path -Path (Join-Path -Path $workingDirectory -ChildPath 'src') | Select-Object -ExpandProperty Path
     }
     default {
         throw "Invalid test type: [$settings]"
     }
 }
 [pscustomobject]@{
-    ModuleName      = $moduleName
-    Settings        = $settings
-    CodePath        = $codePath
-    LocalTestPath   = $localTestPath
-    TestPath        = $testPath
+    ModuleName       = $moduleName
+    Settings         = $settings
+    CodePath         = $codePath
+    LocalTestPath    = $localTestPath
+    TestPath         = $testPath
     WorkingDirectory = $workingDirectory
 } | Format-List
 
