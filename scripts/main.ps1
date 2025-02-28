@@ -7,18 +7,41 @@ $moduleName = if ([string]::IsNullOrEmpty($env:PSMODULE_TEST_PSMODULE_INPUT_Name
 $settings = $env:PSMODULE_TEST_PSMODULE_INPUT_Settings
 $workingDirectory = $env:PSMODULE_TEST_PSMODULE_INPUT_WorkingDirectory
 $testPath = Resolve-Path -Path "$PSScriptRoot/tests/$settings" | Select-Object -ExpandProperty Path
-$localTestPath = Resolve-Path -Path (Join-Path -Path $workingDirectory -ChildPath 'tests') | Select-Object -ExpandProperty Path
+
+# Check if the tests directory exists before attempting to resolve its path
+$localTestsDir = Join-Path -Path $workingDirectory -ChildPath 'tests'
+$localTestPath = if (Test-Path -Path $localTestsDir) {
+    Resolve-Path -Path $localTestsDir | Select-Object -ExpandProperty Path
+} else {
+    # Return the path even though it doesn't exist, to avoid errors
+    $localTestsDir
+}
+
+# Check if expected code paths exist before resolving them
 $codePath = switch ($settings) {
     'Module' {
-        Resolve-Path -Path (Join-Path -Path $workingDirectory -ChildPath "outputs/module/$moduleName") | Select-Object -ExpandProperty Path
+        $moduleDir = Join-Path -Path $workingDirectory -ChildPath "outputs/module/$moduleName"
+        if (Test-Path -Path $moduleDir) {
+            Resolve-Path -Path $moduleDir | Select-Object -ExpandProperty Path
+        } else {
+            Write-Warning "Module directory does not exist: $moduleDir"
+            $moduleDir
+        }
     }
     'SourceCode' {
-        Resolve-Path -Path (Join-Path -Path $workingDirectory -ChildPath 'src') | Select-Object -ExpandProperty Path
+        $srcDir = Join-Path -Path $workingDirectory -ChildPath 'src'
+        if (Test-Path -Path $srcDir) {
+            Resolve-Path -Path $srcDir | Select-Object -ExpandProperty Path
+        } else {
+            Write-Warning "Source directory does not exist: $srcDir"
+            $srcDir
+        }
     }
     default {
         throw "Invalid test type: [$settings]"
     }
 }
+
 [pscustomobject]@{
     ModuleName       = $moduleName
     Settings         = $settings
