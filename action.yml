@@ -12,7 +12,6 @@ inputs:
   Path:
     description: The path to the repo.
     required: true
-    default: ${{ github.workspace }}
   Settings:
     description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
@@ -31,6 +30,10 @@ inputs:
     description: Allow prerelease versions if available.
     required: false
     default: 'false'
+  WorkingDirectory:
+    description: The working directory to use for the action.
+    required: false
+    default: ${{ github.workspace }}
 
 runs:
   using: composite
@@ -42,11 +45,13 @@ runs:
         PSMODULE_TEST_PSMODULE_INPUT_Name: ${{ inputs.Name }}
         PSMODULE_TEST_PSMODULE_INPUT_Path: ${{ inputs.Path }}
         PSMODULE_TEST_PSMODULE_INPUT_Settings: ${{ inputs.Settings }}
+        PSMODULE_TEST_PSMODULE_INPUT_WorkingDirectory: ${{ inputs.WorkingDirectory }}
       with:
         Debug: ${{ inputs.Debug }}
         Prerelease: ${{ inputs.Prerelease }}
         Verbose: ${{ inputs.Verbose }}
         Version: ${{ inputs.Version }}
+        WorkingDirectory: ${{ inputs.WorkingDirectory }}
         Script: ${{ github.action_path }}/scripts/main.ps1
 
     - name: Invoke-Pester
@@ -55,11 +60,13 @@ runs:
       id: test
       env:
         LocalTestPath: ${{ fromJson(steps.paths.outputs.result).LocalTestPath }}
+        WorkingDirectory: ${{ fromJson(steps.paths.outputs.result).WorkingDirectory }}
       with:
         Debug: ${{ inputs.Debug }}
         Prerelease: ${{ inputs.Prerelease }}
         Verbose: ${{ inputs.Verbose }}
         Version: ${{ inputs.Version }}
+        WorkingDirectory: ${{ inputs.WorkingDirectory }}
         TestResult_TestSuiteName: ${{ inputs.Settings }}-${{ runner.os }}
         Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}
         Run_Path: ${{ fromJson(steps.paths.outputs.result).CodePath }}
