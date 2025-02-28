@@ -5,7 +5,7 @@ $moduleName = if ([string]::IsNullOrEmpty($env:PSMODULE_TEST_PSMODULE_INPUT_Name
     $env:PSMODULE_TEST_PSMODULE_INPUT_Name
 }
 $settings = $env:PSMODULE_TEST_PSMODULE_INPUT_Settings
-$workingDirectory = $env:PSMODULE_TEST_PSMODULE_INPUT_WorkingDirectory
+$workingDirectory = Resolve-Path -Path $env:PSMODULE_TEST_PSMODULE_INPUT_WorkingDirectory | Select-Object -ExpandProperty Path
 $testPath = Resolve-Path -Path "$PSScriptRoot/tests/$settings" | Select-Object -ExpandProperty Path
 
 # Check if the tests directory exists before attempting to resolve its path
