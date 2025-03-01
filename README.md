@@ -99,11 +99,11 @@ jobs:
 | ---- | ----------- | -------- | ------- |
 | `Settings` | The type of tests to run. Can be either `Module` or `SourceCode`.  | `true` | |
 | `Name` | The name of the module to test. The name of the repository is used if not specified. | `false` | |
-| `WorkingDirectory` | The working directory to use for the action. This is the root folder where tests and outputs are expected. | `false` | `${{ github.workspace }}` |
 | `Debug` | Enable debug output. | `false` | `'false'` |
 | `Verbose` | Enable verbose output. | `false` | `'false'` |
 | `Version` | Specifies the version of the GitHub module to be installed. The value must be an exact version. | `false` | |
 | `Prerelease` | Allow prerelease versions if available. | `false` | `'false'` |
+| `WorkingDirectory` | The working directory to use for the action. This is the root folder where tests and outputs are expected. | `false` | `${{ github.workspace }}` |
 
 ### Outputs
 
