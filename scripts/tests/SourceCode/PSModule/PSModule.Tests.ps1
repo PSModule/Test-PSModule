@@ -210,8 +210,8 @@ Describe 'PSModule - SourceCode tests' {
         }
     }
 
-    Context 'classes' {
-    }
+    # Context 'classes' {
+    # }
 
     Context 'functions' {
         Context 'Generic' {
@@ -381,14 +381,9 @@ Describe 'PSModule - SourceCode tests' {
                     Should -BeNullOrEmpty -Because 'a test should exist for each of the functions in the module'
             }
         }
-        Context 'private functions' {}
+        # Context 'private functions' {}
     }
 
-    Context 'variables' {
-    }
-
-    Context 'Module manifest' {
-        # It 'Module Manifest exists (maifest.psd1 or modulename.psd1)' {}
-        # It 'Module Manifest is valid' {}
-    }
+    # Context 'variables' {
+    # }
 }

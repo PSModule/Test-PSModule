@@ -27,7 +27,7 @@ $codePath = switch ($settings) {
     CodePath      = $codePath
     LocalTestPath = $localTestPath
     TestPath      = $testPath
-} | Format-List
+} | Format-List | Out-String
 
 Set-GitHubOutput -Name ModuleName -Value $moduleName
 Set-GitHubOutput -Name CodePath -Value $codePath
