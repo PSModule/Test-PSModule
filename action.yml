@@ -63,6 +63,5 @@ runs:
         Version: ${{ inputs.Version }}
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
         TestResult_TestSuiteName: ${{ inputs.Settings }}-${{ runner.os }}
-        Output_Verbosity: Detailed
         Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}
         Run_Path: ${{ fromJson(steps.paths.outputs.result).CodePath }}
