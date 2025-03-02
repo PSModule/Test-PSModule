@@ -51,8 +51,7 @@ runs:
         Script: ${{ github.action_path }}/scripts/main.ps1
 
     - name: Invoke-Pester
-      # uses: PSModule/Invoke-Pester@v3
-      uses: PSModule/Invoke-Pester@fix
+      uses: PSModule/Invoke-Pester@v3
       id: test
       env:
         LocalTestPath: ${{ fromJson(steps.paths.outputs.result).LocalTestPath }}
