@@ -1,0 +1,5 @@
+﻿@{
+    Output = @{
+        Verbosity = 'Detailed'
+    }
+}
