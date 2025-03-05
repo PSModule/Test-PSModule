@@ -25,6 +25,7 @@ switch ($settings) {
             Priority = 100
         }
         Register-PSResourceRepository @localRepo
+        Get-PSResourceRepository | Format-List | Out-String
         $manifestFilePath = Join-Path -Path $codePath "$moduleName.psd1"
         Write-Verbose " - Manifest file path: [$manifestFilePath]" -Verbose
         Resolve-PSModuleDependency -ManifestFilePath $manifestFilePath
