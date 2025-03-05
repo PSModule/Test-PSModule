@@ -24,6 +24,7 @@ switch ($settings) {
         $PSModulePath = $env:PSModulePath -split [System.IO.Path]::PathSeparator | Select-Object -First 1
         $moduleInstallPath = New-Item -Path "$PSModulePath/$moduleName/999.0.0" -ItemType Directory -Force
         Copy-Item -Path $codePath -Destination $moduleInstallPath -Recurse -Force
+        Get-ChildItem -Path $moduleInstallPath -Recurse | Select-Object FullName | Out-String
     }
     'SourceCode' {
         $codePath = Resolve-Path -Path 'src' | Select-Object -ExpandProperty Path
