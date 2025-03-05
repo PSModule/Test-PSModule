@@ -19,9 +19,9 @@ switch ($settings) {
     'Module' {
         $modulePath = Resolve-Path -Path "outputs/module/$moduleName" | Select-Object -ExpandProperty Path
         $manifestFilePath = Join-Path -Path $modulePath "$moduleName.psd1"
-        Test-ModuleManifest -Path $manifestFilePath -Verbose
         Write-Verbose " - Manifest file path: [$manifestFilePath]" -Verbose
         Resolve-PSModuleDependency -ManifestFilePath $manifestFilePath
+        Test-ModuleManifest -Path $manifestFilePath -Verbose
         $PSModulePath = $env:PSModulePath -split [System.IO.Path]::PathSeparator | Select-Object -First 1
         $codePath = New-Item -Path "$PSModulePath/$moduleName/999.0.0" -ItemType Directory -Force
         Copy-Item -Path $modulePath -Destination $codePath -Recurse -Force
