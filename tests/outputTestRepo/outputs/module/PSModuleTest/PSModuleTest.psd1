@@ -14,7 +14,7 @@
     ProcessorArchitecture = 'None'
     RequiredModules       = @(
         @{
-            ModuleVersion = '1.0'
+            ModuleVersion = '1.1.5'
             ModuleName    = 'PSSemVer'
         }
         'Utilities'
