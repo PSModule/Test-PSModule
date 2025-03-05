@@ -16,11 +16,11 @@ switch ($settings) {
             Name     = 'Local'
             Uri      = New-Item -Path $PSScriptRoot -Name '.localpsmodulerepo' -ItemType Directory
             Trusted  = $true
-            Priority = 1
+            Priority = 100
         }
         Register-PSResourceRepository @localRepo
         Publish-PSResource -Path $codePath -Repository Local
-        Install-PSResource -Name $moduleName
+        Install-PSResource -Name $moduleName -Repository Local
     }
     'SourceCode' {
         $codePath = Resolve-Path -Path 'src' | Select-Object -ExpandProperty Path
