@@ -23,7 +23,7 @@ switch ($settings) {
         Resolve-PSModuleDependency -ManifestFilePath $manifestFilePath
         $PSModulePath = $env:PSModulePath -split [System.IO.Path]::PathSeparator | Select-Object -First 1
         $codePath = New-Item -Path "$PSModulePath/$moduleName/999.0.0" -ItemType Directory -Force
-        Copy-Item -Path $codePath -Destination $codePath -Recurse -Force
+        Copy-Item -Path $modulePath -Destination $codePath -Recurse -Force
         Get-ChildItem -Path $codePath -Recurse | Select-Object FullName | Out-String
         Import-Module -Name $moduleName -Verbose
     }
