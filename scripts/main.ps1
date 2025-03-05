@@ -25,6 +25,7 @@ switch ($settings) {
         $moduleInstallPath = New-Item -Path "$PSModulePath/$moduleName/999.0.0" -ItemType Directory -Force
         Copy-Item -Path $codePath -Destination $moduleInstallPath -Recurse -Force
         Get-ChildItem -Path $moduleInstallPath -Recurse | Select-Object FullName | Out-String
+        Import-Module -Name $moduleName -Verbose
     }
     'SourceCode' {
         $codePath = Resolve-Path -Path 'src' | Select-Object -ExpandProperty Path
@@ -37,12 +38,12 @@ switch ($settings) {
 [pscustomobject]@{
     ModuleName    = $moduleName
     Settings      = $settings
-    CodePath      = $codePath
+    CodePath      = $moduleInstallPath
     LocalTestPath = $localTestPath
     TestPath      = $testPath
 } | Format-List | Out-String
 
 Set-GitHubOutput -Name ModuleName -Value $moduleName
-Set-GitHubOutput -Name CodePath -Value $codePath
+Set-GitHubOutput -Name CodePath -Value $moduleInstallPath
 Set-GitHubOutput -Name LocalTestPath -Value $localTestPath
 Set-GitHubOutput -Name TestPath -Value $testPath
