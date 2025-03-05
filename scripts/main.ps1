@@ -9,12 +9,21 @@ $settings = $env:PSMODULE_TEST_PSMODULE_INPUT_Settings
 $testPath = Resolve-Path -Path "$PSScriptRoot/tests/$settings" | Select-Object -ExpandProperty Path
 
 $localTestPath = Resolve-Path -Path 'tests' | Select-Object -ExpandProperty Path
-$codePath = switch ($settings) {
+switch ($settings) {
     'Module' {
-        Resolve-Path -Path "outputs/module/$moduleName" | Select-Object -ExpandProperty Path
+        $codePath = Resolve-Path -Path "outputs/module/$moduleName" | Select-Object -ExpandProperty Path
+        $localRepo = @{
+            Name     = 'Local'
+            Uri      = New-Item -Path $PSScriptRoot -Name '.localpsmodulerepo' -ItemType Directory -PassThru
+            Trusted  = $true
+            Priority = 1
+        }
+        Register-PSResourceRepository @localRepo
+        Publish-PSResource -Path $codePath -Repository Local
+        Install-PSResource -Name $moduleName
     }
     'SourceCode' {
-        Resolve-Path -Path 'src' | Select-Object -ExpandProperty Path
+        $codePath = Resolve-Path -Path 'src' | Select-Object -ExpandProperty Path
     }
     default {
         throw "Invalid test type: [$settings]"
