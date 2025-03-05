@@ -8,22 +8,6 @@ Param(
     [string] $Path
 )
 
-BeforeAll {
-    LogGroup "Load module from path [$Path]" {
-        $helperPath = "$PSScriptRoot/../../../helpers"
-        Get-ChildItem -Path $helperPath -Filter '*.ps1' -Recurse | ForEach-Object {
-            . $_.FullName
-        }
-
-        $moduleName = Split-Path -Path $Path -Leaf
-        Write-Verbose "[$moduleName] - Processing" -Verbose
-        $manifestFilePath = Join-Path -Path $Path "$moduleName.psd1"
-
-        Write-Verbose " - Manifest file path: [$manifestFilePath]" -Verbose
-        Resolve-PSModuleDependency -ManifestFilePath $manifestFilePath
-    }
-}
-
 Describe 'PSModule - Module tests' {
     Context 'Module' {
         It 'The module should be importable' {
