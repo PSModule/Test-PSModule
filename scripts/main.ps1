@@ -18,19 +18,12 @@ $localTestPath = Resolve-Path -Path 'tests' | Select-Object -ExpandProperty Path
 switch ($settings) {
     'Module' {
         $codePath = Resolve-Path -Path "outputs/module/$moduleName" | Select-Object -ExpandProperty Path
-        $localRepo = @{
-            Name     = 'Local'
-            Uri      = New-Item -Path $PSScriptRoot -Name '.localpsmodulerepo' -ItemType Directory
-            Trusted  = $true
-            Priority = 100
-        }
-        Register-PSResourceRepository @localRepo
-        Get-PSResourceRepository | Format-List | Out-String
         $manifestFilePath = Join-Path -Path $codePath "$moduleName.psd1"
         Write-Verbose " - Manifest file path: [$manifestFilePath]" -Verbose
         Resolve-PSModuleDependency -ManifestFilePath $manifestFilePath
-        Publish-PSResource -Path $codePath -Repository Local
-        Install-PSResource -Name $moduleName -Repository Local
+        $PSModulePath = $env:PSModulePath -split [System.IO.Path]::PathSeparator | Select-Object -First 1
+        New-Item -Path "$PSModulePath/$moduleName/999.0.0" -ItemType Directory -Name "" -Force
+        Copy-Item -Path $codePath -Destination "$PSModulePath/$moduleName/999.0.0" -Recurse -Force
     }
     'SourceCode' {
         $codePath = Resolve-Path -Path 'src' | Select-Object -ExpandProperty Path
