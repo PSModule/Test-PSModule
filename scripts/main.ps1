@@ -14,7 +14,7 @@ switch ($settings) {
         $codePath = Resolve-Path -Path "outputs/module/$moduleName" | Select-Object -ExpandProperty Path
         $localRepo = @{
             Name     = 'Local'
-            Uri      = New-Item -Path $PSScriptRoot -Name '.localpsmodulerepo' -ItemType Directory -PassThru
+            Uri      = New-Item -Path $PSScriptRoot -Name '.localpsmodulerepo' -ItemType Directory
             Trusted  = $true
             Priority = 1
         }
