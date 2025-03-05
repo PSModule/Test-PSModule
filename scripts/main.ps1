@@ -1,4 +1,4 @@
-﻿$helperPath = "$PSScriptRoot/../../../helpers"
+﻿$helperPath = "$PSScriptRoot/helpers"
 Get-ChildItem -Path $helperPath -Filter '*.ps1' -Recurse | ForEach-Object {
     . $_.FullName
 }
