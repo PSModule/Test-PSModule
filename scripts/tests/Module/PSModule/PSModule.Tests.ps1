@@ -8,22 +8,20 @@ Param(
     [string] $Path
 )
 
+BeforeAll {
+    $moduleName = Split-Path -Path (Split-Path -Path $Path -Parent) -Leaf
+    $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
+    Write-Verbose "Module Manifest Path: [$moduleManifestPath]"
+}
+
 Describe 'PSModule - Module tests' {
     Context 'Module' {
         It 'The module should be importable' {
-            {
-                $moduleName = Split-Path -Path $Path -Leaf
-                Import-Module -Name $moduleName
-            } | Should -Not -Throw
+            { Import-Module -Name $moduleName } | Should -Not -Throw
         }
     }
 
     Context 'Module Manifest' {
-        BeforeAll {
-            $moduleName = Split-Path -Path $Path -Leaf
-            $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
-            Write-Verbose "Module Manifest Path: [$moduleManifestPath]"
-        }
         It 'Module Manifest exists' {
             $result = Test-Path -Path $moduleManifestPath
             $result | Should -Be $true
