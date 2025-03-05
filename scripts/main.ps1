@@ -26,6 +26,9 @@ switch ($settings) {
         $codePath = New-Item -Path "$PSModulePath/$moduleName/999.0.0" -ItemType Directory -Force
         Copy-Item -Path $modulePath -Destination $codePath -Recurse -Force
         Get-ChildItem -Path $codePath -Recurse | Select-Object FullName | Out-String
+
+        Get-Module -ListAvailable | Format-Table -AutoSize | Out-String
+
         Import-Module -Name $moduleName -Verbose
     }
     'SourceCode' {
