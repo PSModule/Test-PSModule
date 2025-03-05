@@ -10,7 +10,7 @@ Param(
 
 BeforeAll {
     LogGroup "Load module from path [$Path]" {
-        $helperPath = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
+        $helperPath = "$PSScriptRoot/../../../helpers"
         Get-ChildItem -Path $helperPath -Filter '*.ps1' -Recurse | ForEach-Object {
             . $_.FullName
         }

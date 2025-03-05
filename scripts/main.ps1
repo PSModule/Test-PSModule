@@ -1,5 +1,11 @@
-﻿# If test type is module, the code we ought to test is in the WorkingDirectory/outputs/module/Name folder,
+﻿$helperPath = "$PSScriptRoot/../../../helpers"
+Get-ChildItem -Path $helperPath -Filter '*.ps1' -Recurse | ForEach-Object {
+    . $_.FullName
+}
+
+# If test type is module, the code we ought to test is in the WorkingDirectory/outputs/module/Name folder,
 # otherwise it's in the WorkingDirectory/src folder.
+
 $moduleName = if ([string]::IsNullOrEmpty($env:PSMODULE_TEST_PSMODULE_INPUT_Name)) {
     $env:GITHUB_REPOSITORY_NAME
 } else {
@@ -19,6 +25,9 @@ switch ($settings) {
             Priority = 100
         }
         Register-PSResourceRepository @localRepo
+        $manifestFilePath = Join-Path -Path $codePath "$moduleName.psd1"
+        Write-Verbose " - Manifest file path: [$manifestFilePath]" -Verbose
+        Resolve-PSModuleDependency -ManifestFilePath $manifestFilePath
         Publish-PSResource -Path $codePath -Repository Local
         Install-PSResource -Name $moduleName -Repository Local
     }
