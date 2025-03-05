@@ -37,6 +37,7 @@
     foreach ($requiredModule in $manifest.RequiredModules) {
         # Build parameters for Install-PSResource (new version spec).
         $psResourceParams = @{
+            Repository      = 'PSGallery'
             TrustRepository = $true
         }
         # Build parameters for Import-Module (legacy version spec).
