@@ -11,12 +11,16 @@ Param(
 Describe 'PSModule - Module tests' {
     Context 'Module' {
         It 'The module should be importable' {
-            { Import-Module -Name $Path } | Should -Not -Throw
+            {
+                $moduleName = Split-Path -Path $Path -Leaf
+                Import-Module -Name $moduleName
+            } | Should -Not -Throw
         }
     }
 
     Context 'Module Manifest' {
         BeforeAll {
+            $moduleName = Split-Path -Path $Path -Leaf
             $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
             Write-Verbose "Module Manifest Path: [$moduleManifestPath]"
         }

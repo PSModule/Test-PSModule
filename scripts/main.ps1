@@ -22,8 +22,8 @@ switch ($settings) {
         Write-Verbose " - Manifest file path: [$manifestFilePath]" -Verbose
         Resolve-PSModuleDependency -ManifestFilePath $manifestFilePath
         $PSModulePath = $env:PSModulePath -split [System.IO.Path]::PathSeparator | Select-Object -First 1
-        New-Item -Path "$PSModulePath/$moduleName/999.0.0" -ItemType Directory -Name "" -Force
-        Copy-Item -Path $codePath -Destination "$PSModulePath/$moduleName/999.0.0" -Recurse -Force
+        $moduleInstallPath = New-Item -Path "$PSModulePath/$moduleName/999.0.0" -ItemType Directory -Force
+        Copy-Item -Path $codePath -Destination $moduleInstallPath -Recurse -Force
     }
     'SourceCode' {
         $codePath = Resolve-Path -Path 'src' | Select-Object -ExpandProperty Path
