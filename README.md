@@ -58,7 +58,6 @@ jobs:
         uses: PSModule/Test-PSModule@main
         with:
           Settings: SourceCode
-          WorkingDirectory: ${{ github.workspace }}
 
 ```
 </details>
@@ -86,7 +85,6 @@ jobs:
         uses: PSModule/Test-PSModule@main
         with:
           Settings: Module
-          WorkingDirectory: ${{ github.workspace }}
 
 ```
 </details>
@@ -103,7 +101,7 @@ jobs:
 | `Verbose` | Enable verbose output. | `false` | `'false'` |
 | `Version` | Specifies the version of the GitHub module to be installed. The value must be an exact version. | `false` | |
 | `Prerelease` | Allow prerelease versions if available. | `false` | `'false'` |
-| `WorkingDirectory` | The working directory to use for the action. This is the root folder where tests and outputs are expected. | `false` | `${{ github.workspace }}` |
+| `WorkingDirectory` | The working directory to use for the action. This is the root folder where tests and outputs are expected. | `false` | `'.'` |
 
 ### Outputs
 

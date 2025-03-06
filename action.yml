@@ -30,7 +30,7 @@ inputs:
   WorkingDirectory:
     description: The working directory to use for the action. This is the root folder where tests and outputs are expected.
     required: false
-    default: ${{ github.workspace }}
+    default: '.'
 
 runs:
   using: composite
