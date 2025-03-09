@@ -104,7 +104,7 @@ runs:
         Script: ${{ github.action_path }}/scripts/main.ps1
 
     - name: Invoke-Pester
-      uses: PSModule/Invoke-Pester@v3
+      uses: PSModule/Invoke-Pester@v4
       id: test
       env:
         LocalTestPath: ${{ fromJson(steps.paths.outputs.result).LocalTestPath }}
@@ -116,7 +116,6 @@ runs:
         Version: ${{ inputs.Version }}
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
         TestResult_TestSuiteName: ${{ inputs.Settings }}-${{ runner.os }}
-        StepSummary_Enabled: true
         CodeCoverage_CoveragePercentTarget: 0
         Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}
         Run_Path: ${{ fromJson(steps.paths.outputs.result).CodePath }}
