@@ -32,6 +32,56 @@ inputs:
     required: false
     default: '.'
 
+outputs:
+  Outcome:
+    description: |
+      The outcome of the test run.
+    value: ${{ steps.test.outcome }}
+  Conclusion:
+    description: |
+      The conclusion of the test run.
+    value: ${{ steps.test.conclusion }}
+  Executed:
+    description: |
+      Whether tests were executed.
+    value: ${{ steps.test.outputs.Executed }}
+  Result:
+    description: |
+      Overall result of the Pester test run (e.g., Passed, Failed).
+    value: ${{ steps.test.outputs.Result }}
+  FailedCount:
+    description: |
+      Number of failed tests.
+    value: ${{ steps.test.outputs.FailedCount }}
+  FailedBlocksCount:
+    description: |
+      Number of failed blocks.
+    value: ${{ steps.test.outputs.FailedBlocksCount }}
+  FailedContainersCount:
+    description: |
+      Number of failed containers.
+    value: ${{ steps.test.outputs.FailedContainersCount }}
+  PassedCount:
+    description: |
+      Number of passed tests.
+    value: ${{ steps.test.outputs.PassedCount }}
+  SkippedCount:
+    description: |
+      Number of skipped tests.
+    value: ${{ steps.test.outputs.SkippedCount }}
+  InconclusiveCount:
+    description: |
+      Number of inconclusive tests.
+    value: ${{ steps.test.outputs.InconclusiveCount }}
+  NotRunCount:
+    description: |
+      Number of tests not run.
+    value: ${{ steps.test.outputs.NotRunCount }}
+  TotalCount:
+    description: |
+      Total count of tests.
+    value: ${{ steps.test.outputs.TotalCount }}
+
 runs:
   using: composite
   steps:
@@ -66,6 +116,7 @@ runs:
         Version: ${{ inputs.Version }}
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
         TestResult_TestSuiteName: ${{ inputs.Settings }}-${{ runner.os }}
+        StepSummary_Enabled: true
         CodeCoverage_CoveragePercentTarget: 0
         Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}
         Run_Path: ${{ fromJson(steps.paths.outputs.result).CodePath }}
