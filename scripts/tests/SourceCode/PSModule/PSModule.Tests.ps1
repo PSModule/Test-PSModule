@@ -27,85 +27,85 @@ Param(
 
 BeforeAll {
     $scriptFiles = Get-ChildItem -Path $Path -Include *.psm1, *.ps1 -Recurse -File
-    "::group:: - Script files     [$($scriptFiles.Count)]"
+    Write-Host "::group:: - Script files     [$($scriptFiles.Count)]"
     $scriptFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $functionsPath = Join-Path -Path $Path -ChildPath 'functions'
     $functionFiles = (Test-Path -Path $functionsPath) ? (Get-ChildItem -Path $functionsPath -File -Filter '*.ps1' -Recurse) : $null
-    "::group::   - Function files [$($functionFiles.Count)]"
+    Write-Host "::group::   - Function files [$($functionFiles.Count)]"
     $functionFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $privateFunctionsPath = Join-Path -Path $functionsPath -ChildPath 'private'
     $privateFunctionFiles = (Test-Path -Path $privateFunctionsPath) ?
         (Get-ChildItem -Path $privateFunctionsPath -File -Filter '*.ps1' -Recurse) : $null
-    "::group::     - Private      [$($privateFunctionFiles.Count)]"
+    Write-Host "::group::     - Private      [$($privateFunctionFiles.Count)]"
     $privateFunctionFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $publicFunctionsPath = Join-Path -Path $functionsPath -ChildPath 'public'
     $publicFunctionFiles = (Test-Path -Path $publicFunctionsPath) ? (Get-ChildItem -Path $publicFunctionsPath -File -Filter '*.ps1' -Recurse) : $null
-    "::group::     - Public       [$($publicFunctionFiles.Count)]"
+    Write-Host "::group::     - Public       [$($publicFunctionFiles.Count)]"
     $publicFunctionFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $variablesPath = Join-Path -Path $Path -ChildPath 'variables'
     $variableFiles = (Test-Path -Path $variablesPath) ? (Get-ChildItem -Path $variablesPath -File -Filter '*.ps1' -Recurse) : $null
-    "::group::   - Variable files [$($variableFiles.Count)]"
+    Write-Host "::group::   - Variable files [$($variableFiles.Count)]"
     $variableFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $privateVariablesPath = Join-Path -Path $variablesPath -ChildPath 'private'
     $privateVariableFiles = (Test-Path -Path $privateVariablesPath) ?
         (Get-ChildItem -Path $privateVariablesPath -File -Filter '*.ps1' -Recurse) : $null
-    "::group::     - Private      [$($privateVariableFiles.Count)]"
+    Write-Host "::group::     - Private      [$($privateVariableFiles.Count)]"
     $privateVariableFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $publicVariablesPath = Join-Path -Path $variablesPath -ChildPath 'public'
     $publicVariableFiles = (Test-Path -Path $publicVariablesPath) ?
         (Get-ChildItem -Path $publicVariablesPath -File -Filter '*.ps1' -Recurse) : $null
-    "::group::     - Public       [$($publicVariableFiles.Count)]"
+    Write-Host "::group::     - Public       [$($publicVariableFiles.Count)]"
     $publicVariableFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $classPath = Join-Path -Path $Path -ChildPath 'classes'
     $classFiles = (Test-Path -Path $classPath) ? (Get-ChildItem -Path $classPath -File -Filter '*.ps1' -Recurse) : $null
-    "::group::   - Class          [$($classFiles.Count)]"
+    Write-Host "::group::   - Class          [$($classFiles.Count)]"
     $classFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $privateClassPath = Join-Path -Path $classPath -ChildPath 'private'
     $privateClassFiles = (Test-Path -Path $privateClassPath) ?
         (Get-ChildItem -Path $privateClassPath -File -Filter '*.ps1' -Recurse) : $null
-    "::group::     - Private      [$($privateClassFiles.Count)]"
+    Write-Host "::group::     - Private      [$($privateClassFiles.Count)]"
     $privateClassFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $publicClassPath = Join-Path -Path $classPath -ChildPath 'public'
     $publicClassFiles = (Test-Path -Path $publicClassPath) ?
         (Get-ChildItem -Path $publicClassPath -File -Filter '*.ps1' -Recurse) : $null
-    "::group::     - Public       [$($publicClassFiles.Count)]"
+    Write-Host "::group::     - Public       [$($publicClassFiles.Count)]"
     $publicClassFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
     $testFiles = Get-ChildItem -Path $TestsPath -Include *.Tests.ps1 -Recurse -File
-    "::group::   - Test files     [$($testFiles.Count)]"
+    Write-Host "::group::   - Test files     [$($testFiles.Count)]"
     $testFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
     }
-    '::endgroup::'
+    Write-Host '::endgroup::'
 }
 
 Describe 'PSModule - SourceCode tests' {
@@ -119,7 +119,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:NumberOfProcessors:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        "::warning title=Skipping NumberOfProcessors test:: - $relativePath - $skipReason"
+                        Write-Host "::warning title=Skipping NumberOfProcessors test:: - $relativePath - $skipReason"
                     } else {
                         $issues += " - $($_.Path):L$($_.LineNumber)"
                     }
@@ -136,7 +136,7 @@ Describe 'PSModule - SourceCode tests' {
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:Verbose:(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                    "::warning title=Skipping Verbose test:: - $relativePath - $skipReason"
+                    Write-Host "::warning title=Skipping Verbose test:: - $relativePath - $skipReason"
                 } else {
                     Select-String -Path $filePath -Pattern '\s(-Verbose(?::\$true)?)\b(?!:\$false)' -AllMatches | ForEach-Object {
                         $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
@@ -154,7 +154,7 @@ Describe 'PSModule - SourceCode tests' {
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:OutNull:(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                    "::warning title=Skipping OutNull test:: - $relativePath - $skipReason"
+                    Write-Host "::warning title=Skipping OutNull test:: - $relativePath - $skipReason"
                 } else {
                     Select-String -Path $filePath -Pattern 'Out-Null' -AllMatches | ForEach-Object {
                         $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
@@ -172,7 +172,7 @@ Describe 'PSModule - SourceCode tests' {
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:NoTernary:(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                    "::warning title=Skipping NoTernary test:: - $relativePath - $skipReason"
+                    Write-Host "::warning title=Skipping NoTernary test:: - $relativePath - $skipReason"
                 } else {
                     Select-String -Path $filePath -Pattern '(?<!\|)\s+\?\s' -AllMatches | ForEach-Object {
                         $issues += " - $relativePath`:L$($_.LineNumber) - $($_.Line)"
@@ -190,7 +190,7 @@ Describe 'PSModule - SourceCode tests' {
                 $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:LowercaseKeywords:(?<Reason>.+)' -AllMatches
                 if ($skipTest.Matches.Count -gt 0) {
                     $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                    "::warning title=Skipping LowercaseKeywords test:: - $relativePath - $skipReason"
+                    Write-Host "::warning title=Skipping LowercaseKeywords test:: - $relativePath - $skipReason"
                 } else {
                     $errors = $null
                     $tokens = $null
@@ -246,7 +246,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:FunctionCount:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        "::warning title=Skipping FunctionCount test:: - $relativePath - $skipReason"
+                        Write-Host "::warning title=Skipping FunctionCount test:: - $relativePath - $skipReason"
                     } else {
                         $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                         $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
@@ -267,7 +267,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:FunctionName:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        "::warning title=Skipping FunctionName test:: - $relativePath - $skipReason"
+                        Write-Host "::warning title=Skipping FunctionName test:: - $relativePath - $skipReason"
                     } else {
                         $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                         $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
@@ -288,7 +288,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:CmdletBinding:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        "::warning title=Skipping CmdletBinding test:: - $relativePath - $skipReason"
+                        Write-Host "::warning title=Skipping CmdletBinding test:: - $relativePath - $skipReason"
                     } else {
                         $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                         $tokens = $scriptAst.FindAll({ $true }, $true)
@@ -314,7 +314,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:ParamBlock:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        "::warning title=Skipping ParamBlock test:: - $relativePath - $skipReason"
+                        Write-Host "::warning title=Skipping ParamBlock test:: - $relativePath - $skipReason"
                     } else {
                         $scriptAst = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                         $tokens = $scriptAst.FindAll({ $args[0] -is [System.Management.Automation.Language.ParamBlockAst] }, $true)
@@ -366,7 +366,7 @@ Describe 'PSModule - SourceCode tests' {
                     $skipTest = Select-String -Path $filePath -Pattern '#SkipTest:FunctionTest:(?<Reason>.+)' -AllMatches
                     if ($skipTest.Matches.Count -gt 0) {
                         $skipReason = $skipTest.Matches.Groups | Where-Object { $_.Name -eq 'Reason' } | Select-Object -ExpandProperty Value
-                        "::warning title=Skipping FunctionTest test:: - $relativePath - $skipReason"
+                        Write-Host "::warning title=Skipping FunctionTest test:: - $relativePath - $skipReason"
                     } else {
                         $Ast = [System.Management.Automation.Language.Parser]::ParseFile($filePath, [ref]$null, [ref]$null)
                         $tokens = $Ast.FindAll( { $args[0] -is [System.Management.Automation.Language.FunctionDefinitionAst] } , $true )
