@@ -89,19 +89,15 @@ runs:
       uses: PSModule/Install-PSModuleHelpers@v1
 
     - name: Get test paths
-      uses: PSModule/Github-Script@v1
+      shell: pwsh
       id: paths
       env:
         PSMODULE_TEST_PSMODULE_INPUT_Name: ${{ inputs.Name }}
         PSMODULE_TEST_PSMODULE_INPUT_Settings: ${{ inputs.Settings }}
         PSMODULE_TEST_PSMODULE_INPUT_WorkingDirectory: ${{ inputs.WorkingDirectory }}
-      with:
-        Debug: ${{ inputs.Debug }}
-        Prerelease: ${{ inputs.Prerelease }}
-        Verbose: ${{ inputs.Verbose }}
-        Version: ${{ inputs.Version }}
-        WorkingDirectory: ${{ inputs.WorkingDirectory }}
-        Script: ${{ github.action_path }}/scripts/main.ps1
+      run: |
+        # Get test paths
+        ${{ github.action_path }}/scripts/main.ps1
 
     - name: Invoke-Pester
       uses: PSModule/Invoke-Pester@v4
