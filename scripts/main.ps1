@@ -1,6 +1,7 @@
-﻿# If test type is module, the code we ought to test is in the WorkingDirectory/outputs/module/Name folder,
-# otherwise it's in the WorkingDirectory/src folder.
+﻿[CmdletBinding()]
+param()
 
+$env:GITHUB_REPOSITORY_NAME = $env:GITHUB_REPOSITORY -replace '.+/'
 $moduleName = if ([string]::IsNullOrEmpty($env:PSMODULE_TEST_PSMODULE_INPUT_Name)) {
     $env:GITHUB_REPOSITORY_NAME
 } else {
@@ -31,7 +32,7 @@ switch ($settings) {
     TestPath      = $testPath
 } | Format-List | Out-String
 
-Set-GitHubOutput -Name ModuleName -Value $moduleName
-Set-GitHubOutput -Name CodePath -Value $codePath
-Set-GitHubOutput -Name LocalTestPath -Value $localTestPath
-Set-GitHubOutput -Name TestPath -Value $testPath
+"ModuleName=$moduleName" >> $env:GITHUB_OUTPUT
+"CodePath=$codePath" >> $env:GITHUB_OUTPUT
+"LocalTestPath=$localTestPath" >> $env:GITHUB_OUTPUT
+"TestPath=$testPath" >> $env:GITHUB_OUTPUT
