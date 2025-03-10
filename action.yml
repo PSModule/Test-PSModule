@@ -91,10 +91,10 @@ runs:
     - name: Get test paths
       shell: pwsh
       id: paths
+      working-directory: ${{ inputs.WorkingDirectory }}
       env:
         PSMODULE_TEST_PSMODULE_INPUT_Name: ${{ inputs.Name }}
         PSMODULE_TEST_PSMODULE_INPUT_Settings: ${{ inputs.Settings }}
-        PSMODULE_TEST_PSMODULE_INPUT_WorkingDirectory: ${{ inputs.WorkingDirectory }}
       run: |
         # Get test paths
         ${{ github.action_path }}/scripts/main.ps1
