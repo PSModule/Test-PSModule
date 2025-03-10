@@ -103,8 +103,8 @@ runs:
       uses: PSModule/Invoke-Pester@v4
       id: test
       env:
-        LocalTestPath: ${{ fromJson(steps.paths.outputs.result).LocalTestPath }}
-        WorkingDirectory: ${{ fromJson(steps.paths.outputs.result).WorkingDirectory }}
+        LocalTestPath: ${{ steps.paths.outputs.LocalTestPath }}
+        WorkingDirectory: ${{ inputs.WorkingDirectory }}
       with:
         Debug: ${{ inputs.Debug }}
         Prerelease: ${{ inputs.Prerelease }}
@@ -113,5 +113,5 @@ runs:
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
         TestResult_TestSuiteName: ${{ inputs.Settings }}-${{ runner.os }}
         CodeCoverage_CoveragePercentTarget: 0
-        Path: ${{ fromJson(steps.paths.outputs.result).TestPath }}
-        Run_Path: ${{ fromJson(steps.paths.outputs.result).CodePath }}
+        Path: ${{ steps.paths.outputs.TestPath }}
+        Run_Path: ${{ steps.paths.outputs.CodePath }}
