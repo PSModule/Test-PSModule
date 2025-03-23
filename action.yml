@@ -16,17 +16,14 @@ inputs:
     description: |
       Controls which tests to show in the GitHub step summary. Allows "Full" (show all tests), "Failed" (only failed tests), or "None" (disable step summary).
     required: false
-    default: 'Failed'
   StepSummary_ShowTestOverview:
     description: |
       Controls whether to show the test overview table in the GitHub step summary.
     required: false
-    default: 'false'
   StepSummary_ShowConfiguration:
     description: |
       Controls whether to show the configuration details in the GitHub step summary.
     required: false
-    default: 'false'
   Run_Path:
     description: |
       Directories to be searched for tests, paths directly to test files, or combination of both.
