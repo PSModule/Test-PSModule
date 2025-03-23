@@ -1,6 +1,6 @@
-name: Action-Test
+name: Action-Test-Src-WithManifest
 
-run-name: 'Action-Test - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}'
+run-name: 'Action-Test-Src-WithManifest - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}'
 
 on:
   workflow_dispatch:
