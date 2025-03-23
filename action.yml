@@ -327,7 +327,7 @@ runs:
         TestResult_OutputFormat: ${{ inputs.TestResult_OutputFormat }}
         TestResult_OutputPath: ${{ inputs.TestResult_OutputPath }}
         TestResult_OutputEncoding: ${{ inputs.TestResult_OutputEncoding }}
-        TestResult_TestSuiteName: ${{ inputs.Settings }}-${{ runner.os }}
+        TestResult_TestSuiteName: Test-${{ inputs.Settings }}-${{ runner.os }}
         Should_ErrorAction: ${{ inputs.Should_ErrorAction }}
         Debug_ShowFullErrors: ${{ inputs.Debug_ShowFullErrors }}
         Debug_WriteDebugMessages: ${{ inputs.Debug_WriteDebugMessages }}
