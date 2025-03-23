@@ -33,3 +33,4 @@ jobs:
           Name: PSModuleTest
           WorkingDirectory: tests/srcWithManifestTestRepo
           Settings: SourceCode
+          CodeCoverage_CoveragePercentTarget: 80
