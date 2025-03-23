@@ -301,7 +301,7 @@ runs:
         Path: ${{ steps.paths.outputs.TestPath }}
         StepSummary_Mode: ${{ inputs.StepSummary_Mode }}
         StepSummary_ShowTestOverview: ${{ inputs.StepSummary_ShowTestOverview }}
-        StepSummary_ShowConfiguration: ${{ inputs.
+        StepSummary_ShowConfiguration: ${{ inputs.StepSummary_ShowConfiguration }}
         Run_Path: ${{ steps.paths.outputs.CodePath }}
         Run_ExcludePath: ${{ inputs.Run_ExcludePath }}
         Run_ScriptBlock: ${{ inputs.Run_ScriptBlock }}
