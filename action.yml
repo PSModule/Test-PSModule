@@ -111,6 +111,7 @@ runs:
         Verbose: ${{ inputs.Verbose }}
         Version: ${{ inputs.Version }}
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
+        TestResult_Enabled: true
         TestResult_TestSuiteName: ${{ inputs.Settings }}-${{ runner.os }}
         CodeCoverage_CoveragePercentTarget: 0
         Path: ${{ steps.paths.outputs.TestPath }}
