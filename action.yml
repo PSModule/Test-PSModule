@@ -12,6 +12,10 @@ inputs:
   Settings:
     description: The type of tests to run. Can be either 'Module' or 'SourceCode'.
     required: true
+  CodeCoveragePercentTarget:
+    description: The target code coverage percentage. This is used to determine if the code coverage meets the specified threshold.
+    required: false
+    default: '0'
   Debug:
     description: Enable debug output.
     required: false
@@ -111,8 +115,7 @@ runs:
         Verbose: ${{ inputs.Verbose }}
         Version: ${{ inputs.Version }}
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
-        TestResult_Enabled: true
         TestResult_TestSuiteName: ${{ inputs.Settings }}-${{ runner.os }}
-        CodeCoverage_CoveragePercentTarget: 0
+        CodeCoverage_CoveragePercentTarget: ${{ inputs.CodeCoveragePercentTarget }}
         Path: ${{ steps.paths.outputs.TestPath }}
         Run_Path: ${{ steps.paths.outputs.CodePath }}
