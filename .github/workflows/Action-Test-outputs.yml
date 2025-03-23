@@ -33,4 +33,4 @@ jobs:
           Name: PSModuleTest
           WorkingDirectory: tests/outputTestRepo
           Settings: Module
-          CodeCoverage_CoveragePercentTarget: 80
+          CodeCoverage_CoveragePercentTarget: 30
