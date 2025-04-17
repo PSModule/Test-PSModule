@@ -97,49 +97,49 @@ jobs:
 | `Version` | Specifies the version of the GitHub module to be installed. The value must be an exact version. | `false` | |
 | `Prerelease` | Allow prerelease versions if available. | `false` | `'false'` |
 | `WorkingDirectory` | The working directory to use for the action. This is the root folder where tests and outputs are expected. | `false` | `'.'` |
-| `StepSummary_Mode`                   | Controls which tests to show in the GitHub step summary. Allows "Full" (all tests), "Failed" (only failed tests), or "None" (disable step summary). | `Failed` |
-| `StepSummary_ShowTestOverview`       | Controls whether to show the test overview table in the GitHub step summary.                                                                        | `false`  |
-| `StepSummary_ShowConfiguration`      | Controls whether to show the configuration details in the GitHub step summary.                                                                      | `false`  |
-| `Run_ExcludePath`                    | Directories/files to exclude from the run.                                                                                                          |          |
-| `Run_ScriptBlock`                    | ScriptBlocks containing tests to be executed.                                                                                                       |          |
-| `Run_Container`                      | ContainerInfo objects containing tests to be executed.                                                                                              |          |
-| `Run_TestExtension`                  | Filter used to identify test files (e.g. `.Tests.ps1`).                                                                                             |          |
-| `Run_Exit`                           | Whether to exit with a non-zero exit code on failure.                                                                                               |          |
-| `Run_Throw`                          | Whether to throw an exception on test failure.                                                                                                      |          |
-| `Run_SkipRun`                        | Discovery only, skip actual test run.                                                                                                               |          |
-| `Run_SkipRemainingOnFailure`         | Skips remaining tests after the first failure. Options: `None`, `Run`, `Container`, `Block`.                                                        |          |
-| `Filter_Tag`                         | Tags of Describe/Context/It blocks to run.                                                                                                          |          |
-| `Filter_ExcludeTag`                  | Tags of Describe/Context/It blocks to exclude.                                                                                                      |          |
-| `Filter_Line`                        | Filter by file + scriptblock start line (e.g. `C:\tests\file1.Tests.ps1:37`).                                                                       |          |
-| `Filter_ExcludeLine`                 | Exclude by file + scriptblock start line. Precedence over `Filter_Line`.                                                                            |          |
-| `Filter_FullName`                    | Full name of a test with wildcards, joined by dot. E.g. `*.describe Get-Item.test1`                                                                 |          |
-| `CodeCoverage_Enabled`               | Enable code coverage.                                                                                                                               |          |
-| `CodeCoverage_OutputFormat`          | Format for the coverage report. Possible values: `JaCoCo`, `CoverageGutters`, `Cobertura`.                                                          |          |
-| `CodeCoverage_OutputPath`            | Where to save the code coverage report (relative to the current dir).                                                                               |          |
-| `CodeCoverage_OutputEncoding`        | Encoding of the coverage file.                                                                                                                      |          |
-| `CodeCoverage_Path`                  | Files/directories to measure coverage on (by default, reuses `Path` from the general settings).                                                     |          |
-| `CodeCoverage_ExcludeTests`          | Exclude tests themselves from coverage.                                                                                                             |          |
-| `CodeCoverage_RecursePaths`          | Recurse through coverage directories.                                                                                                               |          |
-| `CodeCoverage_CoveragePercentTarget` | Desired minimum coverage percentage.                                                                                                                |          |
-| `CodeCoverage_UseBreakpoints`        | **Experimental**: When `false`, use a Profiler-based tracer instead of breakpoints.                                                                 |          |
-| `CodeCoverage_SingleHitBreakpoints`  | Remove breakpoints after first hit.                                                                                                                 |          |
-| `TestResult_Enabled`                 | Enable test-result output (e.g. NUnitXml, JUnitXml).                                                                                                |          |
-| `TestResult_OutputFormat`            | Possible values: `NUnitXml`, `NUnit2.5`, `NUnit3`, `JUnitXml`.                                                                                      |          |
-| `TestResult_OutputPath`              | Where to save the test-result report (relative path).                                                                                               |          |
-| `TestResult_OutputEncoding`          | Encoding of the test-result file.                                                                                                                   |          |
-| `Should_ErrorAction`                 | Controls if `Should` throws on error. Use `Stop` to throw, or `Continue` to fail at the end.                                                        |          |
-| `Debug_ShowFullErrors`               | Show Pester internal stack on errors. (Deprecated – overrides `Output.StackTraceVerbosity` to `Full`).                                              |          |
-| `Debug_WriteDebugMessages`           | Write debug messages to screen.                                                                                                                     |          |
-| `Debug_WriteDebugMessagesFrom`       | Filter debug messages by source. Wildcards allowed.                                                                                                 |          |
-| `Debug_ShowNavigationMarkers`        | Write paths after every block/test for easy navigation in Visual Studio Code.                                                                       |          |
-| `Debug_ReturnRawResultObject`        | Returns an unfiltered result object, for development only.                                                                                          |          |
-| `Output_Verbosity`                   | Verbosity: `None`, `Normal`, `Detailed`, `Diagnostic`.                                                                                              |          |
-| `Output_StackTraceVerbosity`         | Stacktrace detail: `None`, `FirstLine`, `Filtered`, `Full`.                                                                                         |          |
-| `Output_CIFormat`                    | CI format of error output: `None`, `Auto`, `AzureDevops`, `GithubActions`.                                                                          |          |
-| `Output_CILogLevel`                  | CI log level: `Error` or `Warning`.                                                                                                                 |          |
-| `Output_RenderMode`                  | How to render console output: `Auto`, `Ansi`, `ConsoleColor`, `Plaintext`.                                                                          |          |
-| `TestDrive_Enabled`                  | Enable `TestDrive`.                                                                                                                                 |          |
-| `TestRegistry_Enabled`               | Enable `TestRegistry`.                                                                                                                              |          |
+| `StepSummary_Mode`                   | Controls which tests to show in the GitHub step summary. Allows "Full" (all tests), "Failed" (only failed tests), or "None" (disable step summary). | `false` | `Failed` |
+| `StepSummary_ShowTestOverview`       | Controls whether to show the test overview table in the GitHub step summary.                                                                        | `false` | `false`  |
+| `StepSummary_ShowConfiguration`      | Controls whether to show the configuration details in the GitHub step summary.                                                                      | `false` | `false`  |
+| `Run_ExcludePath`                    | Directories/files to exclude from the run.                                                                                                          | `false` |          |
+| `Run_ScriptBlock`                    | ScriptBlocks containing tests to be executed.                                                                                                       | `false` |          |
+| `Run_Container`                      | ContainerInfo objects containing tests to be executed.                                                                                              | `false` |          |
+| `Run_TestExtension`                  | Filter used to identify test files (e.g. `.Tests.ps1`).                                                                                             | `false` |          |
+| `Run_Exit`                           | Whether to exit with a non-zero exit code on failure.                                                                                               | `false` |          |
+| `Run_Throw`                          | Whether to throw an exception on test failure.                                                                                                      | `false` |          |
+| `Run_SkipRun`                        | Discovery only, skip actual test run.                                                                                                               | `false` |          |
+| `Run_SkipRemainingOnFailure`         | Skips remaining tests after the first failure. Options: `None`, `Run`, `Container`, `Block`.                                                        | `false` |          |
+| `Filter_Tag`                         | Tags of Describe/Context/It blocks to run.                                                                                                          | `false` |          |
+| `Filter_ExcludeTag`                  | Tags of Describe/Context/It blocks to exclude.                                                                                                      | `false` |          |
+| `Filter_Line`                        | Filter by file + scriptblock start line (e.g. `C:\tests\file1.Tests.ps1:37`).                                                                       | `false` |          |
+| `Filter_ExcludeLine`                 | Exclude by file + scriptblock start line. Precedence over `Filter_Line`.                                                                            | `false` |          |
+| `Filter_FullName`                    | Full name of a test with wildcards, joined by dot. E.g. `*.describe Get-Item.test1`                                                                 | `false` |          |
+| `CodeCoverage_Enabled`               | Enable code coverage.                                                                                                                               | `false` |          |
+| `CodeCoverage_OutputFormat`          | Format for the coverage report. Possible values: `JaCoCo`, `CoverageGutters`, `Cobertura`.                                                          | `false` |          |
+| `CodeCoverage_OutputPath`            | Where to save the code coverage report (relative to the current dir).                                                                               | `false` |          |
+| `CodeCoverage_OutputEncoding`        | Encoding of the coverage file.                                                                                                                      | `false` |          |
+| `CodeCoverage_Path`                  | Files/directories to measure coverage on (by default, reuses `Path` from the general settings).                                                     | `false` |          |
+| `CodeCoverage_ExcludeTests`          | Exclude tests themselves from coverage.                                                                                                             | `false` |          |
+| `CodeCoverage_RecursePaths`          | Recurse through coverage directories.                                                                                                               | `false` |          |
+| `CodeCoverage_CoveragePercentTarget` | Desired minimum coverage percentage.                                                                                                                | `false` |          |
+| `CodeCoverage_UseBreakpoints`        | **Experimental**: When `false`, use a Profiler-based tracer instead of breakpoints.                                                                 | `false` |          |
+| `CodeCoverage_SingleHitBreakpoints`  | Remove breakpoints after first hit.                                                                                                                 | `false` |          |
+| `TestResult_Enabled`                 | Enable test-result output (e.g. NUnitXml, JUnitXml).                                                                                                | `false` |          |
+| `TestResult_OutputFormat`            | Possible values: `NUnitXml`, `NUnit2.5`, `NUnit3`, `JUnitXml`.                                                                                      | `false` |          |
+| `TestResult_OutputPath`              | Where to save the test-result report (relative path).                                                                                               | `false` |          |
+| `TestResult_OutputEncoding`          | Encoding of the test-result file.                                                                                                                   | `false` |          |
+| `Should_ErrorAction`                 | Controls if `Should` throws on error. Use `Stop` to throw, or `Continue` to fail at the end.                                                        | `false` |          |
+| `Debug_ShowFullErrors`               | Show Pester internal stack on errors. (Deprecated – overrides `Output.StackTraceVerbosity` to `Full`).                                              | `false` |          |
+| `Debug_WriteDebugMessages`           | Write debug messages to screen.                                                                                                                     | `false` |          |
+| `Debug_WriteDebugMessagesFrom`       | Filter debug messages by source. Wildcards allowed.                                                                                                 | `false` |          |
+| `Debug_ShowNavigationMarkers`        | Write paths after every block/test for easy navigation in Visual Studio Code.                                                                       | `false` |          |
+| `Debug_ReturnRawResultObject`        | Returns an unfiltered result object, for development only.                                                                                          | `false` |          |
+| `Output_Verbosity`                   | Verbosity: `None`, `Normal`, `Detailed`, `Diagnostic`.                                                                                              | `false` |          |
+| `Output_StackTraceVerbosity`         | Stacktrace detail: `None`, `FirstLine`, `Filtered`, `Full`.                                                                                         | `false` |          |
+| `Output_CIFormat`                    | CI format of error output: `None`, `Auto`, `AzureDevops`, `GithubActions`.                                                                          | `false` |          |
+| `Output_CILogLevel`                  | CI log level: `Error` or `Warning`.                                                                                                                 | `false` |          |
+| `Output_RenderMode`                  | How to render console output: `Auto`, `Ansi`, `ConsoleColor`, `Plaintext`.                                                                          | `false` |          |
+| `TestDrive_Enabled`                  | Enable `TestDrive`.                                                                                                                                 | `false` |          |
+| `TestRegistry_Enabled`               | Enable `TestRegistry`.                                                                                                                              | `false` |          |
 
 ### Outputs
 
