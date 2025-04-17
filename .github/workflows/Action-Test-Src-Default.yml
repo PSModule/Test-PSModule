@@ -1,6 +1,6 @@
-name: Action-Test [Src-Default]
+name: Action-Test-Src-Default
 
-run-name: "Action-Test [Src-Default] - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}"
+run-name: 'Action-Test-Src-Default - [${{ github.event.pull_request.title }} #${{ github.event.pull_request.number }}] by @${{ github.actor }}'
 
 on:
   workflow_dispatch:
@@ -15,36 +15,21 @@ concurrency:
 permissions: {}
 
 jobs:
-  ActionTest:
+  ActionTestSrcDefault:
+    name: Action-Test [Src-Default] - [${{ matrix.os }}]
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    name: Action-Test [Src-Default] - [${{ matrix.os }}]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Initialize environment
-        uses: PSModule/Initialize-PSModule@main
-
       - name: Action-Test
         uses: ./
         id: action-test
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
         with:
           Name: PSModuleTest
-          Path: tests/src
-          TestType: SourceCode
-
-      - name: Status
-        shell: pwsh
-        env:
-          PASSED: ${{ steps.action-test.outputs.passed }}
-        run: |
-          Write-Host "Passed: [$env:PASSED]"
-          if ($env:PASSED -ne 'true') {
-            exit 1
-          }
+          WorkingDirectory: tests/srcTestRepo
+          Settings: SourceCode

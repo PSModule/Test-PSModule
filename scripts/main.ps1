@@ -1,66 +1,38 @@
-﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-    'PSAvoidUsingWriteHost', '',
-    Justification = 'Want to just write to the console, not the pipeline.'
-)]
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param()
 
-$path = (Join-Path -Path $PSScriptRoot -ChildPath 'helpers')
-LogGroup "Loading helper scripts from [$path]" {
-    Get-ChildItem -Path $path -Filter '*.ps1' -Recurse | ForEach-Object {
-        Write-Host " - $($_.FullName)"
-        . $_.FullName
+$env:GITHUB_REPOSITORY_NAME = $env:GITHUB_REPOSITORY -replace '.+/'
+$moduleName = if ([string]::IsNullOrEmpty($env:PSMODULE_TEST_PSMODULE_INPUT_Name)) {
+    $env:GITHUB_REPOSITORY_NAME
+} else {
+    $env:PSMODULE_TEST_PSMODULE_INPUT_Name
+}
+$settings = $env:PSMODULE_TEST_PSMODULE_INPUT_Settings
+$testPath = Resolve-Path -Path "$PSScriptRoot/tests/$settings" | Select-Object -ExpandProperty Path
+
+$localTestPath = Resolve-Path -Path 'tests' | Select-Object -ExpandProperty Path
+switch ($settings) {
+    'Module' {
+        $modulePath = Resolve-Path -Path "outputs/module/$moduleName" | Select-Object -ExpandProperty Path
+        $codePath = Install-PSModule -Path $modulePath -PassThru
+    }
+    'SourceCode' {
+        $codePath = Resolve-Path -Path 'src' | Select-Object -ExpandProperty Path
+    }
+    default {
+        throw "Invalid test type: [$settings]"
     }
 }
 
-LogGroup 'Loading inputs' {
-    $moduleName = ($env:GITHUB_ACTION_INPUT_Name | IsNullOrEmpty) ? $env:GITHUB_REPOSITORY_NAME : $env:GITHUB_ACTION_INPUT_Name
-    $codeToTest = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath "$env:GITHUB_ACTION_INPUT_Path\$moduleName"
-    if (-not (Test-Path -Path $codeToTest)) {
-        $codeToTest = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $env:GITHUB_ACTION_INPUT_Path
-    }
-    if (-not (Test-Path -Path $codeToTest)) {
-        throw "Path [$codeToTest] does not exist."
-    }
+[pscustomobject]@{
+    ModuleName    = $moduleName
+    Settings      = $settings
+    CodePath      = $codePath
+    LocalTestPath = $localTestPath
+    TestPath      = $testPath
+} | Format-List | Out-String
 
-    if (-not (Test-Path -Path $env:GITHUB_ACTION_INPUT_TestsPath)) {
-        throw "Path [$env:GITHUB_ACTION_INPUT_TestsPath] does not exist."
-    }
-
-    [pscustomobject]@{
-        ModuleName          = $moduleName
-        CodeToTest          = $codeToTest
-        TestType            = $env:GITHUB_ACTION_INPUT_TestType
-        TestsPath           = $env:GITHUB_ACTION_INPUT_TestsPath
-        StackTraceVerbosity = $env:GITHUB_ACTION_INPUT_StackTraceVerbosity
-        Verbosity           = $env:GITHUB_ACTION_INPUT_Verbosity
-    } | Format-List
-}
-
-$params = @{
-    Path                = $codeToTest
-    TestType            = $env:GITHUB_ACTION_INPUT_TestType
-    TestsPath           = $env:GITHUB_ACTION_INPUT_TestsPath
-    StackTraceVerbosity = $env:GITHUB_ACTION_INPUT_StackTraceVerbosity
-    Verbosity           = $env:GITHUB_ACTION_INPUT_Verbosity
-}
-$testResults = Test-PSModule @params
-
-LogGroup 'Test results' {
-    $testResults | Format-List
-}
-
-$failedTests = [int]$testResults.FailedCount
-
-if (($failedTests -gt 0) -or ($testResults.Result -ne 'Passed')) {
-    Write-GitHubError "❌ Some [$failedTests] tests failed."
-    Set-GitHubOutput -Name 'passed' -Value $false
-    $return = 1
-} elseif ($failedTests -eq 0) {
-    Write-GitHubNotice '✅ All tests passed.'
-    Set-GitHubOutput -Name 'passed' -Value $true
-    $return = 0
-}
-
-Write-Host '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
-exit $return
+"ModuleName=$moduleName" >> $env:GITHUB_OUTPUT
+"CodePath=$codePath" >> $env:GITHUB_OUTPUT
+"LocalTestPath=$localTestPath" >> $env:GITHUB_OUTPUT
+"TestPath=$testPath" >> $env:GITHUB_OUTPUT
