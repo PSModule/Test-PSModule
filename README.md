@@ -143,15 +143,20 @@ jobs:
 
 ### Outputs
 
-| Output        | Description                          |
-|---------------|--------------------------------------|
-| `Outcome`     | Outcome of the test run.             |
-| `Conclusion`  | Conclusion status of test execution. |
-| `Executed`    | Indicates if tests were executed.    |
-| `Result`      | Overall result (`Passed`, `Failed`). |
-| `FailedCount` | Number of failed tests.              |
-| `PassedCount` | Number of passed tests.              |
-| `TotalCount`  | Total tests executed.                |
+| Output                  | Description                          |
+|-------------------------|--------------------------------------|
+| `Outcome`               | Outcome of the test run.             |
+| `Conclusion`            | Conclusion status of test execution. |
+| `Executed`              | Indicates if tests were executed.    |
+| `Result`                | Overall result (`Passed`, `Failed`). |
+| `FailedCount`           | Number of failed tests.              |
+| `FailedBlocksCount`     | Number of failed blocks.             |
+| `FailedContainersCount` | Number of failed containers.         |
+| `PassedCount`           | Number of passed tests.              |
+| `SkippedCount`          | Number of skipped tests.             |
+| `InconclusiveCount`     | Number of inconclusive tests.        |
+| `NotRunCount`           | Number of tests not run.             |
+| `TotalCount`            | Total tests executed.                |
 
 ## PSModule tests
 
