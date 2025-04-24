@@ -17,20 +17,28 @@ BeforeAll {
 Describe 'PSModule - Module tests' {
     Context 'Module' {
         It 'The module should be importable' {
-            { Import-Module -Name $moduleName } | Should -Not -Throw
+            {
+                LogGroup 'Importing Module' {
+                    Import-Module -Name $moduleName -Debug -Verbose -Force
+                }
+            } | Should -Not -Throw
         }
     }
 
     Context 'Module Manifest' {
         It 'Module Manifest exists' {
-            $result = Test-Path -Path $moduleManifestPath
-            $result | Should -Be $true
-            Write-Verbose $result
+            LogGroup 'Module manifest' {
+                $result = Test-Path -Path $moduleManifestPath
+                $result | Should -Be $true
+                Write-Verbose $result
+            }
         }
         It 'Module Manifest is valid' {
-            $result = Test-ModuleManifest -Path $moduleManifestPath
-            $result | Should -Not -Be $null
-            Write-Verbose $result
+            LogGroup 'Validating Module Manifest' {
+                $result = Test-ModuleManifest -Path $moduleManifestPath
+                $result | Should -Not -Be $null
+                Write-Verbose $result
+            }
         }
         # It 'has a valid license URL' {}
         # It 'has a valid project URL' {}
