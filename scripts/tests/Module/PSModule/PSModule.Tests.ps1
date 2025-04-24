@@ -19,10 +19,13 @@ Describe 'PSModule - Module tests' {
         It 'The module should be importable' {
             {
                 LogGroup 'Importing Module' {
-                    Import-Module -Name $moduleName -ArgumentList @{
-                        Debug   = $true
-                        Verbose = $true
-                    }
+                    $currentDebugPreference = $DebugPreference
+                    $currentVerbosePreference = $VerbosePreference
+                    $DebugPreference = 'Continue'
+                    $VerbosePreference = 'Continue'
+                    Import-Module -Name $moduleName
+                    $DebugPreference = $currentDebugPreference
+                    $VerbosePreference = $currentVerbosePreference
                 }
             } | Should -Not -Throw
         }
