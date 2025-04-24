@@ -290,9 +290,9 @@ runs:
         LocalTestPath: ${{ steps.paths.outputs.LocalTestPath }}
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
       with:
-        Debug: ${{ inputs.Debug }}
+        Debug: 'true'
+        Verbose: 'true'
         Prerelease: ${{ inputs.Prerelease }}
-        Verbose: ${{ inputs.Verbose }}
         Version: ${{ inputs.Version }}
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
         Path: ${{ steps.paths.outputs.TestPath }}

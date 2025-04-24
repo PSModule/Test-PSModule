@@ -19,7 +19,7 @@ Describe 'PSModule - Module tests' {
         It 'The module should be importable' {
             {
                 LogGroup 'Importing Module' {
-                    Import-Module -Name $moduleName -Force -Debug -Verbose
+                    Import-Module -Name $moduleName -Force
                 }
             } | Should -Not -Throw
         }
