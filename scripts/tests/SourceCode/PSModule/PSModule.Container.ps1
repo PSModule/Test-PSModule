@@ -3,7 +3,5 @@
     Data = @{
         Path      = $env:PSMODULE_INVOKE_PESTER_INPUT_Run_Path
         TestsPath = $env:LocalTestPath
-        Debug     = $false
-        Verbose   = $false
     }
 }

@@ -1,8 +1,11 @@
 ﻿@{
-    TestResult = @{
+    TestResult   = @{
         Enabled = $true
     }
-    Output     = @{
+    CodeCoverage = @{
+        Enabled = $true
+    }
+    Output       = @{
         Verbosity = 'Detailed'
     }
 }

@@ -3,42 +3,42 @@
 param()
 
 $scriptName = $MyInvocation.MyCommand.Name
-Write-Verbose "[$scriptName] Importing module"
+Write-Debug "[$scriptName] Importing module"
 
 #region - Data import
-Write-Verbose "[$scriptName] - [data] - Processing folder"
+Write-Debug "[$scriptName] - [data] - Processing folder"
 $dataFolder = (Join-Path $PSScriptRoot 'data')
-Write-Verbose "[$scriptName] - [data] - [$dataFolder]"
+Write-Debug "[$scriptName] - [data] - [$dataFolder]"
 Get-ChildItem -Path "$dataFolder" -Recurse -Force -Include '*.psd1' -ErrorAction SilentlyContinue | ForEach-Object {
-    Write-Verbose "[$scriptName] - [data] - [$($_.Name)] - Importing"
+    Write-Debug "[$scriptName] - [data] - [$($_.Name)] - Importing"
     New-Variable -Name $_.BaseName -Value (Import-PowerShellDataFile -Path $_.FullName) -Force
-    Write-Verbose "[$scriptName] - [data] - [$($_.Name)] - Done"
+    Write-Debug "[$scriptName] - [data] - [$($_.Name)] - Done"
 }
 
-Write-Verbose "[$scriptName] - [data] - Done"
+Write-Debug "[$scriptName] - [data] - Done"
 #endregion - Data import
 
 #region - From /init
-Write-Verbose "[$scriptName] - [/init] - Processing folder"
+Write-Debug "[$scriptName] - [/init] - Processing folder"
 
 #region - From /init/initializer.ps1
-Write-Verbose "[$scriptName] - [/init/initializer.ps1] - Importing"
+Write-Debug "[$scriptName] - [/init/initializer.ps1] - Importing"
 
 Write-Verbose '-------------------------------'
 Write-Verbose '---  THIS IS AN INITIALIZER ---'
 Write-Verbose '-------------------------------'
 
-Write-Verbose "[$scriptName] - [/init/initializer.ps1] - Done"
+Write-Debug "[$scriptName] - [/init/initializer.ps1] - Done"
 #endregion - From /init/initializer.ps1
 
-Write-Verbose "[$scriptName] - [/init] - Done"
+Write-Debug "[$scriptName] - [/init] - Done"
 #endregion - From /init
 
 #region - From /classes
-Write-Verbose "[$scriptName] - [/classes] - Processing folder"
+Write-Debug "[$scriptName] - [/classes] - Processing folder"
 
 #region - From /classes/Book.ps1
-Write-Verbose "[$scriptName] - [/classes/Book.ps1] - Importing"
+Write-Debug "[$scriptName] - [/classes/Book.ps1] - Importing"
 
 class Book {
     # Class properties
@@ -86,10 +86,10 @@ class Book {
     }
 }
 
-Write-Verbose "[$scriptName] - [/classes/Book.ps1] - Done"
+Write-Debug "[$scriptName] - [/classes/Book.ps1] - Done"
 #endregion - From /classes/Book.ps1
 #region - From /classes/BookList.ps1
-Write-Verbose "[$scriptName] - [/classes/BookList.ps1] - Importing"
+Write-Debug "[$scriptName] - [/classes/BookList.ps1] - Importing"
 
 class BookList {
     # Static property to hold the list of books
@@ -178,17 +178,17 @@ class BookList {
     }
 }
 
-Write-Verbose "[$scriptName] - [/classes/BookList.ps1] - Done"
+Write-Debug "[$scriptName] - [/classes/BookList.ps1] - Done"
 #endregion - From /classes/BookList.ps1
 
-Write-Verbose "[$scriptName] - [/classes] - Done"
+Write-Debug "[$scriptName] - [/classes] - Done"
 #endregion - From /classes
 
 #region - From /private
-Write-Verbose "[$scriptName] - [/private] - Processing folder"
+Write-Debug "[$scriptName] - [/private] - Processing folder"
 
 #region - From /private/Get-InternalPSModule.ps1
-Write-Verbose "[$scriptName] - [/private/Get-InternalPSModule.ps1] - Importing"
+Write-Debug "[$scriptName] - [/private/Get-InternalPSModule.ps1] - Importing"
 
 Function Get-InternalPSModule {
     <#
@@ -209,10 +209,10 @@ Function Get-InternalPSModule {
     Write-Output "Hello, $Name!"
 }
 
-Write-Verbose "[$scriptName] - [/private/Get-InternalPSModule.ps1] - Done"
+Write-Debug "[$scriptName] - [/private/Get-InternalPSModule.ps1] - Done"
 #endregion - From /private/Get-InternalPSModule.ps1
 #region - From /private/Set-InternalPSModule.ps1
-Write-Verbose "[$scriptName] - [/private/Set-InternalPSModule.ps1] - Importing"
+Write-Debug "[$scriptName] - [/private/Set-InternalPSModule.ps1] - Importing"
 
 Function Set-InternalPSModule {
     <#
@@ -237,17 +237,17 @@ Function Set-InternalPSModule {
     Write-Output "Hello, $Name!"
 }
 
-Write-Verbose "[$scriptName] - [/private/Set-InternalPSModule.ps1] - Done"
+Write-Debug "[$scriptName] - [/private/Set-InternalPSModule.ps1] - Done"
 #endregion - From /private/Set-InternalPSModule.ps1
 
-Write-Verbose "[$scriptName] - [/private] - Done"
+Write-Debug "[$scriptName] - [/private] - Done"
 #endregion - From /private
 
 #region - From /public
-Write-Verbose "[$scriptName] - [/public] - Processing folder"
+Write-Debug "[$scriptName] - [/public] - Processing folder"
 
 #region - From /public/Get-PSModuleTest.ps1
-Write-Verbose "[$scriptName] - [/public/Get-PSModuleTest.ps1] - Importing"
+Write-Debug "[$scriptName] - [/public/Get-PSModuleTest.ps1] - Importing"
 
 #Requires -Modules Utilities
 
@@ -272,10 +272,10 @@ function Get-PSModuleTest {
     Write-Output "Hello, $Name!"
 }
 
-Write-Verbose "[$scriptName] - [/public/Get-PSModuleTest.ps1] - Done"
+Write-Debug "[$scriptName] - [/public/Get-PSModuleTest.ps1] - Done"
 #endregion - From /public/Get-PSModuleTest.ps1
 #region - From /public/New-PSModuleTest.ps1
-Write-Verbose "[$scriptName] - [/public/New-PSModuleTest.ps1] - Importing"
+Write-Debug "[$scriptName] - [/public/New-PSModuleTest.ps1] - Importing"
 
 #Requires -Modules @{ModuleName='PSSemVer'; ModuleVersion='1.0'}
 
@@ -304,10 +304,10 @@ function New-PSModuleTest {
     Write-Output "Hello, $Name!"
 }
 
-Write-Verbose "[$scriptName] - [/public/New-PSModuleTest.ps1] - Done"
+Write-Debug "[$scriptName] - [/public/New-PSModuleTest.ps1] - Done"
 #endregion - From /public/New-PSModuleTest.ps1
 #region - From /public/Set-PSModuleTest.ps1
-Write-Verbose "[$scriptName] - [/public/Set-PSModuleTest.ps1] - Importing"
+Write-Debug "[$scriptName] - [/public/Set-PSModuleTest.ps1] - Importing"
 
 function Set-PSModuleTest {
     <#
@@ -336,10 +336,10 @@ function Set-PSModuleTest {
     }
 }
 
-Write-Verbose "[$scriptName] - [/public/Set-PSModuleTest.ps1] - Done"
+Write-Debug "[$scriptName] - [/public/Set-PSModuleTest.ps1] - Done"
 #endregion - From /public/Set-PSModuleTest.ps1
 #region - From /public/Test-PSModuleTest.ps1
-Write-Verbose "[$scriptName] - [/public/Test-PSModuleTest.ps1] - Importing"
+Write-Debug "[$scriptName] - [/public/Test-PSModuleTest.ps1] - Importing"
 
 function Test-PSModuleTest {
     <#
@@ -362,19 +362,19 @@ function Test-PSModuleTest {
     Write-Output "Hello, $Name!"
 }
 
-Write-Verbose "[$scriptName] - [/public/Test-PSModuleTest.ps1] - Done"
+Write-Debug "[$scriptName] - [/public/Test-PSModuleTest.ps1] - Done"
 #endregion - From /public/Test-PSModuleTest.ps1
 
-Write-Verbose "[$scriptName] - [/public] - Done"
+Write-Debug "[$scriptName] - [/public] - Done"
 #endregion - From /public
 
 #region - From /finally.ps1
-Write-Verbose "[$scriptName] - [/finally.ps1] - Importing"
+Write-Debug "[$scriptName] - [/finally.ps1] - Importing"
 
 Write-Verbose '------------------------------'
 Write-Verbose '---  THIS IS A LAST LOADER ---'
 Write-Verbose '------------------------------'
-Write-Verbose "[$scriptName] - [/finally.ps1] - Done"
+Write-Debug "[$scriptName] - [/finally.ps1] - Done"
 #endregion - From /finally.ps1
 
 $exports = @{

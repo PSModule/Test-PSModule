@@ -2,6 +2,10 @@
     'PSReviewUnusedParameter', 'Path',
     Justification = 'Path is used to specify the path to the module to test.'
 )]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSAvoidUsingWriteHost', '',
+    Justification = 'Log outputs to GitHub Actions logs.'
+)]
 [CmdLetBinding()]
 Param(
     [Parameter(Mandatory)]
@@ -23,14 +27,18 @@ Describe 'PSModule - Module tests' {
 
     Context 'Module Manifest' {
         It 'Module Manifest exists' {
-            $result = Test-Path -Path $moduleManifestPath
-            $result | Should -Be $true
-            Write-Verbose $result
+            LogGroup 'Module manifest' {
+                $result = Test-Path -Path $moduleManifestPath
+                $result | Should -Be $true
+                Write-Host "$($result | Format-List | Out-String)"
+            }
         }
         It 'Module Manifest is valid' {
-            $result = Test-ModuleManifest -Path $moduleManifestPath
-            $result | Should -Not -Be $null
-            Write-Verbose $result
+            LogGroup 'Validating Module Manifest' {
+                $result = Test-ModuleManifest -Path $moduleManifestPath
+                $result | Should -Not -Be $null
+                Write-Host "$($result | Format-List | Out-String)"
+            }
         }
         # It 'has a valid license URL' {}
         # It 'has a valid project URL' {}

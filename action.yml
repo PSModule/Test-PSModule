@@ -291,9 +291,9 @@ runs:
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
       with:
         Debug: ${{ inputs.Debug }}
-        Prerelease: ${{ inputs.Prerelease }}
         Verbose: ${{ inputs.Verbose }}
         Version: ${{ inputs.Version }}
+        Prerelease: ${{ inputs.Prerelease }}
         WorkingDirectory: ${{ inputs.WorkingDirectory }}
         Path: ${{ steps.paths.outputs.TestPath }}
         StepSummary_Mode: ${{ inputs.StepSummary_Mode }}
