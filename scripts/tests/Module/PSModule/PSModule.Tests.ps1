@@ -23,7 +23,7 @@ Describe 'PSModule - Module tests' {
                     $currentVerbosePreference = $VerbosePreference
                     $DebugPreference = 'Continue'
                     $VerbosePreference = 'Continue'
-                    Import-Module -Name $moduleName -Force
+                    Import-Module -Name $moduleName -Force -Verbose -Debug
                     $DebugPreference = $currentDebugPreference
                     $VerbosePreference = $currentVerbosePreference
                 }
