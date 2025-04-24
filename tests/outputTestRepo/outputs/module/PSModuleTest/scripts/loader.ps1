@@ -1,3 +1,3 @@
-﻿Write-Debug '-------------------------'
-Write-Debug '---  THIS IS A LOADER ---'
-Write-Debug '-------------------------'
+﻿Write-Verbose '-------------------------'
+Write-Verbose '---  THIS IS A LOADER ---'
+Write-Verbose '-------------------------'
