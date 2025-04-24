@@ -2,6 +2,10 @@
     'PSReviewUnusedParameter', 'Path',
     Justification = 'Path is used to specify the path to the module to test.'
 )]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSAvoidUsingWriteHost', '',
+    Justification = 'Log outputs to GitHub Actions logs.'
+)]
 [CmdLetBinding()]
 Param(
     [Parameter(Mandatory)]
@@ -17,17 +21,7 @@ BeforeAll {
 Describe 'PSModule - Module tests' {
     Context 'Module' {
         It 'The module should be importable' {
-            {
-                LogGroup 'Importing Module' {
-                    $currentDebugPreference = $DebugPreference
-                    $currentVerbosePreference = $VerbosePreference
-                    $DebugPreference = 'Continue'
-                    $VerbosePreference = 'Continue'
-                    Import-Module -Name $moduleName
-                    $DebugPreference = $currentDebugPreference
-                    $VerbosePreference = $currentVerbosePreference
-                }
-            } | Should -Not -Throw
+            { Import-Module -Name $moduleName } | Should -Not -Throw
         }
     }
 
@@ -36,14 +30,14 @@ Describe 'PSModule - Module tests' {
             LogGroup 'Module manifest' {
                 $result = Test-Path -Path $moduleManifestPath
                 $result | Should -Be $true
-                Write-Verbose $result
+                Write-Host "$($result | Format-List | Out-String)"
             }
         }
         It 'Module Manifest is valid' {
             LogGroup 'Validating Module Manifest' {
                 $result = Test-ModuleManifest -Path $moduleManifestPath
                 $result | Should -Not -Be $null
-                Write-Verbose $result
+                Write-Host "$($result | Format-List | Out-String)"
             }
         }
         # It 'has a valid license URL' {}
