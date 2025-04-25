@@ -27,18 +27,14 @@ Describe 'PSModule - Module tests' {
 
     Context 'Module Manifest' {
         It 'Module Manifest exists' {
-            LogGroup 'Module manifest' {
-                $result = Test-Path -Path $moduleManifestPath
-                $result | Should -Be $true
-                Write-Host "$($result | Format-List | Out-String)"
-            }
+            $result = Test-Path -Path $moduleManifestPath
+            $result | Should -Be $true
+            Write-Host "$($result | Format-List | Out-String)"
         }
         It 'Module Manifest is valid' {
-            LogGroup 'Validating Module Manifest' {
-                $result = Test-ModuleManifest -Path $moduleManifestPath
-                $result | Should -Not -Be $null
-                Write-Host "$($result | Format-List | Out-String)"
-            }
+            $result = Test-ModuleManifest -Path $moduleManifestPath
+            $result | Should -Not -Be $null
+            Write-Host "$($result | Format-List | Out-String)"
         }
         # It 'has a valid license URL' {}
         # It 'has a valid project URL' {}
