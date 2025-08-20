@@ -15,7 +15,7 @@
     Justification = 'Logging to Github Actions.'
 )]
 [CmdLetBinding()]
-Param(
+param(
     # The path to the 'src' folder of the repo.
     [Parameter(Mandatory)]
     [string] $Path,
@@ -41,7 +41,7 @@ BeforeAll {
     Write-Host '::endgroup::'
     $privateFunctionsPath = Join-Path -Path $functionsPath -ChildPath 'private'
     $privateFunctionFiles = (Test-Path -Path $privateFunctionsPath) ?
-        (Get-ChildItem -Path $privateFunctionsPath -File -Filter '*.ps1' -Recurse) : $null
+    (Get-ChildItem -Path $privateFunctionsPath -File -Filter '*.ps1' -Recurse) : $null
     Write-Host "::group::     - Private      [$($privateFunctionFiles.Count)]"
     $privateFunctionFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
@@ -63,7 +63,7 @@ BeforeAll {
     Write-Host '::endgroup::'
     $privateVariablesPath = Join-Path -Path $variablesPath -ChildPath 'private'
     $privateVariableFiles = (Test-Path -Path $privateVariablesPath) ?
-        (Get-ChildItem -Path $privateVariablesPath -File -Filter '*.ps1' -Recurse) : $null
+    (Get-ChildItem -Path $privateVariablesPath -File -Filter '*.ps1' -Recurse) : $null
     Write-Host "::group::     - Private      [$($privateVariableFiles.Count)]"
     $privateVariableFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
@@ -71,7 +71,7 @@ BeforeAll {
     Write-Host '::endgroup::'
     $publicVariablesPath = Join-Path -Path $variablesPath -ChildPath 'public'
     $publicVariableFiles = (Test-Path -Path $publicVariablesPath) ?
-        (Get-ChildItem -Path $publicVariablesPath -File -Filter '*.ps1' -Recurse) : $null
+    (Get-ChildItem -Path $publicVariablesPath -File -Filter '*.ps1' -Recurse) : $null
     Write-Host "::group::     - Public       [$($publicVariableFiles.Count)]"
     $publicVariableFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
@@ -86,7 +86,7 @@ BeforeAll {
     Write-Host '::endgroup::'
     $privateClassPath = Join-Path -Path $classPath -ChildPath 'private'
     $privateClassFiles = (Test-Path -Path $privateClassPath) ?
-        (Get-ChildItem -Path $privateClassPath -File -Filter '*.ps1' -Recurse) : $null
+    (Get-ChildItem -Path $privateClassPath -File -Filter '*.ps1' -Recurse) : $null
     Write-Host "::group::     - Private      [$($privateClassFiles.Count)]"
     $privateClassFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
@@ -94,7 +94,7 @@ BeforeAll {
     Write-Host '::endgroup::'
     $publicClassPath = Join-Path -Path $classPath -ChildPath 'public'
     $publicClassFiles = (Test-Path -Path $publicClassPath) ?
-        (Get-ChildItem -Path $publicClassPath -File -Filter '*.ps1' -Recurse) : $null
+    (Get-ChildItem -Path $publicClassPath -File -Filter '*.ps1' -Recurse) : $null
     Write-Host "::group::     - Public       [$($publicClassFiles.Count)]"
     $publicClassFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
