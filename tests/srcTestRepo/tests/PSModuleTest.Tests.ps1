@@ -1,5 +1,5 @@
 ﻿[CmdletBinding()]
-Param(
+param(
     # Path to the module to test.
     [Parameter()]
     [string] $Path

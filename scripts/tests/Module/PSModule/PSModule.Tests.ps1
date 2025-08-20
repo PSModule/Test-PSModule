@@ -7,7 +7,7 @@
     Justification = 'Log outputs to GitHub Actions logs.'
 )]
 [CmdLetBinding()]
-Param(
+param(
     [Parameter(Mandatory)]
     [string] $Path
 )
