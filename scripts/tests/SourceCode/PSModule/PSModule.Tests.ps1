@@ -93,11 +93,7 @@ BeforeAll {
     }
     Write-Host '::endgroup::'
     $publicClassPath = Join-Path -Path $classPath -ChildPath 'public'
-    $publicClassFiles = if (Test-Path -Path $publicClassPath) {
-        (Get-ChildItem -Path $publicClassPath -File -Filter '*.ps1' -Recurse)
-    } else {
-        $null
-    }
+    $publicClassFiles = (Test-Path -Path $publicClassPath) ? (Get-ChildItem -Path $publicClassPath -File -Filter '*.ps1' -Recurse) : $null
     Write-Host "::group::     - Public       [$($publicClassFiles.Count)]"
     $publicClassFiles | ForEach-Object {
         Write-Host " - $($_.FullName)"
