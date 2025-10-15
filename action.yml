@@ -1,9 +1,6 @@
-name: Test-PSModule (by PSModule)
+name: Test-PSModule
 description: Test a PowerShell module before publishing the module to the PowerShell Gallery.
 author: PSModule
-branding:
-  icon: check-square
-  color: gray-dark
 
 inputs:
   Name:
