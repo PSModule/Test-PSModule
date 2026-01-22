@@ -267,7 +267,7 @@ runs:
   using: composite
   steps:
     - name: Install-PSModuleHelpers
-      uses: PSModule/Install-PSModuleHelpers@v1
+      uses: PSModule/Install-PSModuleHelpers@d60d63e4be477d1ca0c67c6085101fb109bce8f1 # v1.0.6
 
     - name: Get test paths
       shell: pwsh
@@ -281,7 +281,7 @@ runs:
         ${{ github.action_path }}/scripts/main.ps1
 
     - name: Invoke-Pester
-      uses: PSModule/Invoke-Pester@v4
+      uses: PSModule/Invoke-Pester@882994cbe1ff07c3fc8afdac52404c940f99b331 # v4.2.2
       id: test
       env:
         LocalTestPath: ${{ steps.paths.outputs.LocalTestPath }}
