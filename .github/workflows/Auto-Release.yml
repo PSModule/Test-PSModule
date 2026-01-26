@@ -29,6 +29,6 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Auto-Release
-        uses: PSModule/Auto-Release@v1
+        uses: PSModule/Auto-Release@v2
         with:
           IncrementalPrerelease: false
