@@ -163,7 +163,7 @@ Describe 'PSModule - SourceCode tests' {
             $issues -join [Environment]::NewLine |
                 Should -BeNullOrEmpty -Because "the script should use '`$null = ...' instead of '... | Out-Null'"
         }
-        It 'Should not use ternary operations for compatability reasons (ID: NoTernary)' -Skip {
+        It 'Should not use ternary operations for compatibility reasons (ID: NoTernary)' -Skip {
             $issues = @('')
             $scriptFiles | ForEach-Object {
                 $filePath = $_.FullName
@@ -179,7 +179,7 @@ Describe 'PSModule - SourceCode tests' {
                 }
             }
             $issues -join [Environment]::NewLine |
-                Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatability with PS 5.1 and below'
+                Should -BeNullOrEmpty -Because 'the script should not use ternary operations for compatibility with PS 5.1 and below'
         }
         It 'all powershell keywords are lowercase (ID: LowercaseKeywords)' {
             $issues = @('')
