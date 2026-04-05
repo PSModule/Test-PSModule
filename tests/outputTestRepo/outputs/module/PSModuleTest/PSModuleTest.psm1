@@ -1,9 +1,23 @@
 ﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidLongLines', '', Justification = 'Contains long links.')]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSAvoidAssignmentToAutomaticVariable', 'IsWindows',
+    Justification = 'IsWindows does not exist in PS5.1'
+)]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSUseDeclaredVarsMoreThanAssignments', 'IsWindows',
+    Justification = 'IsWindows does not exist in PS5.1'
+)]
 [CmdletBinding()]
 param()
 
 $scriptName = $MyInvocation.MyCommand.Name
 Write-Debug "[$scriptName] Importing module"
+
+#region - IsWindows compatibility shim
+if ($PSEdition -eq 'Desktop') {
+    $IsWindows = $true
+}
+#endregion - IsWindows compatibility shim
 
 #region - Data import
 Write-Debug "[$scriptName] - [data] - Processing folder"
@@ -376,6 +390,48 @@ Write-Verbose '---  THIS IS A LAST LOADER ---'
 Write-Verbose '------------------------------'
 Write-Debug "[$scriptName] - [/finally.ps1] - Done"
 #endregion - From /finally.ps1
+
+#region    Class exporter
+# Get the internal TypeAccelerators class to use its static methods.
+$TypeAcceleratorsClass = [psobject].Assembly.GetType(
+    'System.Management.Automation.TypeAccelerators'
+)
+# Ensure none of the types would clobber an existing type accelerator.
+# If a type accelerator with the same name exists, throw an exception.
+$ExistingTypeAccelerators = $TypeAcceleratorsClass::Get
+# Define the types to export with type accelerators.
+$ExportableEnums = @(
+)
+$ExportableEnums | Foreach-Object { Write-Verbose "Exporting enum '$($_.FullName)'." }
+foreach ($Type in $ExportableEnums) {
+    if ($Type.FullName -in $ExistingTypeAccelerators.Keys) {
+        Write-Verbose "Enum already exists [$($Type.FullName)]. Skipping."
+    } else {
+        Write-Verbose "Importing enum '$Type'."
+        $TypeAcceleratorsClass::Add($Type.FullName, $Type)
+    }
+}
+$ExportableClasses = @(
+    [Book]
+    [BookList]
+)
+$ExportableClasses | Foreach-Object { Write-Verbose "Exporting class '$($_.FullName)'." }
+foreach ($Type in $ExportableClasses) {
+    if ($Type.FullName -in $ExistingTypeAccelerators.Keys) {
+        Write-Verbose "Class already exists [$($Type.FullName)]. Skipping."
+    } else {
+        Write-Verbose "Importing class '$Type'."
+        $TypeAcceleratorsClass::Add($Type.FullName, $Type)
+    }
+}
+
+# Remove type accelerators when the module is removed.
+$MyInvocation.MyCommand.ScriptBlock.Module.OnRemove = {
+    foreach ($Type in ($ExportableEnums + $ExportableClasses)) {
+        $null = $TypeAcceleratorsClass::Remove($Type.FullName)
+    }
+}.GetNewClosure()
+#endregion Class exporter
 
 $exports = @{
     Cmdlet   = ''
