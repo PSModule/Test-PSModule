@@ -6,6 +6,10 @@
     'PSAvoidUsingWriteHost', '',
     Justification = 'Log outputs to GitHub Actions logs.'
 )]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+    'PSUseDeclaredVarsMoreThanAssignments', '',
+    Justification = 'Variables are set in BeforeAll and consumed in Describe/It blocks.'
+)]
 [CmdLetBinding()]
 param(
     [Parameter(Mandatory)]
