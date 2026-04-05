@@ -12,35 +12,33 @@ param(
     [string] $Path
 )
 
-BeforeAll {
-    $moduleName = Split-Path -Path (Split-Path -Path $Path -Parent) -Leaf
-    $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
-    $moduleRootPath = Join-Path -Path $Path -ChildPath "$moduleName.psm1"
-    Write-Verbose "Module Manifest Path: [$moduleManifestPath]"
-    Write-Verbose "Module Root Path: [$moduleRootPath]"
+# Discovery-phase variables — must be set at script scope (outside BeforeAll) so that
+# Pester's -Skip and -ForEach parameters can reference them during test discovery.
+$moduleName = Split-Path -Path (Split-Path -Path $Path -Parent) -Leaf
+$moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
+$moduleRootPath = Join-Path -Path $Path -ChildPath "$moduleName.psm1"
 
-    # Discover public classes and enums from the compiled module source.
-    # The class exporter region is injected by Build-PSModule when classes/public contains types.
-    $moduleContent = if (Test-Path -Path $moduleRootPath) { Get-Content -Path $moduleRootPath -Raw } else { '' }
-    $hasClassExporter = $moduleContent -match '#region\s+Class exporter'
+# Discover public classes and enums from the compiled module source.
+# The class exporter region is injected by Build-PSModule when classes/public contains types.
+$moduleContent = if (Test-Path -Path $moduleRootPath) { Get-Content -Path $moduleRootPath -Raw } else { '' }
+$hasClassExporter = $moduleContent -match '#region\s+Class exporter'
 
-    # Extract expected class and enum names from the class exporter block.
-    $expectedClassNames = @()
-    $expectedEnumNames = @()
-    if ($hasClassExporter) {
-        # Match $ExportableClasses = @( ... ) block
-        if ($moduleContent -match '\$ExportableClasses\s*=\s*@\(([\s\S]*?)\)') {
-            $expectedClassNames = [regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value }
-        }
-        # Match $ExportableEnums = @( ... ) block
-        if ($moduleContent -match '\$ExportableEnums\s*=\s*@\(([\s\S]*?)\)') {
-            $expectedEnumNames = [regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value }
-        }
+# Extract expected class and enum names from the class exporter block.
+$expectedClassNames = @()
+$expectedEnumNames = @()
+if ($hasClassExporter) {
+    # Match $ExportableClasses = @( ... ) block
+    if ($moduleContent -match '\$ExportableClasses\s*=\s*@\(([\s\S]*?)\)') {
+        $expectedClassNames = @([regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value })
     }
-    Write-Host "Has class exporter: $hasClassExporter"
-    Write-Host "Expected classes: $($expectedClassNames -join ', ')"
-    Write-Host "Expected enums: $($expectedEnumNames -join ', ')"
+    # Match $ExportableEnums = @( ... ) block
+    if ($moduleContent -match '\$ExportableEnums\s*=\s*@\(([\s\S]*?)\)') {
+        $expectedEnumNames = @([regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value })
+    }
 }
+Write-Host "Has class exporter: $hasClassExporter"
+Write-Host "Expected classes: $($expectedClassNames -join ', ')"
+Write-Host "Expected enums: $($expectedEnumNames -join ', ')"
 
 Describe 'PSModule - Module tests' {
     Context 'Module' {
