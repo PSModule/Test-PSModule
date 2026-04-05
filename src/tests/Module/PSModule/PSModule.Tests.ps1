@@ -64,7 +64,8 @@ Describe 'PSModule - Module tests' {
 
     Context 'Framework - IsWindows compatibility shim' {
         BeforeAll {
-            $script:moduleRef = Import-Module -Name $moduleManifestPath -Force -PassThru
+            Import-Module -Name $moduleManifestPath -Force
+            $script:moduleRef = Get-Module -Name $moduleName
         }
         It 'Should have $IsWindows defined in the module scope' {
             # The framework injects "$IsWindows = $true" for PowerShell 5.1 (Desktop edition).
