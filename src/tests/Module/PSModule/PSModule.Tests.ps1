@@ -84,23 +84,22 @@ Describe 'PSModule - Module tests' {
         }
     }
 
-    Context 'Framework - Module OnRemove cleanup' -Skip:(-not $hasClassExporter) {
-        It 'Should clean up type accelerators when the module is removed' {
-            # Capture type names before removal
-            $typeNames = @(@($expectedEnumNames) + @($expectedClassNames) | Where-Object { $_ })
-            $typeNames | Should -Not -BeNullOrEmpty -Because 'there should be types to verify cleanup for'
-
+    Context 'Framework - Module OnRemove cleanup' {
+        It 'Should remove the module cleanly and re-import without errors' {
             # Remove the module to trigger the OnRemove hook
-            Remove-Module -Name $moduleName -Force
+            { Remove-Module -Name $moduleName -Force } | Should -Not -Throw
 
-            # Verify type accelerators are cleaned up
-            $typeAccelerators = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')::Get
-            foreach ($typeName in $typeNames) {
-                $typeAccelerators.Keys | Should -Not -Contain $typeName -Because "the OnRemove hook should remove type accelerator [$typeName]"
+            # Verify type accelerators are cleaned up when class exporter is present
+            if ($hasClassExporter) {
+                $typeNames = @(@($expectedEnumNames) + @($expectedClassNames) | Where-Object { $_ })
+                $typeAccelerators = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')::Get
+                foreach ($typeName in $typeNames) {
+                    $typeAccelerators.Keys | Should -Not -Contain $typeName -Because "the OnRemove hook should remove type accelerator [$typeName]"
+                }
             }
 
             # Re-import the module for any subsequent tests
-            Import-Module -Name $moduleName -Force
+            { Import-Module -Name $moduleName -Force } | Should -Not -Throw
         }
     }
 }
