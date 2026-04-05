@@ -89,20 +89,6 @@ Describe 'PSModule - Module tests' {
         }
     }
 
-    Context 'Framework - IsWindows compatibility shim' {
-        BeforeAll {
-            Import-Module -Name $moduleManifestPath -Force
-            $script:moduleRef = Get-Module -Name $moduleName
-        }
-        It 'Should have $IsWindows defined in the module scope' {
-            # The framework injects "$IsWindows = $true" for PowerShell 5.1 (Desktop edition).
-            # On PS 7+ (Core), $IsWindows is a built-in automatic variable.
-            # The variable is set inside the module scope and is not exported, so we must check from within the module.
-            $isWindowsDefined = & $script:moduleRef { Get-Variable -Name 'IsWindows' -ErrorAction SilentlyContinue }
-            $isWindowsDefined | Should -Not -BeNullOrEmpty -Because 'the framework injects a compatibility shim for PS 5.1'
-        }
-    }
-
     Context 'Framework - Type accelerator registration' -Skip:(-not $hasClassExporter) {
         BeforeAll {
             Import-Module -Name $moduleManifestPath -Force

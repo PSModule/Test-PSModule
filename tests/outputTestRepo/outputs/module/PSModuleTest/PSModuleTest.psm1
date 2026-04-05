@@ -1,23 +1,9 @@
 ﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidLongLines', '', Justification = 'Contains long links.')]
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-    'PSAvoidAssignmentToAutomaticVariable', 'IsWindows',
-    Justification = 'IsWindows does not exist in PS5.1'
-)]
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute(
-    'PSUseDeclaredVarsMoreThanAssignments', 'IsWindows',
-    Justification = 'IsWindows does not exist in PS5.1'
-)]
 [CmdletBinding()]
 param()
 
 $scriptName = $MyInvocation.MyCommand.Name
 Write-Debug "[$scriptName] Importing module"
-
-#region - IsWindows compatibility shim
-if ($PSEdition -eq 'Desktop') {
-    $IsWindows = $true
-}
-#endregion - IsWindows compatibility shim
 
 #region - Data import
 Write-Debug "[$scriptName] - [data] - Processing folder"
