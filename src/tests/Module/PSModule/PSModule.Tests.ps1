@@ -41,6 +41,16 @@ Write-Host "Expected classes: $($expectedClassNames -join ', ')"
 Write-Host "Expected enums: $($expectedEnumNames -join ', ')"
 
 Describe 'PSModule - Module tests' {
+    BeforeAll {
+        # Re-expose discovery-phase variables for the Run phase (It blocks).
+        # Pester v5 script-scope variables are visible during Discovery but not inside It blocks.
+        $moduleName = $script:moduleName
+        $moduleManifestPath = $script:moduleManifestPath
+        $hasClassExporter = $script:hasClassExporter
+        $expectedClassNames = $script:expectedClassNames
+        $expectedEnumNames = $script:expectedEnumNames
+    }
+
     Context 'Module' {
         It 'The module should be importable' {
             { Import-Module -Name $moduleManifestPath -Force } | Should -Not -Throw
