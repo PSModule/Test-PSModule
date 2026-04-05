@@ -40,12 +40,12 @@ if ($hasClassExporter) {
         $expectedEnumNames = @([regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value })
     }
 }
-Write-Host "Has class exporter: $hasClassExporter"
-Write-Host "Expected classes: $($expectedClassNames -join ', ')"
-Write-Host "Expected enums: $($expectedEnumNames -join ', ')"
 
-# Run-phase setup — recompute from $Path (available in both Discovery and Run phases).
-# Script-level variables above only exist during Discovery; BeforeAll runs only during Run.
+
+# Run-phase setup — recompute from $Path so that It/Context blocks can use these variables.
+# Pester v5 Discovery and Run are separate executions. The script-scope variables above drive
+# -Skip and -ForEach during Discovery. This BeforeAll recomputes the same values for the Run
+# phase, where It blocks actually execute. The duplication is intentional and required.
 BeforeAll {
     $moduleName = Split-Path -Path (Split-Path -Path $Path -Parent) -Leaf
     $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
@@ -64,9 +64,9 @@ BeforeAll {
             $expectedEnumNames = @([regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value })
         }
     }
-    Write-Host "Run phase - Module: $moduleName"
-    Write-Host "Run phase - Manifest: $moduleManifestPath"
-    Write-Host "Run phase - Has class exporter: $hasClassExporter"
+    Write-Host "Has class exporter: $hasClassExporter"
+    Write-Host "Expected classes: $($expectedClassNames -join ', ')"
+    Write-Host "Expected enums: $($expectedEnumNames -join ', ')"
 }
 
 Describe 'PSModule - Module tests' {

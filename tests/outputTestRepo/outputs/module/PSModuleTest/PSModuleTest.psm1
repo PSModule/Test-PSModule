@@ -383,7 +383,7 @@ $TypeAcceleratorsClass = [psobject].Assembly.GetType(
     'System.Management.Automation.TypeAccelerators'
 )
 # Ensure none of the types would clobber an existing type accelerator.
-# If a type accelerator with the same name exists, throw an exception.
+# If a type accelerator with the same name already exists, skip adding it.
 $ExistingTypeAccelerators = $TypeAcceleratorsClass::Get
 # Define the types to export with type accelerators.
 $ExportableEnums = @(
