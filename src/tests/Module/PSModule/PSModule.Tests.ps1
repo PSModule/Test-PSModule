@@ -40,17 +40,32 @@ Write-Host "Has class exporter: $hasClassExporter"
 Write-Host "Expected classes: $($expectedClassNames -join ', ')"
 Write-Host "Expected enums: $($expectedEnumNames -join ', ')"
 
-Describe 'PSModule - Module tests' {
-    BeforeAll {
-        # Re-expose discovery-phase variables for the Run phase (It blocks).
-        # Pester v5 script-scope variables are visible during Discovery but not inside It blocks.
-        $moduleName = $script:moduleName
-        $moduleManifestPath = $script:moduleManifestPath
-        $hasClassExporter = $script:hasClassExporter
-        $expectedClassNames = $script:expectedClassNames
-        $expectedEnumNames = $script:expectedEnumNames
-    }
+# Run-phase setup — recompute from $Path (available in both Discovery and Run phases).
+# Script-level variables above only exist during Discovery; BeforeAll runs only during Run.
+BeforeAll {
+    $moduleName = Split-Path -Path (Split-Path -Path $Path -Parent) -Leaf
+    $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
+    $moduleRootPath = Join-Path -Path $Path -ChildPath "$moduleName.psm1"
 
+    $moduleContent = if (Test-Path -Path $moduleRootPath) { Get-Content -Path $moduleRootPath -Raw } else { '' }
+    $hasClassExporter = $moduleContent -match '#region\s+Class exporter'
+
+    $expectedClassNames = @()
+    $expectedEnumNames = @()
+    if ($hasClassExporter) {
+        if ($moduleContent -match '\$ExportableClasses\s*=\s*@\(([\s\S]*?)\)') {
+            $expectedClassNames = @([regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value })
+        }
+        if ($moduleContent -match '\$ExportableEnums\s*=\s*@\(([\s\S]*?)\)') {
+            $expectedEnumNames = @([regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value })
+        }
+    }
+    Write-Host "Run phase - Module: $moduleName"
+    Write-Host "Run phase - Manifest: $moduleManifestPath"
+    Write-Host "Run phase - Has class exporter: $hasClassExporter"
+}
+
+Describe 'PSModule - Module tests' {
     Context 'Module' {
         It 'The module should be importable' {
             { Import-Module -Name $moduleManifestPath -Force } | Should -Not -Throw
