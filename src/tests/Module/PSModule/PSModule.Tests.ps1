@@ -45,7 +45,7 @@ BeforeAll {
 Describe 'PSModule - Module tests' {
     Context 'Module' {
         It 'The module should be importable' {
-            { Import-Module -Name $moduleName -Force } | Should -Not -Throw
+            { Import-Module -Name $moduleManifestPath -Force } | Should -Not -Throw
         }
     }
 
@@ -63,16 +63,22 @@ Describe 'PSModule - Module tests' {
     }
 
     Context 'Framework - IsWindows compatibility shim' {
+        BeforeAll {
+            $script:moduleRef = Import-Module -Name $moduleManifestPath -Force -PassThru
+        }
         It 'Should have $IsWindows defined in the module scope' {
             # The framework injects "$IsWindows = $true" for PowerShell 5.1 (Desktop edition).
             # On PS 7+ (Core), $IsWindows is a built-in automatic variable.
             # The variable is set inside the module scope and is not exported, so we must check from within the module.
-            $isWindowsDefined = & (Get-Module $moduleName) { Get-Variable -Name 'IsWindows' -ErrorAction SilentlyContinue }
+            $isWindowsDefined = & $script:moduleRef { Get-Variable -Name 'IsWindows' -ErrorAction SilentlyContinue }
             $isWindowsDefined | Should -Not -BeNullOrEmpty -Because 'the framework injects a compatibility shim for PS 5.1'
         }
     }
 
     Context 'Framework - Type accelerator registration' -Skip:(-not $hasClassExporter) {
+        BeforeAll {
+            Import-Module -Name $moduleManifestPath -Force
+        }
         It 'Should register public enum [<_>] as a type accelerator' -ForEach $expectedEnumNames {
             $registered = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')::Get
             $registered.Keys | Should -Contain $_ -Because 'the framework registers public enums as type accelerators'
@@ -85,22 +91,27 @@ Describe 'PSModule - Module tests' {
     }
 
     Context 'Framework - Module OnRemove cleanup' -Skip:(-not $hasClassExporter) {
+        BeforeAll {
+            Import-Module -Name $moduleManifestPath -Force
+        }
         It 'Should clean up type accelerators when the module is removed' {
             # Capture type names before removal
             $typeNames = @(@($expectedEnumNames) + @($expectedClassNames) | Where-Object { $_ })
             $typeNames | Should -Not -BeNullOrEmpty -Because 'there should be types to verify cleanup for'
 
-            # Remove the module to trigger the OnRemove hook
-            Remove-Module -Name $moduleName -Force
+            try {
+                # Remove the module to trigger the OnRemove hook
+                Remove-Module -Name $moduleName -Force
 
-            # Verify type accelerators are cleaned up
-            $typeAccelerators = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')::Get
-            foreach ($typeName in $typeNames) {
-                $typeAccelerators.Keys | Should -Not -Contain $typeName -Because "the OnRemove hook should remove type accelerator [$typeName]"
+                # Verify type accelerators are cleaned up
+                $typeAccelerators = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')::Get
+                foreach ($typeName in $typeNames) {
+                    $typeAccelerators.Keys | Should -Not -Contain $typeName -Because "the OnRemove hook should remove type accelerator [$typeName]"
+                }
+            } finally {
+                # Re-import the module for any subsequent tests
+                Import-Module -Name $moduleManifestPath -Force
             }
-
-            # Re-import the module for any subsequent tests
-            Import-Module -Name $moduleName -Force
         }
     }
 }

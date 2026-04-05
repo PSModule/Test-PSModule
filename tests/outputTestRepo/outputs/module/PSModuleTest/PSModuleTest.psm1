@@ -204,7 +204,7 @@ Write-Debug "[$scriptName] - [/private] - Processing folder"
 #region - From /private/Get-InternalPSModule.ps1
 Write-Debug "[$scriptName] - [/private/Get-InternalPSModule.ps1] - Importing"
 
-Function Get-InternalPSModule {
+function Get-InternalPSModule {
     <#
         .SYNOPSIS
         Performs tests on a module.
@@ -228,7 +228,7 @@ Write-Debug "[$scriptName] - [/private/Get-InternalPSModule.ps1] - Done"
 #region - From /private/Set-InternalPSModule.ps1
 Write-Debug "[$scriptName] - [/private/Set-InternalPSModule.ps1] - Importing"
 
-Function Set-InternalPSModule {
+function Set-InternalPSModule {
     <#
         .SYNOPSIS
         Performs tests on a module.
@@ -402,7 +402,7 @@ $ExistingTypeAccelerators = $TypeAcceleratorsClass::Get
 # Define the types to export with type accelerators.
 $ExportableEnums = @(
 )
-$ExportableEnums | Foreach-Object { Write-Verbose "Exporting enum '$($_.FullName)'." }
+$ExportableEnums | ForEach-Object { Write-Verbose "Exporting enum '$($_.FullName)'." }
 foreach ($Type in $ExportableEnums) {
     if ($Type.FullName -in $ExistingTypeAccelerators.Keys) {
         Write-Verbose "Enum already exists [$($Type.FullName)]. Skipping."
@@ -415,7 +415,7 @@ $ExportableClasses = @(
     [Book]
     [BookList]
 )
-$ExportableClasses | Foreach-Object { Write-Verbose "Exporting class '$($_.FullName)'." }
+$ExportableClasses | ForEach-Object { Write-Verbose "Exporting class '$($_.FullName)'." }
 foreach ($Type in $ExportableClasses) {
     if ($Type.FullName -in $ExistingTypeAccelerators.Keys) {
         Write-Verbose "Class already exists [$($Type.FullName)]. Skipping."
