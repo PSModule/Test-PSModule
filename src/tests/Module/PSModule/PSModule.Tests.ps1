@@ -15,13 +15,38 @@ param(
 BeforeAll {
     $moduleName = Split-Path -Path (Split-Path -Path $Path -Parent) -Leaf
     $moduleManifestPath = Join-Path -Path $Path -ChildPath "$moduleName.psd1"
+    $moduleRootPath = Join-Path -Path $Path -ChildPath "$moduleName.psm1"
     Write-Verbose "Module Manifest Path: [$moduleManifestPath]"
+    Write-Verbose "Module Root Path: [$moduleRootPath]"
+
+    # Discover public classes and enums from the compiled module source.
+    # The class exporter region is injected by Build-PSModule when classes/public contains types.
+    $moduleContent = if (Test-Path -Path $moduleRootPath) { Get-Content -Path $moduleRootPath -Raw } else { '' }
+    $hasClassExporter = $moduleContent -match '#region\s+Class exporter'
+
+    # Extract expected class and enum names from the class exporter block.
+    $expectedClassNames = @()
+    $expectedEnumNames = @()
+    if ($hasClassExporter) {
+        # Match $ExportableClasses = @( ... ) block
+        if ($moduleContent -match '\$ExportableClasses\s*=\s*@\(([\s\S]*?)\)') {
+            $expectedClassNames = [regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value }
+        }
+        # Match $ExportableEnums = @( ... ) block
+        if ($moduleContent -match '\$ExportableEnums\s*=\s*@\(([\s\S]*?)\)') {
+            $expectedEnumNames = [regex]::Matches($Matches[1], '\[([^\]]+)\]') | ForEach-Object { $_.Groups[1].Value }
+        }
+    }
+    $expectedTypeNames = @($expectedEnumNames) + @($expectedClassNames) | Where-Object { $_ }
+    Write-Host "Has class exporter: $hasClassExporter"
+    Write-Host "Expected classes: $($expectedClassNames -join ', ')"
+    Write-Host "Expected enums: $($expectedEnumNames -join ', ')"
 }
 
 Describe 'PSModule - Module tests' {
     Context 'Module' {
         It 'The module should be importable' {
-            { Import-Module -Name $moduleName } | Should -Not -Throw
+            { Import-Module -Name $moduleName -Force } | Should -Not -Throw
         }
     }
 
@@ -36,9 +61,49 @@ Describe 'PSModule - Module tests' {
             $result | Should -Not -Be $null
             Write-Host "$($result | Format-List | Out-String)"
         }
-        # It 'has a valid license URL' {}
-        # It 'has a valid project URL' {}
-        # It 'has a valid icon URL' {}
-        # It 'has a valid help URL' {}
+    }
+
+    Context 'Framework - IsWindows compatibility shim' {
+        It 'Should have $IsWindows defined' {
+            # The framework injects "$IsWindows = $true" for PowerShell 5.1 (Desktop edition).
+            # On PS 7+ (Core), $IsWindows is a built-in automatic variable.
+            # Either way, it must be defined after module import.
+            $variable = Get-Variable -Name 'IsWindows' -ErrorAction SilentlyContinue
+            $variable | Should -Not -BeNullOrEmpty -Because 'the framework injects a compatibility shim for PS 5.1'
+        }
+    }
+
+    Context 'Framework - Type accelerator registration' -Skip:(-not $hasClassExporter) {
+        BeforeAll {
+            $typeAccelerators = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')::Get
+        }
+
+        It 'Should register public enum [<_>] as a type accelerator' -ForEach $expectedEnumNames {
+            $typeAccelerators.Keys | Should -Contain $_ -Because 'the framework registers public enums as type accelerators'
+        }
+
+        It 'Should register public class [<_>] as a type accelerator' -ForEach $expectedClassNames {
+            $typeAccelerators.Keys | Should -Contain $_ -Because 'the framework registers public classes as type accelerators'
+        }
+    }
+
+    Context 'Framework - Module OnRemove cleanup' -Skip:(-not $hasClassExporter) {
+        It 'Should clean up type accelerators when the module is removed' {
+            # Capture type names before removal
+            $typeNames = $expectedTypeNames.Clone()
+            $typeNames | Should -Not -BeNullOrEmpty -Because 'there should be types to verify cleanup for'
+
+            # Remove the module to trigger the OnRemove hook
+            Remove-Module -Name $moduleName -Force
+
+            # Verify type accelerators are cleaned up
+            $typeAccelerators = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')::Get
+            foreach ($typeName in $typeNames) {
+                $typeAccelerators.Keys | Should -Not -Contain $typeName -Because "the OnRemove hook should remove type accelerator [$typeName]"
+            }
+
+            # Re-import the module for any subsequent tests
+            Import-Module -Name $moduleName -Force
+        }
     }
 }
